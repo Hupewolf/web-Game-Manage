@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="login.css">
+    <link rel="stylesheet" href="../../share/ultis.css">
+    <title>Đăng nhập</title>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-box">
+            <h2>Đăng nhập</h2>
+            <form id="login-form">
+                <div class="input-group">
+                    <label for="mssv"><i class="fa-solid fa-user"></i> MSSV</label>
+                    <input type="text" id="mssv" name="mssv" pattern="[0-9]*" maxlength="8" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required placeholder="Nhập MSSV (8 chữ số)">
+                </div>
+                <div class="input-group">
+                    <label for="password"><i class="fa-solid fa-lock"></i> Mật khẩu</label>
+                    <input type="password" id="password" name="password" required placeholder="Nhập mật khẩu">
+                </div>
+                <button type="submit" class="login-btn">Đăng nhập</button>
+            </form>
+        </div>
+    </div>
+    <script src="https://kit.fontawesome.com/c4edd7a73c.js" crossorigin="anonymous"></script>
+    <script src="login.js"></script>
+</body>
+</html>

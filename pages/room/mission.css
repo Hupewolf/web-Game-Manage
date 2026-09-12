@@ -1,0 +1,308 @@
+.outer-box {
+    position: relative;
+    width: 255px;
+}
+
+.outer-box.minimized #mission-icon {
+    opacity: 1;
+    transform: scale(1);
+    pointer-events: auto;
+}
+
+.mission-icon-btn {
+    cursor: pointer;
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-pill);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--primary-background-gradient);
+    box-shadow: var(--primary-shadow-glow-sm);
+}
+
+#mission-icon {
+    position: absolute;
+    right: 0;
+    opacity: 0;
+    transform: scale(0);
+    transition: all var(--transition-slow) ease;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+
+.box {
+    width: 255px;
+    max-height: 300px;
+    padding: 15px 14px;
+    border-radius: var(--radius-lg);
+    background: var(--primary-background-gradient);
+    box-shadow: var(--primary-shadow-glow-sm);
+    overflow: hidden;
+    position: relative;
+    transform-origin: top right;
+    transition:
+        transform var(--transition-slow) ease,
+        opacity var(--transition-slow) ease;
+}
+
+#mission-close {
+    cursor: pointer;
+}
+
+.box.collapsed {
+    opacity: 0;
+    transform: scale(.2);
+    pointer-events: none;
+}
+
+.box.collapsed #mission-icon {
+    opacity: 0;
+}
+
+.mission-content {
+    opacity: 1;
+    transition: opacity var(--transition-base) ease;
+}
+
+.box.collapsed .mission-list,
+.box.collapsed .title,
+.box.collapsed .watch-all {
+    opacity: 0;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.box>* {
+    position: relative;
+    z-index: 2;
+}
+
+.head-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    padding: 4px 3px;
+}
+
+.title {
+    font-weight: var(--font-weight-medium);
+    letter-spacing: 1px;
+    color: #dff4ff;
+    font-size: var(--font-size-xl);
+    text-shadow: var(--primary-shadow-glow-sm);
+}
+
+.calender-icon {
+    width: 24px;
+	height: 24px;
+	background-color: var(--primary-icon-color-light);
+	-webkit-mask: url("../../img/icon/simple-line-icons_calender.svg") no-repeat center;
+	mask: url("../../img/icon/simple-line-icons_calender.svg") no-repeat center;
+    opacity: 0.9;
+}
+
+.mission-list {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    margin-top: 9px;
+}
+
+.mission-card {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 8px 6px;
+    border-radius: var(--radius-8);
+    border-top: 2px solid rgba(255, 255, 255, 0.03);
+}
+
+.icon {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    border-radius: 50%;
+    background: rgba(10, 25, 80, .9);
+    box-shadow:
+        0 0 8px rgba(120, 180, 255, .8),
+        0 0 15px rgba(120, 180, 255, .5),
+        inset 0 0 10px rgba(120, 180, 255, .3);
+}
+
+.mission-card:nth-child(1) .icon {
+    box-shadow:
+        0 4px 12px rgba(90, 220, 255, 0.06),
+        0 0 12px rgba(90, 220, 255, 0.12) inset;
+}
+
+.mission-card:nth-child(2) .icon {
+    box-shadow:
+        0 4px 12px rgba(150, 110, 255, 0.06),
+        0 0 12px rgba(150, 110, 255, 0.12) inset;
+}
+
+.mission-card:nth-child(3) .icon {
+    box-shadow:
+        0 4px 12px rgba(100, 220, 180, 0.06),
+        0 0 12px rgba(100, 220, 180, 0.12) inset;
+}
+
+.gift-icon {
+    width: 24px;
+	height: 24px;
+	background-color: var(--primary-icon-color);
+	-webkit-mask: url("../../img/icon/mdi_gift.svg") no-repeat center;
+	mask: url("../../img/icon/mdi_gift.svg") no-repeat center;
+}
+
+.target-icon {
+    width: 24px;
+	height: 24px;
+	background-color: var(--primary-icon-color);
+	-webkit-mask: url("../../img/icon/ri_target-fill.svg") no-repeat center;
+	mask: url("../../img/icon/ri_target-fill.svg") no-repeat center;
+}
+
+.book-icon {
+    width: 24px;
+	height: 24px;
+	background-color: var(--primary-icon-color);
+	-webkit-mask: url("../../img/icon/ix_book.svg") no-repeat center;
+	mask: url("../../img/icon/ix_book.svg") no-repeat center;
+}
+
+
+.icon::before {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    border-radius: 50%;
+    background: conic-gradient(from 0deg,
+            var(--primary-border-glow-color),
+            transparent,
+            transparent,
+            var(--primary-border-glow-color));
+    animation: borderRotate 2s linear infinite;
+    z-index: -2;
+}
+
+.icon::after {
+    content: "";
+    position: absolute;
+    inset: 3px;
+    border-radius: 50%;
+    background: rgba(8, 18, 60, .95);
+    z-index: -1;
+}
+
+@keyframes borderRotate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.text {
+    flex: 1 1 auto;
+}
+
+.info {
+    color: #dfefff;
+    font-size: var(--font-size-sm);
+    margin-bottom: 4px;
+}
+
+.index {
+    font-size: var(--font-size-xs);
+    color: #bfe8ff;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.index img {
+    width: 10px;
+    height: 10px;
+}
+
+.frequency {
+    min-width: 34px;
+    text-align: right;
+    color: #9fe6ff;
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--font-size-sm);
+}
+
+.tick {
+    display: flex;
+    gap: 4px;
+    align-items: flex-end;
+    color: #00d30b;
+}
+
+.tick img {
+    width: 16px;
+    height: 16px;
+}
+
+.watch-all {
+    margin-top: 10px;
+    align-self: stretch;
+    background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.02),
+        rgba(255, 255, 255, 0.01)
+    );
+    color: #cfeeff;
+    padding: 8px 10px;
+    width: 100%;
+    border-radius: var(--radius-8);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-md);
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    position: relative;
+    cursor: pointer;
+}
+
+.watch-all::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: var(--radius-md);
+    background: linear-gradient(90deg, #3ee7ff, #7a39ff);
+    filter: blur(6px);
+    opacity: 0.12;
+    z-index: -1;
+}
+
+.watch-all:hover {
+    transform: translateY(-2px);
+}
+
+
+
+@media (max-width: 400px) {
+    .box {
+        width: 100%;
+        padding: 12px;
+    }
+}

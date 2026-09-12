@@ -1,0 +1,90 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: var(--dark-background-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: var(--base-text-color-light);
+}
+
+.login-container {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+}
+
+.login-box {
+    background: var(--surface-background-color);
+    padding: 40px 30px;
+    border-radius: var(--radius-12);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--surface-border-color);
+}
+
+.login-box h2 {
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 25px;
+    color: var(--cyan-text-color);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: var(--cyan-shadow-glow);
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: var(--font-size-xl);
+    color: #ccc;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--surface-border-color-strong);
+    border-radius: var(--radius-sm);
+    background: rgba(0, 0, 0, 0.2);
+    color: var(--base-text-color-light);
+    outline: none;
+    box-sizing: border-box;
+    font-size: var(--font-size-2xl);
+    transition: border-color var(--transition-medium);
+}
+
+.input-group input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.input-group input:focus {
+    border-color: var(--cyan-text-color);
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.login-btn {
+    width: 100%;
+    padding: 14px;
+    background-color: var(--cyan-text-color);
+    color: var(--dark-background-color);
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-bold);
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all var(--transition-medium) ease;
+    margin-top: 15px;
+    box-shadow: var(--cyan-shadow-glow);
+}
+
+.login-btn:hover {
+    background-color: #00c2cc;
+    box-shadow: var(--cyan-shadow-glow-hover);
+}

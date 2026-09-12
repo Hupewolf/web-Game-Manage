@@ -1,0 +1,172 @@
+/* @import url('https://fonts.googleapis.com/css2?family=Oxanium:wght@200..800&display=swap'); */
+@import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=Be+Vietnam+Pro:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Kaushan+Script&family=Michroma&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Mountains+of+Christmas:wght@400;700&family=Mulish:ital,wght@0,200..1000;1,200..1000&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+:root{
+    --Oswald: 'Oxanium', sans-serif;
+    --beVietnamPro: 'Be Vietnam Pro', sans-serif;
+    --Noto-Sans: 'Noto Sans', sans-serif;
+    /*Base (chữ chung toàn site)*/
+    --base-text-color: #292929;
+    --base-text-color-muted: #ffffff84;
+    --base-text-color-light: #fff;
+
+    /*Surface (lớp kính/viền trung tính, dùng cho card, panel mờ)*/
+    --surface-background-color: rgba(255, 255, 255, 0.05);
+    --surface-background-color-soft: rgba(255, 255, 255, 0.06);
+    --surface-background-color-strong: rgba(255, 255, 255, 0.15);
+    --surface-border-color: rgba(255, 255, 255, 0.1);
+    --surface-border-color-soft: rgba(255, 255, 255, 0.08);
+    --surface-border-color-strong: rgba(255, 255, 255, 0.2);
+
+    /*Primary (panel xanh navy phát sáng - header, footer, nav, mission)*/
+    --primary-background-gradient: /*linear-gradient(180deg, rgba(12, 25, 70, 0.95), rgba(4, 12, 40, 0.95))*/ #4b5f64dc; 
+    /* --primary-shadow-glow-sm: 0 0 18px rgba(94, 125, 255, 0.7), 0 0 45px rgba(119, 66, 255, 0.4), inset 0 0 15px rgba(120, 180, 255, 0.15);
+    --primary-shadow-glow-lg: 0 0 25px rgba(94, 125, 255, 0.7), 0 0 60px rgba(119, 66, 255, 0.4), inset 0 0 20px rgba(120, 180, 255, 0.15); */
+    --primary-shadow-glow-sm: inset 0px 0px 2px 2px #D5BC9D;
+    
+    --primary-accent-color: #4f8ef7;
+    --primary-icon-color: #D5BC9D;
+    --primary-icon-color-light: #D5BC9D;
+    --primary-text-color: #b0ffff;
+    --primary-text-color-muted: #b0c8ff;
+    --primary-border-glow-color: #5df6ff;
+
+    /*Accent (vàng/cam - thưởng, đồ ăn, xp, rank)*/
+    --accent-text-color: #ffd93d;
+    --accent-background-color: #ffb000;
+    --accent-background-color-hover: #ffc94d;
+    --accent-text-color-on-accent: #1a1a1a;
+
+    /*Danger (đỏ - cảnh báo, battle, xoá)*/
+    --danger-text-color: #ff6060;
+    --danger-border-color: #ff4040;
+    --danger-background-color: #ff5252;
+    --danger-shadow-glow: 0 0 12px rgba(255, 40, 40, 0.3), inset 0 0 10px rgba(255, 40, 40, 0.05);
+
+    /*Dark panel (nền tối đặc - login, modal kho đồ)*/
+    --dark-background-color: #0d1b2a;
+    --dark-background-color-alt: #1b263b;
+    --dark-border-color: #415a77;
+    --dark-text-color-light: #e0e1dd;
+
+    --notice-text-color: #ff3d9a;
+    --notice-background-gradient: linear-gradient(90deg, #ff2f91, #ff5fc4);
+    --notice-shadow-glow: 0 0 18px rgba(255, 61, 154, 0.5);
+    --notice-border-color: rgba(255, 61, 154, 0.4);
+
+    /*xanh ngọc - login, hiệu ứng công nghệ*/
+    --cyan-text-color: #00f3ff;
+    --cyan-shadow-glow: 0 0 10px rgba(0, 243, 255, 0.3);
+    --cyan-shadow-glow-hover: 0 0 15px rgba(0, 243, 255, 0.5);
+
+    /*Overlay (nền phủ tối cho badge/backdrop)*/
+    --overlay-background-color: rgba(0, 0, 0, 0.55);
+    --overlay-background-color-strong: rgba(0, 0, 0, 0.7);
+
+    --overlay-background-color-light: rgba(255, 255, 255, 0.4);
+    --overlay-blur-amount: 8px;
+
+    /*Font size (cỡ chữ dùng nhiều nơi, từ nhỏ -> lớn)*/
+    --font-size-xxs: 8px;
+    --font-size-xs: 9px;
+    --font-size-sm: 10px;
+    --font-size-md: 11px;
+    --font-size-base: 12px;
+    --font-size-lg: 13px;
+    --font-size-xl: 14px;
+    --font-size-2xl: 15px;
+    --font-size-3xl: 16px;
+    --font-size-4xl: 18px;
+
+    /*Font weight*/
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+    --font-weight-extra_bold: 800;
+
+    /*Transition duration dùng nhiều nơi*/
+    --transition-fast: 0.15s;
+    --transition-base: 0.2s;
+    --transition-medium: 0.3s;
+    --transition-slow: 0.35s;
+
+    /*Radius dùng nhiều nơi*/
+    --radius-4: 4px;
+    --radius-5: 5px;
+    --radius-sm: 6px;
+    --radius-8: 8px;
+    --radius-md: 10px;
+    --radius-12: 12px;
+    --radius-14: 14px;
+    --radius-lg: 16px;
+    --radius-pill: 99px;
+
+    /* battle */
+    --battle-accent: 220,38,38;
+    --battle-bg:
+        radial-gradient(
+            ellipse 130% 40% at 50% -5%,
+            rgba(var(--battle-accent),.28),
+            transparent
+        ),
+        rgba(5,5,13,.97);
+    --battle-card-bg:
+        linear-gradient(
+            155deg,
+            rgba(var(--battle-accent),.08),
+            rgba(5,3,8,.96) 55%
+        );
+    --battle-card-player-bg:rgba(7,7,17,.93);
+    --battle-panel:rgba(255,255,255,.05);
+    --battle-panel-soft:rgba(255,255,255,.04);
+    --battle-border:rgba(255,255,255,.08);
+    --battle-border-strong:rgba(255,255,255,.16);
+    --battle-shadow: 0 8px 40px rgba(0,0,0,.55);
+    --battle-shadow-player: 0 8px 32px rgba(0,0,0,.4);
+    --battle-accent-shadow: 0 0 18px rgba(var(--battle-accent),.3);
+    --battle-success:#4ade80;
+    --battle-danger:#f87171;
+    --battle-warning:#fbbf24;
+    --battle-text:rgba(255,255,255,.88);
+    --battle-text-light:rgba(255,255,255,.68);
+    --battle-text-muted:rgba(255,255,255,.36);
+}
+body{
+    font-family: var(--beVietnamPro);
+    position: relative;
+}
+.primary{
+    height: fit-content;
+    width: fit-content;
+    padding: 6px 20px !important;
+}
+
+.frost-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0);
+    backdrop-filter: blur(0px);
+    -webkit-backdrop-filter: blur(0px);
+    pointer-events: none;
+    transition:
+        background var(--transition-medium) ease,
+        backdrop-filter var(--transition-medium) ease;
+}
+
+.frost-overlay.frost-overlay--visible {
+    background: var(--overlay-background-color-light);
+    backdrop-filter: blur(var(--overlay-blur-amount));
+    -webkit-backdrop-filter: blur(var(--overlay-blur-amount));
+    pointer-events: auto;
+}

@@ -1,0 +1,117 @@
+.mission-app {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    padding: 14px;
+    gap: 12px;
+    color: var(--base-text-color-light);
+}
+
+.mission-app__header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.mission-app__back {
+    background: var(--surface-background-color-strong);
+    border: 1px solid rgba(120, 160, 255, 0.2);
+    color: var(--base-text-color-light);
+    width: 28px;
+    height: 28px;
+    border-radius: var(--radius-8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.mission-app__title {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    letter-spacing: 0.02em;
+}
+
+.mission-app__list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow-y: auto;
+}
+
+.mission-app__card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--surface-background-color-soft);
+    border: 1px solid var(--surface-border-color-soft);
+    border-radius: var(--radius-12);
+    padding: 10px 12px;
+}
+
+.mission-app__card--done {
+    opacity: 0.6;
+}
+
+.mission-app__icon {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-md);
+    background: linear-gradient(135deg, rgba(60, 90, 200, 0.6), rgba(30, 50, 130, 0.8));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-icon-color-light);
+    flex-shrink: 0;
+}
+
+.mission-app__body {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+    min-width: 0;
+}
+
+.mission-app__name {
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-semibold);
+}
+
+.mission-app__reward {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: var(--font-size-xs);
+    color: var(--accent-text-color);
+}
+
+.mission-app__reward img {
+    width: 14px;
+    height: 14px;
+}
+
+.mission-app__progress {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
+    color: var(--primary-text-color-muted);
+    flex-shrink: 0;
+}
+
+.mission-app__progress i {
+    color: #00d30b;
+    font-size: 18px;
+}
+
+.mission-app__watch-all {
+    margin-top: auto;
+    background: var(--primary-accent-color);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-8);
+    padding: 10px;
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-base);
+    cursor: pointer;
+}

@@ -1,0 +1,140 @@
+/* body {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	width: 100%;
+    height: 100vh;
+    background: linear-gradient(rgba(0,0,0,0.3),
+                        rgba(0,0,0,0.3)),
+						url(../../img/background/Phòng\ buổi\ chiều.png);
+
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+} */
+
+body {
+	width: 100%;
+    height: 100vh;
+    background:	url(../../img/Background\ map/room-bg.svg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    overflow: hidden;
+}
+/* 
+body::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    background: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.65),
+        transparent,
+        transparent,
+        transparent
+    );
+    z-index: 0;
+} */
+
+.main {
+	position: absolute;
+    top: 20%;
+	padding: 16px 35px;
+    right: 0;
+    width: fit-content;
+}
+
+img {
+	display: block;
+}
+
+/* .story-trigger-btn {
+	position: fixed;
+	top: 90px;
+	left: 35px;
+	z-index: 50;
+	padding: 10px 18px;
+	background-image: url(../../img/background/Nền\ elements.svg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+	box-shadow: var(--primary-shadow-glow-sm);
+	border: 1px solid var(--surface-border-color);
+	border-radius: var(--radius-pill);
+	color: var(--base-text-color);
+	font-size: var(--font-size-base);
+	font-weight: var(--font-weight-semibold);
+	cursor: pointer;
+	transition: background var(--transition-base), transform var(--transition-base);
+} */
+
+.story-trigger-btn {
+    position: fixed;
+	top: 160px;
+	left: 35px;
+	z-index: 50;
+	display: grid;
+    grid-template-columns: 32px 1fr 32px;
+    width: 140px;
+    height: 52px;
+    border: none;
+    background: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+.story-trigger-btn .left {
+    background: url("../../img/background/left.svg")
+        no-repeat left center;
+    background-size:100% 100%;
+} 
+
+.story-trigger-btn .center {
+    background: url("../../img/background/centerRepeat.svg")
+        repeat-x center;
+    background-size:auto 100%;
+}
+
+.story-trigger-btn .right{
+    background: url("../../img/background/right.svg")
+        no-repeat right center;
+    background-size:100% 100%;
+}
+
+.story-trigger-btn .text{
+    position:absolute;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    color: var(--base-text-color);
+	font-size: var(--font-size-base);
+	font-weight: var(--font-weight-semibold);
+    z-index:2;
+    white-space:nowrap;
+}
+
+.story-trigger-btn:hover {
+	transform: translateY(-2px);
+}
+
+.main-character {
+    position: absolute;
+    left: 38.5%;
+    top: 45%;
+    height: 42vh;
+    aspect-ratio: 407/326;
+    background-image: url(../../img/character/main.svg);
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    animation: UpDown 2s linear infinite;
+}
+
+@keyframes UpDown {
+    0% {transform: translateY(0);}
+    25% {transform: translateY(2px);}
+    50% {transform: translateY(0);}
+    75% {transform: translateY(-2px);}
+    100% {transform: translateY(0);}
+}

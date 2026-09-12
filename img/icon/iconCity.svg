@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <defs>
+    <linearGradient id="houseGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="30%" stop-color="#b8d4ff" />
+      <stop offset="100%" stop-color="#5588ff" />
+    </linearGradient>
+
+    <filter id="neonGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur1" />
+      <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur2" />
+      <feMerge>
+        <feMergeNode in="blur2" />
+        <feMergeNode in="blur1" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <path d="M 50 20 
+           L 15 50 
+           L 25 50 
+           L 25 78 
+           L 40 78 
+           L 40 55 
+           C 40 52, 42 50, 45 50 
+           L 55 50 
+           C 58 50, 60 52, 60 55 
+           L 60 78 
+           L 75 78 
+           L 75 50 
+           L 85 50 
+           Z" 
+        fill="url(#houseGrad)" 
+        filter="url(#neonGlow)"
+        stroke="url(#houseGrad)"
+        stroke-width="2.5"
+        stroke-linejoin="round"
+        stroke-linecap="round"/>
+</svg>

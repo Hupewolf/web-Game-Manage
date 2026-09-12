@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="./room.css" />
+        <link rel="stylesheet" href="./mission.css" />
+        <link rel="stylesheet" href="../../share/ultis.css" />
+        <link rel="stylesheet" href="../../component/header/header.css" />
+        <link rel="stylesheet" href="../../component/footer/footer.css">
+        <link rel="stylesheet" href="../../component/personalItem/personalItem.css">
+        <link rel="stylesheet" href="../../component/navButton/navbutton.css">
+        <link rel="stylesheet" href="../../component/phoneModal/phonemodal.css">
+        <link rel="stylesheet" href="../../component/missionApp/missionApp.css">
+        <link rel="stylesheet" href="../../component/notification/notification.css">
+        <link rel="stylesheet" href="../../component/dashboardPanel/dashboardPanel.css">
+        <title>My Room</title>
+    </head>
+
+<body>
+    <header id="game-header"></header>
+    <div class="main-character"></div>
+
+    <!-- Bảng quản lý (component mới) — nằm giữa trang, giữa header và footer -->
+    <div id="dashboard-panel-slot"></div>
+
+    <div class="main">
+        <div class="outer-box minimized">
+            
+            <button class="mission-icon-btn" id="mission-icon">
+                <div class="g-icon calender-icon"></div>
+            </button>
+            <div class="box collapsed" id="mission-box">
+                <div class="head-box">
+                    <div class="title">NHIỆM VỤ HÔM NAY</div>
+                    <div class="g-icon calender-icon" id="mission-close"></div>
+                </div>
+                <div class="mission-list">
+                    <div class="mission-card">
+                        <div class="icon">
+                            <div class="g-icon gift-icon"></div>
+                        </div>
+                        <div class="text">
+                            <div class="info">Đăng nhập hàng ngày</div>
+                            <div class="index"><img src="../../img/icon/UCoin.svg"> x100</div>
+                        </div>
+                        <div class="frequency tick">1/1 <img src="../../img/icon/check.png"></div>
+                    </div>
+                    <div class="mission-card">
+                        <div class="icon">
+                            <div class="g-icon target-icon"></div>
+                        </div>
+                        <div class="text">
+                            <div class="info">Hoàn thành 3 nhiệm vụ</div>
+                            <div class="index"><img src="../../img/icon/UCoin.svg"> x200</div>
+                        </div>
+                        <div class="frequency">2/3</div>
+                    </div>
+                    <div class="mission-card">
+                        <div class="icon">
+                            <div class="g-icon book-icon"></div>
+                        </div>
+                        <div class="text">
+                            <div class="info">Học tập 30 phút</div>
+                            <div class="index"><img src="../../img/icon/flash.png"> x50</div>
+                        </div>
+                        <div class="frequency">18/30</div>
+                    </div>
+                </div>
+                <button class="watch-all">XEM TẤT CẢ</button>
+            </div>
+        </div>
+    </div>
+    <footer></footer>
+
+
+        <script src="https://kit.fontawesome.com/c4edd7a73c.js" crossorigin="anonymous"></script>
+        <script type="module" src="../../component/footer/footer.js"></script>
+        <script type="module" src="./home.js"></script>
+    </body>
+</html>

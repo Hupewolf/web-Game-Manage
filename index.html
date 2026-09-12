@@ -3,12 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <title>Mai gà</title>
+    <title>Document</title>
 </head>
 <body>
-    <div>
-        sự thật thú vị về Mai
-    </div>
+    <script>
+        const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+        if (isLoggedIn) {
+            window.location.replace("./pages/room/room.html");
+        } else {
+            window.location.replace("./pages/login/login.html");
+        }
+    </script>
 </body>
 </html>

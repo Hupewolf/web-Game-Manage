@@ -1,0 +1,66 @@
+.nav-btn {
+    position: relative;
+    display: grid;
+    grid-template-columns: 32px 1fr 32px;
+    width: 280px;
+    height: 64px;
+    border: none;
+    background: none;
+    padding: 0;
+    cursor: pointer;
+    transition: transform .2s ease;
+}
+
+.nav-btn .left {
+    background: url("../../img/background/left.svg")
+        no-repeat left center;
+    background-size:100% 100%;
+} 
+
+.nav-btn .center {
+    background: url("../../img/background/centerRepeat.svg")
+        repeat-x center;
+    background-size:auto 100%;
+}
+
+.nav-btn .right{
+    background: url("../../img/background/right.svg")
+        no-repeat right center;
+    background-size:100% 100%;
+}
+
+.nav-btn .content{
+    position:absolute;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: var(--base-text-color);
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-semibold);
+    text-transform: uppercase;
+    z-index:2;
+}
+
+.nav-btn:hover {
+	transform: translateX(3px);
+}
+
+.nav-btn__icon {
+	width: 42px;
+	height: 42px;
+	object-fit: contain;
+}
+
+.nav-btn__label {
+	padding-top: 5px;
+}
+
+#nav-btn-slot {
+	display: flex;
+	justify-content: center;
+}
