@@ -45,7 +45,7 @@
     align-items: center;
     gap: 14px;
     width: fit-content;
-    padding: 12px 20px 12px 12px;
+    padding: 18px 24px 18px 18px;
     border-radius: 16px;
     background: rgba(255, 255, 255, 0.97);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
@@ -57,8 +57,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 56px;
-    height: 56px;
+    width: 80px;
+    height: 80px;
     flex-shrink: 0;
     border-radius: 50%;
     border: 3px solid #3ecf6a;
@@ -105,7 +105,6 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
-    width: 300px;
     padding: 16px 18px;
     border-radius: 16px;
     background: rgba(255, 255, 255, 0.97);
@@ -155,8 +154,8 @@
 }
 
 .notification-btn {
-	width: 34px;
-    height: 34px;
+	width: 50px;
+    height: 50px;
     border-radius: var(--radius-pill);
     display: flex;
     align-items: center;
@@ -184,8 +183,8 @@
 
 /* Nút mở điện thoại */
 .phone-trigger-btn {
-    width: 34px;
-    height: 34px;
+    width: 50px;
+    height: 50px;
     border-radius: var(--radius-pill);
     display: flex;
     align-items: center;

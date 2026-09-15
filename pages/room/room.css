@@ -1,3 +1,9 @@
+html {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
 /* body {
 	display: flex;
 	flex-direction: column;
@@ -14,14 +20,24 @@
 } */
 
 body {
-	width: 100%;
+    width: 100%;
     height: 100vh;
-    background:	url(../../img/Background\ map/room-bg.svg);
+    background: url(../../img/background/funny-bg.png);
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
     overflow: hidden;
 }
+
+#web {
+    position: fixed;
+    inset: 0;
+    width: 1920px;
+    height: 1080px;
+    transform-origin: top left;
+
+}
+
 /* 
 body::before {
     content: "";
@@ -38,15 +54,15 @@ body::before {
 } */
 
 .main {
-	position: absolute;
+    position: absolute;
     top: 20%;
-	padding: 16px 35px;
+    padding: 16px 35px;
     right: 0;
     width: fit-content;
 }
 
 img {
-	display: block;
+    display: block;
 }
 
 /* .story-trigger-btn {
@@ -71,10 +87,10 @@ img {
 
 .story-trigger-btn {
     position: fixed;
-	top: 160px;
-	left: 35px;
-	z-index: 50;
-	display: grid;
+    top: 160px;
+    left: 35px;
+    z-index: 50;
+    display: grid;
     grid-template-columns: 32px 1fr 32px;
     width: 140px;
     height: 52px;
@@ -85,56 +101,32 @@ img {
 }
 
 .story-trigger-btn .left {
-    background: url("../../img/background/left.svg")
-        no-repeat left center;
-    background-size:100% 100%;
-} 
+    background: url("../../img/background/left.svg") no-repeat left center;
+    background-size: 100% 100%;
+}
 
 .story-trigger-btn .center {
-    background: url("../../img/background/centerRepeat.svg")
-        repeat-x center;
-    background-size:auto 100%;
+    background: url("../../img/background/centerRepeat.svg") repeat-x center;
+    background-size: auto 100%;
 }
 
-.story-trigger-btn .right{
-    background: url("../../img/background/right.svg")
-        no-repeat right center;
-    background-size:100% 100%;
+.story-trigger-btn .right {
+    background: url("../../img/background/right.svg") no-repeat right center;
+    background-size: 100% 100%;
 }
 
-.story-trigger-btn .text{
-    position:absolute;
-    left:50%;
-    top:50%;
-    transform:translate(-50%,-50%);
+.story-trigger-btn .text {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
     color: var(--base-text-color);
-	font-size: var(--font-size-base);
-	font-weight: var(--font-weight-semibold);
-    z-index:2;
-    white-space:nowrap;
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    z-index: 2;
+    white-space: nowrap;
 }
 
 .story-trigger-btn:hover {
-	transform: translateY(-2px);
-}
-
-.main-character {
-    position: absolute;
-    left: 38.5%;
-    top: 45%;
-    height: 42vh;
-    aspect-ratio: 407/326;
-    background-image: url(../../img/character/main.svg);
-    background-position: center;
-    background-size: cover;
-    background-repeat: no-repeat;
-    animation: UpDown 2s linear infinite;
-}
-
-@keyframes UpDown {
-    0% {transform: translateY(0);}
-    25% {transform: translateY(2px);}
-    50% {transform: translateY(0);}
-    75% {transform: translateY(-2px);}
-    100% {transform: translateY(0);}
+    transform: translateY(-2px);
 }

@@ -11,7 +11,6 @@ export const NavButton = {
 				<span class="center"></span>
 				<span class="right"></span>
 				<span class="content">
-					<img class="nav-btn__icon" src="${icon}" alt="${label}">
 					<span class="nav-btn__label">${label}</span>
 				</span>
 				
