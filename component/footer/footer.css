@@ -1,19 +1,24 @@
+/* component/footer/footer.css
+   Thanh menu dưới đổi từ nền tối sang "dock" trắng bo tròn,
+   mỗi icon nằm trong ô gradient riêng — cùng ngôn ngữ với lưới tính năng
+   của dashboard iPad. */
+
 a {
-	text-decoration: none;
-	color: inherit;
+    text-decoration: none;
+    color: inherit;
 }
 
 button {
-	cursor: pointer;
-	border: none;
-	background: none;
-	color: inherit;
-	font: inherit;
+    cursor: pointer;
+    border: none;
+    background: none;
+    color: inherit;
+    font: inherit;
 }
 
 .g-icon {
-	-webkit-mask-size: contain;
-	mask-size: contain;
+    -webkit-mask-size: contain;
+    mask-size: contain;
 }
 
 footer {
@@ -22,194 +27,147 @@ footer {
     left: 0;
     width: 100%;
     z-index: 100;
-	padding: 0 35px 30px 35px;
-	display: flex;
-	justify-content: space-between;
-	align-items: flex-end;
-}
-/* .game-menu {
+    padding: 0 35px 30px 35px;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    padding: 13px 24px;
-    border-radius: var(--radius-lg);
-    background-image: url(../../img/background/Nền\ elements\ 2.svg);
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    box-shadow: var(--primary-shadow-glow-lg);
-} */
+    justify-content: end;
+    align-items: flex-end;
+    gap: 20px;
+}
 
+/* ===== Dock trắng ===== */
 /* .game-menu {
     position: relative;
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 12px;
-    padding: 13px 24px;
-    border-radius: var(--radius-lg);
-    overflow: hidden;
-    isolation: isolate;
-} */
-
-/* .game-menu::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background-image: url("../../img/background/Nền elements 2.svg");
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    opacity: 0.7;
-    z-index: -1;
-} */
-
-.game-menu {
-    position: relative;
-	display: grid;
-    grid-template-columns: 44px 1fr 44px;
-    width: 800px;
-    height: 69px;
-    border: none;
-    background: none;
-    padding: 0;
-}
-/* 
-.game-menu .left {
-    overflow: hidden;
-    position: relative;
-} 
-
-.game-menu .center {
-    overflow: hidden;
-    position: relative;
+    width: fit-content;
+    height: auto;
+    border: 1px solid var(--fun-line);
+    border-radius: 28px;
+    background: linear-gradient(160deg, #ffffff, #f4f8ff);
+    box-shadow: var(--fun-shadow-lg);
+    padding: 12px 20px;
 }
 
-.game-menu .right {
-    overflow: hidden;
-    position: relative;
+
+.game-menu > .left,
+.game-menu > .center,
+.game-menu > .right {
+    display: none;
 }
 
-.game-menu .left::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: url("../../img/background/left\ black.svg")
-        no-repeat left center;
-    background-size:100% 100%;
-    opacity: 0.7;
-    z-index: -1;
-} 
-
-.game-menu .center::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: url("../../img/background/center\ black.svg")
-        repeat-x center;
-    background-size:auto 100%;
-    opacity: 0.7;
-    z-index: -1;
-}
-
-.game-menu .right::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: url("../../img/background/right\ black.svg")
-        no-repeat right center;
-    background-size:100% 100%;
-    opacity: 0.7;
-    z-index: -1;
-} */
-
-.game-menu .content{
-    position:absolute;
-    left:50%;
-    top:50%;
-    transform:translate(-50%,-50%);
+.game-menu .content {
+    position: static;
+    transform: none;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
-    width: 100%;
-    gap: 32px;
-    z-index:2;
+    width: auto;
+    gap: 14px;
+    z-index: 2;
 }
 
 .game-menu-btn {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: flex-start;
+    gap: 7px;
+    width: 76px;
+    padding: 0;
+}
+
+.game-menu-btn__tile {
+    width: 52px;
+    height: 52px;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
     justify-content: center;
-    gap: 4px;
+    color: #ffffff;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.14);
+    transition: transform var(--transition-base) ease, box-shadow var(--transition-base) ease;
+}
+
+.game-menu-btn__tile svg {
+    width: 26px;
+    height: 26px;
+}
+
+.game-menu-btn:hover .game-menu-btn__tile {
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.18);
+}
+
+.game-menu-btn:active .game-menu-btn__tile {
+    transform: scale(0.93);
+}
+
+.game-menu .content .game-menu-btn:nth-child(1) .game-menu-btn__tile { background: var(--fun-grad-orange); }
+.game-menu .content .game-menu-btn:nth-child(2) .game-menu-btn__tile { background: var(--fun-grad-purple); }
+.game-menu .content .game-menu-btn:nth-child(3) .game-menu-btn__tile { background: var(--fun-grad-teal); }
+.game-menu .content .game-menu-btn:nth-child(4) .game-menu-btn__tile { background: var(--fun-grad-pink); }
+.game-menu .content .game-menu-btn:nth-child(5) .game-menu-btn__tile { background: var(--fun-grad-primary); }
+.game-menu .content .game-menu-btn:nth-child(6) .game-menu-btn__tile { background: var(--fun-grad-indigo); }
+.game-menu .content .game-menu-btn:nth-child(7) .game-menu-btn__tile { background: var(--fun-grad-yellow); }
+
+.game-menu-text {
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    color: var(--fun-text);
+    text-align: center;
+    line-height: 1.3;
+}
+
+.bag-icon,
+.skill-icon,
+.mission-icon,
+.realm-icon,
+.place-icon,
+.social-icon,
+.cup-icon {
+    width: 24px;
+    height: 24px;
+    background-color: #ffffff;
 }
 
 .bag-icon {
-    width: 24px;
-	height: 24px;
-	background-color: var(--primary-icon-color);
-	-webkit-mask: url("../../img/icon/ph_handbag-fill.svg") no-repeat center;
-	mask: url("../../img/icon/ph_handbag-fill.svg") no-repeat center;
+    -webkit-mask: url("../../img/icon/ph_handbag-fill.svg") no-repeat center;
+    mask: url("../../img/icon/ph_handbag-fill.svg") no-repeat center;
 }
 
 .skill-icon {
-    width: 24px;
-	height: 24px;
-	background-color: var(--primary-icon-color);
-	-webkit-mask: url("../../img/icon/tdesign_share.svg") no-repeat center;
-	mask: url("../../img/icon/tdesign_share.svg") no-repeat center;
+    -webkit-mask: url("../../img/icon/tdesign_share.svg") no-repeat center;
+    mask: url("../../img/icon/tdesign_share.svg") no-repeat center;
 }
 
 .mission-icon {
-    width: 24px;
-	height: 24px;
-	background-color: var(--primary-icon-color);
-	-webkit-mask: url("../../img/icon/streamline-ultimate_flag-bold.svg") no-repeat center;
-	mask: url("../../img/icon/streamline-ultimate_flag-bold.svg") no-repeat center;
+    -webkit-mask: url("../../img/icon/streamline-ultimate_flag-bold.svg") no-repeat center;
+    mask: url("../../img/icon/streamline-ultimate_flag-bold.svg") no-repeat center;
 }
 
 .realm-icon {
-    width: 24px;
-	height: 24px;
-	background-color: var(--primary-icon-color);
-	-webkit-mask: url("../../img/icon/pagoda-realm.svg") no-repeat center;
-	mask: url("../../img/icon/pagoda-realm.svg") no-repeat center;
+    -webkit-mask: url("../../img/icon/pagoda-realm.svg") no-repeat center;
+    mask: url("../../img/icon/pagoda-realm.svg") no-repeat center;
 }
 
 .place-icon {
-    width: 24px;
-	height: 24px;
-	background-color: var(--primary-icon-color);
-	-webkit-mask: url("../../img/icon/ic_baseline-place-phone.svg") no-repeat center;
-	mask: url("../../img/icon/ic_baseline-place-phone.svg") no-repeat center;
+    -webkit-mask: url("../../img/icon/ic_baseline-place-phone.svg") no-repeat center;
+    mask: url("../../img/icon/ic_baseline-place-phone.svg") no-repeat center;
 }
 
 .social-icon {
-    width: 24px;
-	height: 24px;
-	background-color: var(--primary-icon-color);
-	-webkit-mask: url("../../img/icon/ion_people-sharp.svg") no-repeat center;
-	mask: url("../../img/icon/ion_people-sharp.svg") no-repeat center;
+    -webkit-mask: url("../../img/icon/ion_people-sharp.svg") no-repeat center;
+    mask: url("../../img/icon/ion_people-sharp.svg") no-repeat center;
 }
 
 .cup-icon {
-    width: 24px;
-	height: 24px;
-	background-color: var(--primary-icon-color);
-	-webkit-mask: url("../../img/icon/solar_cup-star-bold.svg") no-repeat center;
-	mask: url("../../img/icon/solar_cup-star-bold.svg") no-repeat center;
-}
-
-.game-menu-text {
-    font-size: var(--font-size-4xl);
-    font-weight: var(--font-weight-bold);
-    color: var(--base-text-color-light);
-}
+    -webkit-mask: url("../../img/icon/solar_cup-star-bold.svg") no-repeat center;
+    mask: url("../../img/icon/solar_cup-star-bold.svg") no-repeat center;
+} */
 
 .footer-right-panel {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    gap: 8px;
+    gap: 10px;
 }

@@ -1,14 +1,15 @@
 /* @import url('https://fonts.googleapis.com/css2?family=Oxanium:wght@200..800&display=swap'); */
 @import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=Be+Vietnam+Pro:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Kaushan+Script&family=Michroma&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Mountains+of+Christmas:wght@400;700&family=Mulish:ital,wght@0,200..1000;1,200..1000&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
 *,
 *::before,
 *::after {
-	box-sizing: border-box;
-	margin: 0;
-	padding: 0;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
-:root{
+:root {
     --Oswald: 'Oxanium', sans-serif;
     --beVietnamPro: 'Be Vietnam Pro', sans-serif;
     --Noto-Sans: 'Noto Sans', sans-serif;
@@ -26,11 +27,13 @@
     --surface-border-color-strong: rgba(255, 255, 255, 0.2);
 
     /*Primary (panel xanh navy phát sáng - header, footer, nav, mission)*/
-    --primary-background-gradient: /*linear-gradient(180deg, rgba(12, 25, 70, 0.95), rgba(4, 12, 40, 0.95))*/ #4b5f64dc; 
+    --primary-background-gradient:
+        /*linear-gradient(180deg, rgba(12, 25, 70, 0.95), rgba(4, 12, 40, 0.95))*/
+        #4b5f64dc;
     /* --primary-shadow-glow-sm: 0 0 18px rgba(94, 125, 255, 0.7), 0 0 45px rgba(119, 66, 255, 0.4), inset 0 0 15px rgba(120, 180, 255, 0.15);
     --primary-shadow-glow-lg: 0 0 25px rgba(94, 125, 255, 0.7), 0 0 60px rgba(119, 66, 255, 0.4), inset 0 0 20px rgba(120, 180, 255, 0.15); */
     --primary-shadow-glow-sm: inset 0px 0px 2px 2px #D5BC9D;
-    
+
     --primary-accent-color: #4f8ef7;
     --primary-icon-color: #D5BC9D;
     --primary-icon-color-light: #D5BC9D;
@@ -109,40 +112,83 @@
     --radius-pill: 99px;
 
     /* battle */
-    --battle-accent: 220,38,38;
+    --battle-accent: 220, 38, 38;
     --battle-bg:
-        radial-gradient(
-            ellipse 130% 40% at 50% -5%,
-            rgba(var(--battle-accent),.28),
-            transparent
-        ),
-        rgba(5,5,13,.97);
+        radial-gradient(ellipse 130% 40% at 50% -5%,
+            rgba(var(--battle-accent), .28),
+            transparent),
+        rgba(5, 5, 13, .97);
     --battle-card-bg:
-        linear-gradient(
-            155deg,
-            rgba(var(--battle-accent),.08),
-            rgba(5,3,8,.96) 55%
-        );
-    --battle-card-player-bg:rgba(7,7,17,.93);
-    --battle-panel:rgba(255,255,255,.05);
-    --battle-panel-soft:rgba(255,255,255,.04);
-    --battle-border:rgba(255,255,255,.08);
-    --battle-border-strong:rgba(255,255,255,.16);
-    --battle-shadow: 0 8px 40px rgba(0,0,0,.55);
-    --battle-shadow-player: 0 8px 32px rgba(0,0,0,.4);
-    --battle-accent-shadow: 0 0 18px rgba(var(--battle-accent),.3);
-    --battle-success:#4ade80;
-    --battle-danger:#f87171;
-    --battle-warning:#fbbf24;
-    --battle-text:rgba(255,255,255,.88);
-    --battle-text-light:rgba(255,255,255,.68);
-    --battle-text-muted:rgba(255,255,255,.36);
+        linear-gradient(155deg,
+            rgba(var(--battle-accent), .08),
+            rgba(5, 3, 8, .96) 55%);
+    --battle-card-player-bg: rgba(7, 7, 17, .93);
+    --battle-panel: rgba(255, 255, 255, .05);
+    --battle-panel-soft: rgba(255, 255, 255, .04);
+    --battle-border: rgba(255, 255, 255, .08);
+    --battle-border-strong: rgba(255, 255, 255, .16);
+    --battle-shadow: 0 8px 40px rgba(0, 0, 0, .55);
+    --battle-shadow-player: 0 8px 32px rgba(0, 0, 0, .4);
+    --battle-accent-shadow: 0 0 18px rgba(var(--battle-accent), .3);
+    --battle-success: #4ade80;
+    --battle-danger: #f87171;
+    --battle-warning: #fbbf24;
+    --battle-text: rgba(255, 255, 255, .88);
+    --battle-text-light: rgba(255, 255, 255, .68);
+    --battle-text-muted: rgba(255, 255, 255, .36);
+
+    /* ===================================================================
+       FUN PALETTE — bảng màu tươi sáng, đồng bộ với dashboard iPad.
+       Mọi component "xung quanh" (header, footer, nhiệm vụ, điện thoại,
+       kho đồ, thông báo, login) đều dùng nhóm biến này.
+       =================================================================== */
+    --fun-blue: #4f8ef7;
+    --fun-blue-dark: #2f6fe0;
+    --fun-blue-soft: #e6efff;
+    --fun-purple: #8b5cf6;
+    --fun-pink: #ff6fa5;
+    --fun-orange: #ffa53d;
+    --fun-teal: #2dd4bf;
+    --fun-green: #4ade80;
+    --fun-cyan: #22d3ee;
+    --fun-yellow: #ffd93d;
+    --fun-red: #ff5252;
+
+    --fun-text: #2b2f45;
+    --fun-text-soft: #6b7280;
+    --fun-text-faint: #9aa3b5;
+
+    --fun-card: #ffffff;
+    --fun-card-alt: #f5f8ff;
+    --fun-page: #eef4ff;
+    --fun-line: #eef1f8;
+    --fun-track: #e7ecf7;
+
+    --fun-shadow-sm: 0 6px 14px rgba(79, 142, 247, 0.15);
+    --fun-shadow: 0 10px 24px rgba(79, 142, 247, 0.16);
+    --fun-shadow-lg: 0 18px 38px rgba(20, 40, 90, 0.22);
+
+    --fun-grad-primary: linear-gradient(135deg, #6ec3ff, #4f8ef7);
+    --fun-grad-purple: linear-gradient(135deg, #b794f6, #8b5cf6);
+    --fun-grad-pink: linear-gradient(135deg, #ff8fc0, #ff4d94);
+    --fun-grad-orange: linear-gradient(135deg, #ffb347, #ff8a00);
+    --fun-grad-teal: linear-gradient(135deg, #5eead4, #14b8a6);
+    --fun-grad-green: linear-gradient(135deg, #86efac, #4ade80);
+    --fun-grad-yellow: linear-gradient(135deg, #ffd93d, #ffb000);
+    --fun-grad-red: linear-gradient(135deg, #ff8a80, #ff5252);
+    --fun-grad-indigo: linear-gradient(135deg, #a5b4fc, #6366f1);
+    --fun-grad-cta: linear-gradient(135deg, #4f8ef7, #8b5cf6);
+
+    --fun-radius: 22px;
+    --fun-radius-tile: 16px;
 }
-body{
+
+body {
     font-family: var(--beVietnamPro);
     position: relative;
 }
-.primary{
+
+.primary {
     height: fit-content;
     width: fit-content;
     padding: 6px 20px !important;
@@ -169,4 +215,35 @@ body{
     backdrop-filter: blur(var(--overlay-blur-amount));
     -webkit-backdrop-filter: blur(var(--overlay-blur-amount));
     pointer-events: auto;
+}
+
+/* ===== Tiện ích dùng chung cho giao diện sáng ===== */
+.fun-card {
+    background: var(--fun-card);
+    border: 1px solid var(--fun-line);
+    border-radius: var(--fun-radius);
+    box-shadow: var(--fun-shadow);
+}
+
+.fun-tile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--fun-radius-tile);
+    color: #fff;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.14);
+    flex-shrink: 0;
+}
+
+.fun-scroll::-webkit-scrollbar {
+    width: 6px;
+}
+
+.fun-scroll::-webkit-scrollbar-thumb {
+    background: #d8e2f5;
+    border-radius: var(--radius-pill);
+}
+
+.fun-scroll::-webkit-scrollbar-track {
+    background: transparent;
 }

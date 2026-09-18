@@ -73,9 +73,35 @@ export const GameHeader = {
 						<span class="survival__text">Coin: <strong class="survival__value">${s.coin.toLocaleString()}</strong></span>
 					</div>
 				</div>
-				<button class="notification-btn"><div class="g-icon noti-icon"></div></button>
+				<button class="notification-btn">
+					<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24">
+						<defs>
+							<mask id="notification-mask">
+								<path d="M10.268 21a2 2 0 0 0 3.464 0" fill="white" />
+
+								<path
+									d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"
+									fill="white" />
+							</mask>
+						</defs>
+
+						<rect x="0" y="0" width="24" height="24" fill="white" mask="url(#notification-mask)" />
+					</svg>
+				</button>
 				<button class="phone-trigger-btn" id="phone-trigger-btn" aria-label="Mở điện thoại">
-					<div class="g-icon phone-icon"></div>
+					<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24">
+						<defs>
+							<mask id="phone-mask">
+
+								<rect x="5" y="2" width="14" height="24" rx="2" fill="white" />
+
+								<circle cx="12" cy="18" r="2" fill="black" />
+							</mask>
+						</defs>
+
+						<rect x="5" y="2" width="14" height="20" rx="2" fill="white" mask="url(#phone-mask)" />
+					</svg>
+
 				</button>
 			</div>
 		`;

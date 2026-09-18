@@ -1,3 +1,5 @@
+/* component/phoneModal/phonemodal.css — điện thoại trong game, nền sáng */
+
 #phone-modal-overlay {
     position: fixed;
     inset: 0;
@@ -5,7 +7,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(0, 0, 0, 0);
+    background: rgba(20, 40, 90, 0);
     backdrop-filter: blur(0px);
     pointer-events: none;
     transition:
@@ -14,29 +16,27 @@
 }
 
 #phone-modal-overlay.phone-modal-overlay--visible {
-    background: var(--overlay-background-color);
-    backdrop-filter: blur(4px);
+    background: rgba(20, 40, 90, 0.35);
+    backdrop-filter: blur(6px);
     pointer-events: auto;
 }
 
 .phone-modal {
-    width: 300px;
-    /* width: 20%;
-    height: calc(100vh - 80px); */
-    min-height: 480px;
-    border-radius: var(--radius-12);
-    padding: 10px 0 0;
+    width: 310px;
+    min-height: 500px;
+    border-radius: 34px;
+    padding: 12px 0 0;
     align-items: center;
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 20px;
     position: relative;
     overflow: hidden;
 
-    background: var(--primary-background-gradient);
-    border: 5px solid var(--overlay-background-color-strong);
+    background: linear-gradient(170deg, #ffffff 0%, #eef4ff 55%, #e3ebfb 100%);
+    border: 6px solid #ffffff;
 
-    box-shadow: var(--primary-shadow-glow-sm);
+    box-shadow: var(--fun-shadow-lg);
 
     transform: scale(0.85) translateY(20px);
     opacity: 0;
@@ -54,7 +54,7 @@
     width: 80px;
     height: 6px;
     border-radius: var(--radius-pill);
-    background: var(--surface-background-color-strong);
+    background: #d9e2f3;
     align-self: center;
     margin-bottom: 4px;
 }
@@ -62,26 +62,25 @@
 .phone-modal__header {
     width: 10px;
     height: 10px;
-    background-color: var(--overlay-background-color-strong);
+    background-color: #c9d5ec;
     display: flex;
     justify-content: space-between;
     align-items: center;
     border-radius: var(--radius-pill);
 }
 
+/* thẻ thông tin người chơi */
 .phone-modal__stCard {
     width: 90%;
-
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    background: linear-gradient(135deg,
-            rgba(180, 40, 40, 0.85),
-            rgba(100, 20, 20, 0.9));
-    border-radius: var(--radius-lg);
-    padding: 12px 14px;
-    border: 1px solid rgba(255, 100, 100, 0.2);
+    background: linear-gradient(120deg, #7ec8ff 0%, #a78bfa 55%, #ff9ecb 100%);
+    border-radius: var(--fun-radius);
+    padding: 14px;
+    border: none;
+    box-shadow: 0 12px 24px rgba(124, 156, 255, 0.35);
 }
 
 .phone-modal__player {
@@ -93,9 +92,9 @@
 .phone-modal__avatar {
     width: 100%;
     height: 160px;
-    border-radius: var(--radius-8);
-    background: var(--surface-background-color-strong);
-    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--fun-radius-tile);
+    background: rgba(255, 255, 255, 0.35);
+    border: 2px solid rgba(255, 255, 255, 0.7);
     flex-shrink: 0;
 }
 
@@ -107,51 +106,55 @@
 
 .phone-modal__name {
     font-size: var(--font-size-lg);
-    font-weight: var(--font-weight-bold);
-    color: var(--base-text-color-light);
+    font-weight: var(--font-weight-extra_bold);
+    color: #ffffff;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .phone-modal__level {
     font-size: var(--font-size-sm);
-    color: rgba(255, 255, 255, 0.6);
+    font-weight: var(--font-weight-semibold);
+    color: rgba(255, 255, 255, 0.9);
 }
 
 .phone-modal__xp-track {
     width: 90px;
-    height: 3px;
-    background: var(--surface-background-color-strong);
+    height: 5px;
+    background: rgba(255, 255, 255, 0.45);
     border-radius: var(--radius-pill);
     overflow: hidden;
-    margin-top: 2px;
+    margin-top: 3px;
 }
 
 .phone-modal__xp-fill {
     height: 100%;
-    background: linear-gradient(90deg, #ffd93d, #ff9800);
+    background: linear-gradient(90deg, #ffd93d, #ffb000);
     border-radius: var(--radius-pill);
 }
 
 .phone-modal__xp-text {
     font-size: var(--font-size-xs);
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(255, 255, 255, 0.85);
 }
 
 .phone-modal__rank {
     font-size: var(--font-size-md);
     font-weight: var(--font-weight-bold);
-    color: var(--accent-text-color);
-    border: 1px solid rgba(255, 200, 0, 0.25);
-    border-radius: var(--radius-8);
-    padding: 4px 10px;
+    color: #8a6206;
+    background: #fff3cf;
+    border: none;
+    border-radius: var(--radius-pill);
+    padding: 5px 12px;
     white-space: nowrap;
     align-self: flex-start;
 }
 
+/* lưới ứng dụng */
 .phone-modal__app-grid {
     width: 90%;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 12px 8px;
+    gap: 14px 8px;
 }
 
 .phone-app-item {
@@ -175,43 +178,52 @@
 }
 
 .phone-app-item__icon {
-    width: 48px;
-    height: 48px;
-    border-radius: var(--radius-14);
+    width: 50px;
+    height: 50px;
+    border-radius: var(--fun-radius-tile);
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg,
-            rgba(60, 90, 200, 0.6),
-            rgba(30, 50, 130, 0.8));
-    border: 1px solid rgba(120, 160, 255, 0.2);
-    box-shadow: 0 0 10px rgba(80, 120, 255, 0.2);
+    background: var(--fun-grad-primary);
+    border: none;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.14);
 }
+
+/* mỗi app một màu cho vui mắt */
+.phone-modal__app-grid .phone-app-item:nth-child(6n + 1) .phone-app-item__icon { background: var(--fun-grad-orange); }
+.phone-modal__app-grid .phone-app-item:nth-child(6n + 2) .phone-app-item__icon { background: var(--fun-grad-pink); }
+.phone-modal__app-grid .phone-app-item:nth-child(6n + 3) .phone-app-item__icon { background: var(--fun-grad-primary); }
+.phone-modal__app-grid .phone-app-item:nth-child(6n + 4) .phone-app-item__icon { background: var(--fun-grad-purple); }
+.phone-modal__app-grid .phone-app-item:nth-child(6n + 5) .phone-app-item__icon { background: var(--fun-grad-teal); }
+.phone-modal__app-grid .phone-app-item:nth-child(6n + 6) .phone-app-item__icon { background: var(--fun-grad-indigo); }
 
 .phone-app-item__icon img {
     width: 24px;
     height: 24px;
     object-fit: contain;
-    filter: brightness(0) invert(1) opacity(0.85);
+    filter: brightness(0) invert(1);
 }
 
 .phone-app-item__label {
     font-size: var(--font-size-xs);
-    color: rgba(200, 220, 255, 0.8);
+    font-weight: var(--font-weight-semibold);
+    color: var(--fun-text);
     text-align: center;
     white-space: nowrap;
 }
 
-
+/* thanh điều hướng dưới */
 #phone-modal .navigation {
     width: 100%;
-    background: var(--surface-background-color-soft);
-    border: 1px solid rgba(120, 160, 255, 0.15);
+    background: #ffffff;
+    border: none;
+    border-top: 1px solid var(--fun-line);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-radius: var(--radius-12);
+    border-radius: 24px 24px 0 0;
     padding: 12px 16px;
+    box-shadow: 0 -6px 16px rgba(20, 40, 90, 0.06);
 }
 
 .game-menu-btn-phone {
@@ -222,54 +234,63 @@
     gap: 4px;
 }
 
-.home-icon {
+.home-icon,
+.mission-phone-icon,
+.explore-icon,
+.social-phone-icon,
+.my-icon {
     width: 24px;
     height: 24px;
-    background-color: var(--base-text-color);
+    background-color: var(--fun-text-faint);
+}
+
+.home-icon {
     -webkit-mask: url("../../img/icon/mdi_home.svg") no-repeat center;
     mask: url("../../img/icon/mdi_home.svg") no-repeat center;
 }
 
 .mission-phone-icon {
-    width: 24px;
-    height: 24px;
-    background-color: var(--base-text-color);
     -webkit-mask: url("../../img/icon/ri_target-fill.svg") no-repeat center;
     mask: url("../../img/icon/ri_target-fill.svg") no-repeat center;
 }
 
 .explore-icon {
-    width: 24px;
-    height: 24px;
-    background-color: var(--base-text-color);
     -webkit-mask: url("../../img/icon/ic_baseline-place-phone.svg") no-repeat center;
     mask: url("../../img/icon/ic_baseline-place-phone.svg") no-repeat center;
 }
 
 .social-phone-icon {
-    width: 24px;
-    height: 24px;
-    background-color: var(--base-text-color);
     -webkit-mask: url("../../img/icon/ion_people-sharp-phone.svg") no-repeat center;
     mask: url("../../img/icon/ion_people-sharp-phone.svg") no-repeat center;
 }
 
 .my-icon {
-    width: 24px;
-    height: 24px;
-    background-color: var(--base-text-color);
     -webkit-mask: url("../../img/icon/material-symbols_person-phone.svg") no-repeat center;
     mask: url("../../img/icon/material-symbols_person-phone.svg") no-repeat center;
 }
 
 .game-menu-text-phone {
     font-size: var(--font-size-xs);
-    font-weight: var(--font-weight-medium);
-    color: var(--base-text-color);
+    font-weight: var(--font-weight-semibold);
+    color: var(--fun-text-faint);
 }
 
+/* mục đang chọn */
 .phone-active {
-    color: var(--primary-icon-color-light);
+    color: var(--fun-blue);
+}
+
+.phone-active .home-icon,
+.phone-active .mission-phone-icon,
+.phone-active .explore-icon,
+.phone-active .social-phone-icon,
+.phone-active .my-icon,
+.phone-active.home-icon,
+.phone-active.mission-phone-icon,
+.phone-active.explore-icon,
+.phone-active.social-phone-icon,
+.phone-active.my-icon {
+    background-color: var(--fun-blue);
 }
 
 .phone-modal__app-view {
@@ -277,7 +298,7 @@
     inset: 0;
     z-index: 5;
     display: none;
-    background: linear-gradient(160deg, rgba(18, 30, 80, 0.99), rgba(8, 14, 45, 0.99));
+    background: linear-gradient(170deg, #ffffff, #eef4ff);
 }
 
 .phone-modal__app-view.phone-modal__app-view--active {
