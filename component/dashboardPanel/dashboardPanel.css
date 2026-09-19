@@ -20,19 +20,46 @@
     position: absolute;
     top: 200px;
     left: 50%;
-    transform: translateX(-50%);
     width: min(1194px, 92vw);
     height: 720px;
     z-index: 6;
     font-family: var(--beVietnamPro, 'Be Vietnam Pro', sans-serif);
     color: var(--db-text);
     pointer-events: none;
+
+    /* Mặc định: đóng. Nút danh sách trên header bật/tắt .dboard-root--open */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(-50%) translateY(-26px) scale(0.92);
+    transform-origin: 90% top;
+    transition:
+        opacity var(--transition-medium, 0.3s) ease,
+        transform var(--transition-slow, 0.35s) cubic-bezier(0.22, 1, 0.36, 1),
+        visibility var(--transition-slow, 0.35s) ease;
+}
+
+.dboard-root.dboard-root--open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0) scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .dboard-root {
+        transition: opacity 0.12s linear, visibility 0.12s linear;
+        transform: translateX(-50%);
+    }
+
+    .dboard-root.dboard-root--open {
+        transform: translateX(-50%);
+    }
 }
 
 .dboard-root * {
     pointer-events: auto;
     box-sizing: border-box;
 }
+
 
 /* ===== Khung iPad bọc ngoài ===== */
 .dboard-device {

@@ -80,3 +80,195 @@ body {
     background-color: #ede1e5;
     border-top-right-radius: 20px;
 }
+
+.header__left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-shrink: 0;
+}
+
+/* ===== Thẻ người chơi ===== */
+.header__player-card {
+    position: relative;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    width: fit-content;
+    min-width: 330px;
+    padding: 10px 28px 10px 44px;
+    /* chừa chỗ cho avatar lồi ra ngoài mép trái */
+    margin-left: 42px;
+    border-radius: 26px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(240, 248, 255, 0.86));
+    border: 2px solid var(--hd-card-edge);
+    box-shadow:
+        0 10px 26px rgba(24, 52, 110, 0.22),
+        inset 0 1px 0 rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    transition: transform var(--transition-base) ease, box-shadow var(--transition-base) ease;
+}
+
+.header__player-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 32px rgba(24, 52, 110, 0.28);
+}
+
+.header__avatar {
+    position: absolute;
+    left: -70px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 110px;
+    height: 110px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    border: 3px solid #ffffff;
+    background: var(--fun-grad-cta);
+    color: #ffffff;
+    font-weight: var(--font-weight-extra_bold);
+    font-size: 24px;
+    text-transform: uppercase;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(24, 52, 110, 0.3);
+}
+
+/* vòng xanh ngọc mảnh bên trong viền trắng */
+.header__avatar::after {
+    content: "";
+    position: absolute;
+    inset: 3px;
+    border-radius: 50%;
+    border: 3px solid var(--hd-ring);
+    pointer-events: none;
+}
+
+.header__avatar img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.header__player-card--guest .header__avatar img {
+    width: 42px;
+    height: 42px;
+    object-fit: contain;
+}
+
+.header__info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 3px;
+    flex: 1;
+}
+
+.header__name-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.header__name {
+    font-size: 22px;
+    line-height: 1.1;
+    font-weight: var(--font-weight-extra_bold);
+    color: var(--hd-ink);
+}
+
+.header__edit-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: #6f7f9b;
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    transition: color var(--transition-base) ease, background var(--transition-base) ease;
+}
+
+.header__edit-btn svg {
+    width: 15px;
+    height: 15px;
+}
+
+.header__edit-btn:hover {
+    color: var(--fun-blue-dark);
+    background: rgba(79, 142, 247, 0.12);
+}
+
+/* hàng huy hiệu nhỏ dưới tên */
+.header__chips {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.header__chip {
+    font-size: var(--font-size-sm);
+    line-height: 1;
+    font-weight: var(--font-weight-semibold);
+    padding: 4px 9px;
+    border-radius: var(--radius-pill);
+    color: var(--hd-ink-soft);
+    background: rgba(125, 150, 190, 0.14);
+    white-space: nowrap;
+}
+
+.header__chip--tier {
+    color: var(--fun-blue-dark);
+    background: rgba(79, 142, 247, 0.16);
+}
+
+/* hàng Lv + thanh XP */
+.header__level-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    margin-top: 2px;
+}
+
+.header__level {
+    font-size: 17px;
+    font-weight: var(--font-weight-extra_bold);
+    color: var(--hd-ink);
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+}
+
+.header__xp-track {
+    position: relative;
+    flex: 1;
+    min-width: 96px;
+    height: 10px;
+    border-radius: var(--radius-pill);
+    background: var(--hd-xp-track);
+    overflow: hidden;
+    box-shadow: inset 0 1px 2px rgba(24, 52, 110, 0.14);
+}
+
+.header__xp-fill {
+    height: 100%;
+    border-radius: var(--radius-pill);
+    background: var(--hd-xp-fill);
+    transition: width var(--transition-slow) ease;
+}
+
+.header__xp-text {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--hd-ink-soft);
+    white-space: nowrap;
+}

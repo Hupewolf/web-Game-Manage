@@ -20,11 +20,12 @@ window.addEventListener("resize", resizeGame);
 
 resizeGame();
 
-// Không có hamburger
-GameHeader.render(playerState, { showHamburger: false });
-
-// Bảng quản lý (component mới) — nằm giữa trang home
+// Bảng quản lý iPad — render sẵn nhưng ở trạng thái ĐÓNG.
+// Bấm nút danh sách trên header (trước đây là nút mở điện thoại) để bật/tắt.
 DashboardPanel.render('dashboard-panel-slot', playerState);
+
+// Header — render sau để đồng bộ được trạng thái nút bảng iPad
+GameHeader.render(playerState);
 
 const box = document.getElementById("mission-box");
 const openBtn = document.getElementById("mission-icon");

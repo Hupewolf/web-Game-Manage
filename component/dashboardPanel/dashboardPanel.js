@@ -50,6 +50,9 @@ function renderFeatureIcon(f) {
 
 export const DashboardPanel = {
     _state: null,
+    _open: false,        // mặc định bảng iPad đóng, mở bằng nút trên header
+    _escBound: false,
+    _outsideBound: false,
 
     render(containerId, state = {}) {
         const el = document.getElementById(containerId) || (() => {
@@ -70,7 +73,8 @@ export const DashboardPanel = {
         const missionsDone = 1; // demo: nhiệm vụ đã hoàn thành hôm nay
         const missionsTotal = 3;
 
-        el.className = 'dboard-root';
+        el.className = 'dboard-root' + (this._open ? ' dboard-root--open' : '');
+        el.setAttribute('aria-hidden', String(!this._open));
         el.innerHTML = `
             <div class="dboard-device">
                 <div class="dboard-device__cam"></div>
@@ -224,6 +228,25 @@ export const DashboardPanel = {
     },
 
     _bindEvents(root) {
+        if (!this._escBound) {
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && this._open) this.hide();
+            });
+            this._escBound = true;
+        }
+
+        // Click ra ngoài khung iPad thì tự đóng.
+        // Nút trên header đã stopPropagation nên không bị đóng-mở chồng nhau.
+        if (!this._outsideBound) {
+            document.addEventListener('click', (e) => {
+                if (!this._open) return;
+                if (e.target.closest?.('.dboard-root')) return;
+                if (e.target.closest?.('#dashboard-trigger-btn')) return;
+                this.hide();
+            });
+            this._outsideBound = true;
+        }
+
         root.querySelectorAll('.dboard-feature').forEach(btn => {
             btn.addEventListener('click', () => {
                 console.log('Mở tính năng:', btn.dataset.feature);
@@ -234,5 +257,44 @@ export const DashboardPanel = {
                 console.log('Hành động bảng quản lý:', btn.dataset.action);
             });
         });
+    },
+
+    /* ===== Đóng / mở bảng iPad (nút trên header gọi vào đây) ===== */
+
+    _root() {
+        return document.querySelector('.dboard-root');
+    },
+
+    isOpen() {
+        return this._open;
+    },
+
+    show() {
+        const el = this._root();
+        if (!el) return;
+        this._open = true;
+        el.classList.add('dboard-root--open');
+        el.setAttribute('aria-hidden', 'false');
+        this._emit();
+    },
+
+    hide() {
+        const el = this._root();
+        if (!el) return;
+        this._open = false;
+        el.classList.remove('dboard-root--open');
+        el.setAttribute('aria-hidden', 'true');
+        this._emit();
+    },
+
+    toggle() {
+        this._open ? this.hide() : this.show();
+    },
+
+    // Báo cho header biết để đổi trạng thái nút (khi đóng bằng X hoặc Esc)
+    _emit() {
+        document.dispatchEvent(new CustomEvent('dashboard:change', {
+            detail: { open: this._open },
+        }));
     },
 };
