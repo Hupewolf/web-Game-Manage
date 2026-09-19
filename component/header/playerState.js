@@ -15,7 +15,7 @@ export const playerState = userData ? {
         energy: { current: 96, max: 120, icon: '../../img/icon/flash.png' },
     },
     profile: {
-        tier: userData.tier || 'Trúc cơ tầng 1',
+        tier: userData.tier || 'Tân thủ',
         id: userData.id ?? '000000',
     },
     survival: {

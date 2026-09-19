@@ -107,16 +107,29 @@ export const NotificationPanel = {
     markAllRead() {
         this._notifications.forEach(n => n.unread = false);
         this._renderList();
+        this._emitChange();
     },
 
     // Demo: gọi NotificationPanel.addNotification({...}) khi có đơn ăn về / quái xuất hiện
     addNotification({ icon = '🔔', title, message, time = 'Vừa xong' }) {
         this._notifications.unshift({ id: Date.now(), icon, title, message, time, unread: true });
         this._renderList();
+        this._emitChange();
     },
 
     hasUnread() {
         return this._notifications.some(n => n.unread);
+    },
+
+    // Số thông báo chưa đọc — header dùng để hiện huy hiệu đỏ
+    unreadCount() {
+        return this._notifications.filter(n => n.unread).length;
+    },
+
+    _emitChange() {
+        document.dispatchEvent(new CustomEvent('notification:change', {
+            detail: { unread: this.unreadCount() },
+        }));
     },
 
     toggle(triggerEl) {

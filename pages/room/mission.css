@@ -1,6 +1,10 @@
+/* pages/room/mission.css
+   Bảng "Nhiệm vụ hôm nay": đổi từ panel navy phát sáng sang thẻ trắng
+   bo tròn, icon tròn gradient nhiều màu — cùng tông với dashboard iPad. */
+
 .outer-box {
     position: relative;
-    width: 255px;
+    width: 280px;
 }
 
 .outer-box.minimized #mission-icon {
@@ -11,14 +15,24 @@
 
 .mission-icon-btn {
     cursor: pointer;
-    width: 48px;
-    height: 48px;
-    border-radius: var(--radius-pill);
+    width: 54px;
+    height: 54px;
+    border-radius: var(--fun-radius-tile);
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--primary-background-gradient);
-    box-shadow: var(--primary-shadow-glow-sm);
+    background: var(--fun-grad-teal);
+    box-shadow: 0 8px 18px rgba(20, 184, 166, 0.35);
+    transition: transform var(--transition-base) ease;
+}
+
+.mission-icon-btn:hover {
+    transform: translateY(-3px) scale(1.04);
+}
+
+.mission-icon-btn .calender-icon {
+    background-color: #ffffff;
+    opacity: 1;
 }
 
 #mission-icon {
@@ -31,14 +45,14 @@
     z-index: 1000;
 }
 
-
 .box {
-    width: 255px;
-    max-height: 300px;
-    padding: 15px 14px;
-    border-radius: var(--radius-lg);
-    background: var(--primary-background-gradient);
-    box-shadow: var(--primary-shadow-glow-sm);
+    width: 280px;
+    max-height: 340px;
+    padding: 16px;
+    border-radius: var(--fun-radius);
+    background: linear-gradient(165deg, #ffffff, #f6f9ff);
+    border: 1px solid var(--fun-line);
+    box-shadow: var(--fun-shadow-lg);
     overflow: hidden;
     position: relative;
     transform-origin: top right;
@@ -72,13 +86,7 @@
     opacity: 0;
 }
 
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-.box>* {
+.box > * {
     position: relative;
     z-index: 2;
 }
@@ -88,42 +96,51 @@
     align-items: center;
     justify-content: space-between;
     gap: 6px;
-    padding: 4px 3px;
+    padding: 2px 2px 8px;
+    border-bottom: 1px solid var(--fun-line);
 }
 
 .title {
-    font-weight: var(--font-weight-medium);
-    letter-spacing: 1px;
-    color: #dff4ff;
+    font-weight: var(--font-weight-extra_bold);
+    letter-spacing: 0.02em;
+    color: var(--fun-text);
     font-size: var(--font-size-xl);
-    text-shadow: var(--primary-shadow-glow-sm);
+    text-shadow: none;
 }
 
 .calender-icon {
-    width: 24px;
-	height: 24px;
-	background-color: var(--primary-icon-color-light);
-	-webkit-mask: url("../../img/icon/simple-line-icons_calender.svg") no-repeat center;
-	mask: url("../../img/icon/simple-line-icons_calender.svg") no-repeat center;
-    opacity: 0.9;
+    width: 22px;
+    height: 22px;
+    background-color: var(--fun-blue);
+    -webkit-mask: url("../../img/icon/simple-line-icons_calender.svg") no-repeat center;
+    mask: url("../../img/icon/simple-line-icons_calender.svg") no-repeat center;
+    opacity: 0.85;
 }
 
 .mission-list {
     display: flex;
     flex-direction: column;
-    gap: 9px;
-    margin-top: 9px;
+    gap: 8px;
+    margin-top: 10px;
 }
 
 .mission-card {
     display: flex;
     align-items: center;
-    gap: 9px;
-    padding: 8px 6px;
-    border-radius: var(--radius-8);
-    border-top: 2px solid rgba(255, 255, 255, 0.03);
+    gap: 10px;
+    padding: 9px 10px;
+    border-radius: var(--radius-14);
+    border: 1px solid var(--fun-line);
+    background: var(--fun-card);
+    transition: transform var(--transition-base) ease, box-shadow var(--transition-base) ease;
 }
 
+.mission-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--fun-shadow-sm);
+}
+
+/* ô icon tròn gradient — mỗi nhiệm vụ một màu */
 .icon {
     width: 40px;
     height: 40px;
@@ -133,176 +150,133 @@
     align-items: center;
     position: relative;
     border-radius: 50%;
-    background: rgba(10, 25, 80, .9);
-    box-shadow:
-        0 0 8px rgba(120, 180, 255, .8),
-        0 0 15px rgba(120, 180, 255, .5),
-        inset 0 0 10px rgba(120, 180, 255, .3);
+    background: var(--fun-grad-primary);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.12);
 }
 
-.mission-card:nth-child(1) .icon {
-    box-shadow:
-        0 4px 12px rgba(90, 220, 255, 0.06),
-        0 0 12px rgba(90, 220, 255, 0.12) inset;
+.mission-card:nth-child(1) .icon { background: var(--fun-grad-yellow); }
+.mission-card:nth-child(2) .icon { background: var(--fun-grad-pink); }
+.mission-card:nth-child(3) .icon { background: var(--fun-grad-teal); }
+
+.icon::before,
+.icon::after {
+    content: none;
 }
 
-.mission-card:nth-child(2) .icon {
-    box-shadow:
-        0 4px 12px rgba(150, 110, 255, 0.06),
-        0 0 12px rgba(150, 110, 255, 0.12) inset;
-}
-
-.mission-card:nth-child(3) .icon {
-    box-shadow:
-        0 4px 12px rgba(100, 220, 180, 0.06),
-        0 0 12px rgba(100, 220, 180, 0.12) inset;
+.gift-icon,
+.target-icon,
+.book-icon {
+    width: 22px;
+    height: 22px;
+    background-color: #ffffff;
 }
 
 .gift-icon {
-    width: 24px;
-	height: 24px;
-	background-color: var(--primary-icon-color);
-	-webkit-mask: url("../../img/icon/mdi_gift.svg") no-repeat center;
-	mask: url("../../img/icon/mdi_gift.svg") no-repeat center;
+    -webkit-mask: url("../../img/icon/mdi_gift.svg") no-repeat center;
+    mask: url("../../img/icon/mdi_gift.svg") no-repeat center;
 }
 
 .target-icon {
-    width: 24px;
-	height: 24px;
-	background-color: var(--primary-icon-color);
-	-webkit-mask: url("../../img/icon/ri_target-fill.svg") no-repeat center;
-	mask: url("../../img/icon/ri_target-fill.svg") no-repeat center;
+    -webkit-mask: url("../../img/icon/ri_target-fill.svg") no-repeat center;
+    mask: url("../../img/icon/ri_target-fill.svg") no-repeat center;
 }
 
 .book-icon {
-    width: 24px;
-	height: 24px;
-	background-color: var(--primary-icon-color);
-	-webkit-mask: url("../../img/icon/ix_book.svg") no-repeat center;
-	mask: url("../../img/icon/ix_book.svg") no-repeat center;
-}
-
-
-.icon::before {
-    content: "";
-    position: absolute;
-    inset: -2px;
-    border-radius: 50%;
-    background: conic-gradient(from 0deg,
-            var(--primary-border-glow-color),
-            transparent,
-            transparent,
-            var(--primary-border-glow-color));
-    animation: borderRotate 2s linear infinite;
-    z-index: -2;
-}
-
-.icon::after {
-    content: "";
-    position: absolute;
-    inset: 3px;
-    border-radius: 50%;
-    background: rgba(8, 18, 60, .95);
-    z-index: -1;
+    -webkit-mask: url("../../img/icon/ix_book.svg") no-repeat center;
+    mask: url("../../img/icon/ix_book.svg") no-repeat center;
 }
 
 @keyframes borderRotate {
-    from {
-        transform: rotate(0deg);
-    }
-
-    to {
-        transform: rotate(360deg);
-    }
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
 }
 
 .text {
     flex: 1 1 auto;
+    min-width: 0;
 }
 
 .info {
-    color: #dfefff;
-    font-size: var(--font-size-sm);
+    color: var(--fun-text);
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-semibold);
     margin-bottom: 4px;
 }
 
 .index {
     font-size: var(--font-size-xs);
-    color: #bfe8ff;
+    font-weight: var(--font-weight-semibold);
+    color: var(--fun-text-soft);
     display: flex;
     align-items: center;
     gap: 4px;
 }
 
 .index img {
-    width: 10px;
-    height: 10px;
+    width: 12px;
+    height: 12px;
 }
 
 .frequency {
-    min-width: 34px;
-    text-align: right;
-    color: #9fe6ff;
-    font-weight: var(--font-weight-semibold);
+    min-width: 36px;
+    text-align: center;
+    color: var(--fun-blue-dark);
+    background: var(--fun-blue-soft);
+    border-radius: var(--radius-pill);
+    padding: 3px 8px;
+    font-weight: var(--font-weight-bold);
     font-size: var(--font-size-sm);
 }
 
 .tick {
     display: flex;
     gap: 4px;
-    align-items: flex-end;
-    color: #00d30b;
+    align-items: center;
+    justify-content: center;
+    color: #1a9c4f;
+    background: #e3fbec;
 }
 
 .tick img {
-    width: 16px;
-    height: 16px;
+    width: 14px;
+    height: 14px;
 }
 
 .watch-all {
-    margin-top: 10px;
+    margin-top: 12px;
     align-self: stretch;
-    background: linear-gradient(
-        90deg,
-        rgba(255, 255, 255, 0.02),
-        rgba(255, 255, 255, 0.01)
-    );
-    color: #cfeeff;
-    padding: 8px 10px;
+    background: var(--fun-grad-cta);
+    color: #ffffff;
+    padding: 11px 10px;
     width: 100%;
-    border-radius: var(--radius-8);
-    border: 1px solid rgba(255, 255, 255, 0.04);
+    border-radius: var(--radius-pill);
+    border: none;
     font-weight: var(--font-weight-bold);
-    font-size: var(--font-size-md);
-    letter-spacing: 1px;
+    font-size: var(--font-size-base);
+    letter-spacing: 0.06em;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 6px;
     position: relative;
     cursor: pointer;
+    box-shadow: 0 8px 18px rgba(79, 142, 247, 0.32);
+    transition: transform var(--transition-base) ease, box-shadow var(--transition-base) ease;
 }
 
 .watch-all::before {
-    content: '';
-    position: absolute;
-    inset: -2px;
-    border-radius: var(--radius-md);
-    background: linear-gradient(90deg, #3ee7ff, #7a39ff);
-    filter: blur(6px);
-    opacity: 0.12;
-    z-index: -1;
+    content: none;
 }
 
 .watch-all:hover {
     transform: translateY(-2px);
+    box-shadow: 0 12px 22px rgba(79, 142, 247, 0.42);
 }
 
-
-
 @media (max-width: 400px) {
-    .box {
+    .box,
+    .outer-box {
         width: 100%;
-        padding: 12px;
     }
+    .box { padding: 12px; }
 }

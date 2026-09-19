@@ -1,90 +1,118 @@
+/* pages/login/login.css — màn đăng nhập tông sáng, cùng ngôn ngữ với dashboard */
+
 body {
     margin: 0;
     padding: 0;
-    font-family: Arial, sans-serif;
-    background-color: var(--dark-background-color);
+    font-family: var(--beVietnamPro);
+    background:
+        radial-gradient(circle at 15% 15%, rgba(126, 200, 255, 0.55), transparent 45%),
+        radial-gradient(circle at 85% 20%, rgba(255, 158, 203, 0.5), transparent 45%),
+        radial-gradient(circle at 50% 95%, rgba(167, 139, 250, 0.45), transparent 50%),
+        var(--fun-page);
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    color: var(--base-text-color-light);
+    color: var(--fun-text);
 }
 
 .login-container {
     width: 100%;
-    max-width: 400px;
+    max-width: 420px;
     padding: 20px;
 }
 
 .login-box {
-    background: var(--surface-background-color);
-    padding: 40px 30px;
-    border-radius: var(--radius-12);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(10px);
-    border: 1px solid var(--surface-border-color);
+    position: relative;
+    background: linear-gradient(170deg, #ffffff, #f7faff);
+    padding: 38px 32px 34px;
+    border-radius: 28px;
+    box-shadow: var(--fun-shadow-lg);
+    border: 1px solid var(--fun-line);
+}
+
+/* dải gradient vui mắt trên đầu thẻ */
+.login-box::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 32px;
+    right: 32px;
+    height: 6px;
+    border-radius: 0 0 var(--radius-pill) var(--radius-pill);
+    background: linear-gradient(90deg, #7ec8ff, #a78bfa 55%, #ff9ecb);
 }
 
 .login-box h2 {
     text-align: center;
     margin-top: 0;
-    margin-bottom: 25px;
-    color: var(--cyan-text-color);
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    text-shadow: var(--cyan-shadow-glow);
+    margin-bottom: 26px;
+    color: var(--fun-text);
+    font-size: 26px;
+    font-weight: var(--font-weight-extra_bold);
+    letter-spacing: 0.02em;
+    text-shadow: none;
+    text-transform: none;
 }
 
 .input-group {
-    margin-bottom: 20px;
+    margin-bottom: 18px;
 }
 
 .input-group label {
     display: block;
     margin-bottom: 8px;
     font-size: var(--font-size-xl);
-    color: #ccc;
+    font-weight: var(--font-weight-semibold);
+    color: var(--fun-text-soft);
 }
 
 .input-group input {
     width: 100%;
-    padding: 12px;
-    border: 1px solid var(--surface-border-color-strong);
-    border-radius: var(--radius-sm);
-    background: rgba(0, 0, 0, 0.2);
-    color: var(--base-text-color-light);
+    padding: 14px 16px;
+    border: 1px solid var(--fun-line);
+    border-radius: var(--radius-14);
+    background: var(--fun-card-alt);
+    color: var(--fun-text);
     outline: none;
     box-sizing: border-box;
     font-size: var(--font-size-2xl);
-    transition: border-color var(--transition-medium);
+    font-family: inherit;
+    transition: border-color var(--transition-medium), background var(--transition-medium), box-shadow var(--transition-medium);
 }
 
 .input-group input::placeholder {
-    color: rgba(255, 255, 255, 0.4);
+    color: var(--fun-text-faint);
 }
 
 .input-group input:focus {
-    border-color: var(--cyan-text-color);
-    background: rgba(0, 0, 0, 0.4);
+    border-color: var(--fun-blue);
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(79, 142, 247, 0.15);
 }
 
 .login-btn {
     width: 100%;
-    padding: 14px;
-    background-color: var(--cyan-text-color);
-    color: var(--dark-background-color);
+    padding: 15px;
+    background: var(--fun-grad-cta);
+    color: #ffffff;
     border: none;
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-pill);
     font-size: var(--font-size-3xl);
     font-weight: var(--font-weight-bold);
-    text-transform: uppercase;
+    font-family: inherit;
+    letter-spacing: 0.02em;
     cursor: pointer;
-    transition: all var(--transition-medium) ease;
-    margin-top: 15px;
-    box-shadow: var(--cyan-shadow-glow);
+    transition: transform var(--transition-base) ease, box-shadow var(--transition-medium) ease;
+    margin-top: 12px;
+    box-shadow: 0 10px 22px rgba(79, 142, 247, 0.35);
 }
 
 .login-btn:hover {
-    background-color: #00c2cc;
-    box-shadow: var(--cyan-shadow-glow-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 14px 28px rgba(79, 142, 247, 0.45);
+}
+
+.login-btn:active {
+    transform: scale(0.98);
 }

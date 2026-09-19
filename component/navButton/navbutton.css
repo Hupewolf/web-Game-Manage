@@ -1,66 +1,74 @@
+/* component/navButton/navbutton.css
+   Nút điều hướng: bỏ khung SVG tối, dùng viên thuốc gradient xanh-tím
+   giống nút "Bảng xếp hạng" trong dashboard. */
+
 .nav-btn {
     position: relative;
-    display: grid;
-    grid-template-columns: 32px 1fr 32px;
-    width: 280px;
-    height: 64px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-width: 220px;
+    height: 56px;
     border: none;
-    background: none;
-    padding: 0;
+    border-radius: var(--radius-pill);
+    background: var(--fun-grad-cta);
+    box-shadow: 0 10px 22px rgba(79, 142, 247, 0.38);
+    padding: 0 26px;
     cursor: pointer;
-    transition: transform .2s ease;
+    transition: transform var(--transition-base) ease, box-shadow var(--transition-base) ease;
 }
 
-.nav-btn .left {
-    background: url("../../img/background/left.svg")
-        no-repeat left center;
-    background-size:100% 100%;
-} 
-
-.nav-btn .center {
-    background: url("../../img/background/centerRepeat.svg")
-        repeat-x center;
-    background-size:auto 100%;
+/* 3 mảnh ảnh nền cũ */
+.nav-btn .left,
+.nav-btn .center,
+.nav-btn .right {
+    display: none;
 }
 
-.nav-btn .right{
-    background: url("../../img/background/right.svg")
-        no-repeat right center;
-    background-size:100% 100%;
-}
-
-.nav-btn .content{
-    position:absolute;
-    left:50%;
-    top:50%;
-    transform:translate(-50%,-50%);
-    width: 100%;
+.nav-btn .content {
+    position: static;
+    transform: none;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
-    color: var(--base-text-color);
+    color: #ffffff;
     font-size: var(--font-size-xl);
-    font-weight: var(--font-weight-semibold);
+    font-weight: var(--font-weight-bold);
     text-transform: uppercase;
-    z-index:2;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+    z-index: 2;
 }
 
 .nav-btn:hover {
-	transform: translateX(3px);
+    transform: translateY(-3px);
+    box-shadow: 0 14px 28px rgba(79, 142, 247, 0.48);
+}
+
+.nav-btn:active {
+    transform: scale(0.97);
 }
 
 .nav-btn__icon {
-	width: 42px;
-	height: 42px;
-	object-fit: contain;
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
 }
 
 .nav-btn__label {
-	padding-top: 5px;
+    padding-top: 1px;
+}
+
+/* .primary (ultis.css) ép padding nhỏ — trả lại kích thước viên thuốc */
+.nav-btn.primary {
+    padding: 0 26px !important;
+    height: 56px;
+    width: auto;
 }
 
 #nav-btn-slot {
-	display: flex;
-	justify-content: center;
+    display: flex;
+    justify-content: center;
 }
