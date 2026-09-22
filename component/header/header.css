@@ -80,7 +80,6 @@
 }
 
 .header__player-card:hover {
-    transform: translateY(-2px);
     box-shadow: 0 16px 32px rgba(24, 52, 110, 0.28);
 }
 
@@ -253,15 +252,15 @@
 .header__wallet {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 20px;
 }
 
 .wallet-pill {
     display: flex;
     align-items: center;
     gap: 9px;
-    height: 46px;
-    padding: 0 18px 0 7px;
+    height: 52px;
+    padding: 0 24px 0 12px;
     border-radius: var(--radius-pill);
     background: var(--hd-dark);
     border: 1px solid rgba(255, 255, 255, 0.14);
@@ -324,9 +323,9 @@
 /* ===== 3 nút bo góc ===== */
 .header__icon-btn {
     position: relative;
-    width: 48px;
-    height: 46px;
-    border-radius: 14px;
+    width: 62px;
+    height: 62px;
+    border-radius: 18px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -341,8 +340,8 @@
 }
 
 .header__icon-btn svg {
-    width: 24px;
-    height: 24px;
+    width: 36px;
+    height: 36px;
 }
 
 .header__icon-btn:hover {
