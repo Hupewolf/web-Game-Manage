@@ -39,7 +39,7 @@ const ICON = {
 	bell: `<svg viewBox="0 0 24 24" fill="currentColor">
 		<path d="M12 2a6 6 0 0 0-6 6c0 3.6-.9 5.2-2 6.4A1 1 0 0 0 4.8 16h14.4a1 1 0 0 0 .8-1.6c-1.1-1.2-2-2.8-2-6.4a6 6 0 0 0-6-6Z"/>
 		<path d="M9.8 18a2.2 2.2 0 0 0 4.4 0Z"/></svg>`,
-	list: `<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24">
+	list: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
 						<defs>
 							<mask id="phone-mask">
 
