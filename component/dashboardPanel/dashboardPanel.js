@@ -1,3 +1,5 @@
+import { ViCoinApp } from '../viCoinApp/viCoinApp.js';
+
 function updateClock() {
     const time = document.getElementById("time");
     if (!time) return;
@@ -14,7 +16,7 @@ setInterval(updateClock, 1000);
 
 const FEATURES_ROW_1 = [
     { id: 'shop',      label: 'Cửa Hàng',        icon: 'fa-bag-shopping', badge: true,  grad: 'grad-orange' },
-    { id: 'event',     label: 'Sự Kiện',         icon: 'fa-gift',         badge: true,  grad: 'grad-pink' },
+    { id: 'vicoin',    label: 'Ví Coin',         icon: 'fa-wallet',       badge: false, grad: 'grad-gold' },
     { id: 'meet',      label: 'Gặp Gỡ',          icon: 'fa-handshake',    badge: false, grad: 'grad-blue' },
     { id: 'guide',     label: 'Hướng Dẫn',       icon: 'fa-book-open',    badge: false, grad: 'grad-purple' },
     { id: 'library',   label: 'Thư Viện',        icon: 'fa-book',         badge: false, grad: 'grad-teal' },
@@ -81,9 +83,16 @@ export const DashboardPanel = {
                 <div class="dboard-screen">
             <div class="dboard-card">
                 <div class="ipad-status-bar">
-                    <div class="outer-bcn">
+                    <div class="outer-bcn outer-bcn--home">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-code-xml"><path d="m18 16 4-4-4-4"/><path d="m6 8-4 4 4 4"/><path d="m14.5 4-5 16"/></svg>
                         Ban Công Nghệ
+                    </div>
+                    <div class="outer-bcn outer-bcn--app">
+                        <button class="outer-bcn__back" id="dboard-app-back" aria-label="Quay lại màn hình chính">
+                            <i class="fa-solid fa-chevron-left"></i>
+                        </button>
+                        <span class="outer-bcn__app-icon"><i class="fa-solid fa-wallet"></i></span>
+                        <span class="outer-bcn__app-title">Ví Coin</span>
                     </div>
                     <div class="inner-status-bar">
                         <div class="time" id="time">00:00</div>
@@ -219,6 +228,7 @@ export const DashboardPanel = {
                         </div>
                     </main>
                 </div>
+                <div class="dboard-app-view" id="dboard-app-view"></div>
             </div>
                 </div>
             </div>
@@ -236,19 +246,30 @@ export const DashboardPanel = {
         }
 
         // Click ra ngoài khung iPad thì tự đóng.
-        // Nút trên header đã stopPropagation nên không bị đóng-mở chồng nhau.
+        // Dùng composedPath() thay vì e.target.closest() vì nhiều nút bên trong
+        // (tab lịch sử, nút đóng modal...) tự vẽ lại DOM ngay trong lúc xử lý click,
+        // khiến e.target bị gỡ khỏi cây DOM trước khi sự kiện nổi tới đây —
+        // composedPath() chụp lại đường đi của sự kiện tại thời điểm phát ra nên không bị ảnh hưởng.
         if (!this._outsideBound) {
             document.addEventListener('click', (e) => {
                 if (!this._open) return;
-                if (e.target.closest?.('.dboard-root')) return;
-                if (e.target.closest?.('#dashboard-trigger-btn')) return;
+                const path = typeof e.composedPath === 'function' ? e.composedPath() : [];
+                const insideDashboard = path.some((node) => node?.classList?.contains?.('dboard-root'));
+                const onTrigger = path.some((node) => node?.id === 'dashboard-trigger-btn');
+                if (insideDashboard || onTrigger) return;
                 this.hide();
             });
             this._outsideBound = true;
         }
 
+        root.querySelector('#dboard-app-back')?.addEventListener('click', () => this._closeApp());
+
         root.querySelectorAll('.dboard-feature').forEach(btn => {
             btn.addEventListener('click', () => {
+                if (btn.dataset.feature === 'vicoin') {
+                    this._openApp('vicoin');
+                    return;
+                }
                 console.log('Mở tính năng:', btn.dataset.feature);
             });
         });
@@ -257,6 +278,33 @@ export const DashboardPanel = {
                 console.log('Hành động bảng quản lý:', btn.dataset.action);
             });
         });
+    },
+
+    /* ===== Mở / đóng app con bên trong iPad (Ví Coin, ...) ===== */
+
+    _openApp(appId) {
+        const root = this._root();
+        if (!root) return;
+        const card = root.querySelector('.dboard-card');
+        if (card) card.dataset.view = appId;
+
+        if (appId === 'vicoin') {
+            const saved = localStorage.getItem('currentUser');
+            const userData = saved ? JSON.parse(saved) : null;
+            ViCoinApp.render('dboard-app-view', {
+                userData,
+                onBack: () => this._closeApp(),
+            });
+        }
+    },
+
+    _closeApp() {
+        const root = this._root();
+        if (!root) return;
+        const card = root.querySelector('.dboard-card');
+        if (card) card.dataset.view = 'home';
+        const view = root.querySelector('#dboard-app-view');
+        if (view) view.innerHTML = '';
     },
 
     /* ===== Đóng / mở bảng iPad (nút trên header gọi vào đây) ===== */
@@ -284,6 +332,7 @@ export const DashboardPanel = {
         this._open = false;
         el.classList.remove('dboard-root--open');
         el.setAttribute('aria-hidden', 'true');
+        this._closeApp(); // đóng bảng thì luôn quay về màn hình chính, không giữ app con đang mở
         this._emit();
     },
 

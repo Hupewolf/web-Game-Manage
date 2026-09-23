@@ -1,0 +1,47 @@
+[
+    {
+        "id": "seed_001",
+        "type": "receive",
+        "title": "Nhận từ Nguyễn Minh Anh",
+        "subtitle": "Chuyển coin nội bộ",
+        "amount": 200,
+        "date": "19/09/2025 20:15",
+        "timestamp": 1758298500000
+    },
+    {
+        "id": "seed_002",
+        "type": "send",
+        "title": "Chuyển cho Lê Hoàng",
+        "subtitle": "Chuyển coin nội bộ",
+        "amount": -150,
+        "date": "17/09/2025 20:15",
+        "timestamp": 1758125700000
+    },
+    {
+        "id": "seed_003",
+        "type": "payment",
+        "title": "Thanh toán CLB Bạn Công Nghệ",
+        "subtitle": "Phí hoạt động tháng 9",
+        "amount": -300,
+        "date": "15/09/2025 09:00",
+        "timestamp": 1757926800000
+    },
+    {
+        "id": "seed_004",
+        "type": "topup",
+        "title": "Nạp Coin",
+        "subtitle": "Mua thêm coin mới",
+        "amount": 1000,
+        "date": "04/09/2025 12:10",
+        "timestamp": 1756958600000
+    },
+    {
+        "id": "seed_005",
+        "type": "receive",
+        "title": "Nhận thưởng sự kiện",
+        "subtitle": "Tham gia hoạt động tháng 9",
+        "amount": 100,
+        "date": "02/09/2025 16:30",
+        "timestamp": 1756808200000
+    }
+]

@@ -1,0 +1,586 @@
+/* component/viCoinApp/viCoinApp.css
+   App "Ví Coin" mở bên trong bảng iPad — tông tím/vàng ánh kim, dùng chung
+   biến màu --db-* đã khai báo trong dashboardPanel.css (.dboard-root). */
+
+.vc-app {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    padding: 4px 2px 16px;
+}
+
+.vc-top {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 14px;
+}
+
+.vc-mid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 14px;
+    height: 100%;
+}
+
+/* ===== Thẻ số dư ===== */
+.vc-balance-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 22px;
+    padding: 18px 20px;
+    color: #fff;
+    background: linear-gradient(150deg, #210b44 0%, #4b2996 55%, #6a3093 100%);
+    background-size: 200% 200%;
+    animation: gradientShift 4s ease infinite;
+    box-shadow: 0 16px 32px rgba(90, 40, 180, 0.35);
+}
+
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.vc-balance-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle at 85% 15%, rgba(255, 255, 255, 0.18), transparent 45%),
+        radial-gradient(circle at 15% 90%, rgba(255, 255, 255, 0.08), transparent 40%);
+    pointer-events: none;
+}
+
+.vc-balance-card__badge {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 255, 255, 0.14);
+    padding: 4px 12px;
+    border-radius: 99px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.vc-balance-card__badge i {
+    color: var(--db-yellow, #ffd93d);
+}
+
+.vc-balance-card__main {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.vc-coin-orb {
+    flex-shrink: 0;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background-image: url(../../img/icon/UCoin.svg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.3), inset 0 2px 4px rgba(255, 255, 255, 0.6);
+}
+
+.vc-balance-card__info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.vc-balance-card__label {
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+.vc-balance-card__amount {
+    font-size: 30px;
+    font-weight: var(--font-weight-extra_bold, 800);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    line-height: 1.2;
+}
+
+.vc-balance-card__amount img {
+    width: 20px;
+    height: 20px;
+}
+
+.vc-balance-card__vnd {
+    font-size: 11px;
+    opacity: 0.75;
+}
+
+.vc-balance-card__history {
+    position: relative;
+    margin-top: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: none;
+    background: rgba(255, 255, 255, 0.14);
+    color: #fff;
+    padding: 8px 14px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.vc-balance-card__history i:last-child {
+    margin-left: auto;
+    font-size: 10px;
+    opacity: 0.8;
+}
+
+.vc-balance-card__tagline {
+    position: relative;
+    margin-top: 10px;
+    font-size: 11px;
+    opacity: 0.6;
+}
+
+/* ===== Thao tác nhanh ===== */
+.vc-quick-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.vc-quick {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-align: center;
+    background: var(--db-card-bg, #fff);
+    border: none;
+    border-radius: 16px;
+    padding: 14px 8px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--db-text, #2b2f45);
+    box-shadow: 0 8px 18px rgba(79, 142, 247, 0.12);
+    cursor: pointer;
+    transition: transform 0.15s ease;
+}
+
+.vc-quick:hover {
+    transform: translateY(-2px);
+}
+
+.vc-quick__icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 24px;
+}
+
+.vc-grad-blue {
+    background: linear-gradient(135deg, #6ec3ff, #4f8ef7);
+}
+
+.vc-grad-teal {
+    background: linear-gradient(135deg, #5eead4, #14b8a6);
+}
+
+.vc-grad-orange {
+    background: linear-gradient(135deg, #ffb347, #ff8a00);
+}
+
+.vc-grad-purple {
+    background: linear-gradient(135deg, #c084fc, #9333ea);
+}
+
+.vc-grad-green {
+    background: linear-gradient(135deg, #86efac, #4ade80);
+}
+
+.outer-vc-highlights-card {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.vc-history-card,
+.vc-highlights-card {
+    background: var(--db-card-bg, #fff);
+    border-radius: 20px;
+    padding: 16px 18px;
+    box-shadow: 0 10px 22px rgba(79, 142, 247, 0.1);
+    flex: 1;
+}
+
+.vc-card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.vc-see-all {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--db-blue, #4f8ef7);
+    text-decoration: none;
+}
+
+.vc-tabs {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    margin-bottom: 10px;
+}
+
+.vc-tab {
+    flex-shrink: 0;
+    border: none;
+    background: #f1f5ff;
+    color: var(--db-text-soft, #6b7280);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 99px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.vc-tab--active {
+    background: var(--db-blue, #4f8ef7);
+    color: #fff;
+}
+
+.vc-tx-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-height: 260px;
+    overflow-y: auto;
+}
+
+.vc-tx-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 2px;
+    border-bottom: 1px solid #f1f4fb;
+}
+
+.vc-tx-item:last-child {
+    border-bottom: none;
+}
+
+.vc-tx-icon {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 13px;
+}
+
+.tx-icon--receive {
+    background: linear-gradient(135deg, #86efac, #22c55e);
+}
+
+.tx-icon--send {
+    background: linear-gradient(135deg, #ff8fc0, #ff4d94);
+}
+
+.tx-icon--payment {
+    background: linear-gradient(135deg, #ffb347, #ff8a00);
+}
+
+.tx-icon--topup {
+    background: linear-gradient(135deg, #6ec3ff, #4f8ef7);
+}
+
+.vc-tx-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.vc-tx-info .t {
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.vc-tx-info .s {
+    font-size: 10px;
+    color: var(--db-text-soft, #6b7280);
+}
+
+.vc-tx-amount {
+    flex-shrink: 0;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.vc-tx-amount.is-positive {
+    color: #16a34a;
+}
+
+.vc-tx-amount.is-negative {
+    color: #ef4444;
+}
+
+.vc-tx-empty {
+    text-align: center;
+    padding: 24px 0;
+    font-size: 12px;
+    color: var(--db-text-soft, #6b7280);
+}
+
+.vc-highlights-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.vc-highlight {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-align: left;
+    background: #f8f9ff;
+    border: none;
+    border-radius: 14px;
+    padding: 20px 10px;
+    cursor: pointer;
+    transition: transform 0.15s ease;
+}
+
+.vc-highlight:hover {
+    transform: translateY(-2px);
+}
+
+.vc-highlight__icon {
+    flex-shrink: 0;
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 20px;
+}
+
+.vc-highlight__text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.vc-highlight__text .t {
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.vc-highlight__text .s {
+    font-size: 9px;
+    color: var(--db-text-soft, #6b7280);
+}
+
+/* ===== Banner ưu đãi ===== */
+.vc-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    background: linear-gradient(135deg, #2b1055, #4b2996);
+    border-radius: 20px;
+    padding: 30px 20px;
+    color: #fff;
+}
+
+.vc-banner__title {
+    display: block;
+    font-size: 15px;
+    font-weight: 800;
+}
+
+.vc-banner__sub {
+    font-size: 11px;
+    opacity: 0.8;
+}
+
+.vc-banner__cta {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.16);
+    color: #fff;
+    cursor: pointer;
+}
+
+/* ===== Trạng thái tải ===== */
+.vc-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 40px 0;
+    color: var(--db-text-soft, #6b7280);
+    font-size: 13px;
+}
+
+.vc-loading--small {
+    padding: 16px 0;
+}
+
+/* ===== Modal chuyển coin ===== */
+.vc-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(20, 20, 40, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 40px;
+    z-index: 50;
+}
+
+.vc-transfer-modal {
+    width: min(320px, 88%);
+    background: #fff;
+    border-radius: 18px;
+    padding: 16px 18px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+}
+
+.vc-transfer-modal__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: var(--db-text, #2b2f45);
+}
+
+.vc-modal-close {
+    border: none;
+    background: none;
+    font-size: 14px;
+    color: var(--db-text-soft, #6b7280);
+    cursor: pointer;
+}
+
+.vc-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--db-text-soft, #6b7280);
+    margin-bottom: 10px;
+}
+
+.vc-field select,
+.vc-field input {
+    padding: 8px 10px;
+    border-radius: 10px;
+    border: 1px solid #e5e9f5;
+    font-size: 13px;
+    color: var(--db-text, #2b2f45);
+    font-family: inherit;
+}
+
+.vc-transfer-balance {
+    font-size: 11px;
+    color: var(--db-text-soft, #6b7280);
+    margin-bottom: 8px;
+}
+
+.vc-transfer-error {
+    font-size: 11px;
+    color: #ef4444;
+    min-height: 14px;
+    margin-bottom: 6px;
+}
+
+.vc-transfer-submit {
+    width: 100%;
+    border: none;
+    background: var(--db-blue, #4f8ef7);
+    color: #fff;
+    padding: 10px;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.vc-transfer-submit:disabled {
+    opacity: 0.6;
+    cursor: default;
+}
+
+/* ===== Toast ===== */
+.vc-toast {
+    position: fixed;
+    left: 50%;
+    bottom: 24px;
+    transform: translate(-50%, 10px);
+    background: #2b2f45;
+    color: #fff;
+    padding: 10px 16px;
+    border-radius: 99px;
+    font-size: 12px;
+    opacity: 0;
+    transition: all 0.25s ease;
+    z-index: 60;
+    white-space: nowrap;
+}
+
+.vc-toast--show {
+    opacity: 1;
+    transform: translate(-50%, 0);
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 900px) {
+
+    .vc-top,
+    .vc-mid {
+        grid-template-columns: 1fr;
+    }
+}

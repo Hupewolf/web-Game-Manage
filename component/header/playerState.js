@@ -19,7 +19,7 @@ export const playerState = userData ? {
         id: userData.id ?? '000000',
     },
     survival: {
-        coin: userData.coin ?? 0,
+        coin: userData.values?.coin ?? userData.coin ?? 0,
         lifespan: userData.lifespan || { years: 0, months: 0 },
         mood: userData.mood ?? 100,
         contribution: userData.contribution || { current: 0, max: 100 },
