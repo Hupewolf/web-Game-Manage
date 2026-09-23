@@ -47,7 +47,7 @@ function resizeGame() {
         baseHeight = designHeight - missing;
 
         // Không cho baseHeight quá nhỏ
-        baseHeight = Math.max(baseHeight, 900);
+        baseHeight = Math.max(baseHeight, 1000);
     }
 
     const scaleX = viewportWidth / baseWidth;
