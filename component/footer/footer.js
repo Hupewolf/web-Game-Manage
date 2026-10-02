@@ -53,12 +53,17 @@ const navBtnArrow = document.querySelector(".nav-btn__arrow");
 
 const isCityPage = window.location.pathname.includes("testbg.html");
 const isThanThongPage = window.location.pathname.includes("thanThong.html");
+const isOutSidePage = window.location.pathname.includes("outSide.html");
 
 NavButton.render("nav-btn-slot", {
-    label: isCityPage ? "Quay về phòng" : isThanThongPage ? "Quay lại phòng" : "Rời khỏi phòng",
-    // Bấm "Rời khỏi phòng" -> sang trang outSide
-    href: (isCityPage || isThanThongPage) ? undefined : "../outSide/outSide.html",
-    
+    label: isOutSidePage ? "Quay lại phòng"
+        : isCityPage ? "Quay về phòng"
+        : isThanThongPage ? "Quay lại phòng"
+        : "Rời khỏi phòng",
+    // Ở phòng -> sang outSide; ở outSide -> quay lại phòng
+    href: isOutSidePage ? "../room/room.html"
+        : (isCityPage || isThanThongPage) ? undefined
+        : "../outSide/outSide.html",
 });
 
 const bagBtn = document.getElementById("bag-btn")
