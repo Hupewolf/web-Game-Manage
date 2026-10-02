@@ -1,0 +1,53 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    height: 100vh;
+    background-image: url(../../img/BackgroundMap/946e8ef1-0b91-4261-9d40-ce42751b9105.png);
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    position: relative;
+}
+
+#web {
+    position: fixed;
+    inset: 0;
+    width: 1920px;
+    height: 1080px;
+    transform-origin: top left;
+
+}
+
+.home {
+    width: 200px;
+    height: 162px;
+    background-image: url(../../img/BackgroundMap/Building\ 1.svg);
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    position: absolute;
+    top: 100px;
+    left: 500px;
+    cursor: pointer;
+}
+
+.hem {
+    width: 200px;
+    height: 162px;
+    background-image: url(../../img/BackgroundMap/Building\ 2.svg);
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    position: absolute;
+    top: 400px;
+    left: 700px;
+    cursor: pointer;
+}
+
+.home:hover, .hem:hover {
+    transform: scale(1.05);
+}
