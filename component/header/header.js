@@ -7,6 +7,7 @@
 
 import { NotificationPanel } from '../notification/notification.js';
 import { DashboardPanel } from '../dashboardPanel/dashboardPanel.js';
+import { startWalletWatcher } from '../viCoinApp/viCoinApp.js';
 
 const getInitials = (name) => {
 	if (!name) return "G";
@@ -217,6 +218,19 @@ export const GameHeader = {
 			e.stopPropagation();
 			console.log('Mở cửa hàng nạp linh thạch');
 		});
+
+		// Số dư đổi (chuyển / nhận coin) -> cập nhật wallet pill ngay, không cần F5.
+		// Chỉ gắn 1 lần dù header được render lại nhiều lần.
+		if (!this._walletBound) {
+			this._walletBound = true;
+			document.addEventListener('wallet:change', (e) => {
+				const coin = e.detail?.coin ?? 0;
+				if (this._state?.survival) this._state.survival.coin = coin; // giữ state đồng bộ để render lại không bị về số cũ
+				this.updateCurrency('coin', coin);
+			});
+			// Nhận coin từ người khác: tự kiểm tra định kỳ
+			startWalletWatcher();
+		}
 
 		// Nút cũ mở điện thoại -> giờ bật/tắt bảng quản lý iPad
 		document.getElementById('dashboard-trigger-btn')?.addEventListener('click', (e) => {

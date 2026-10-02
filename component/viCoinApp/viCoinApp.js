@@ -60,6 +60,46 @@ async function putAccount(id, payload) {
     });
 }
 
+// ===== Đồng bộ số dư với header (wallet pill) =====
+// Mọi nơi làm đổi số dư đều gọi emitWalletChange(); header lắng nghe sự kiện
+// "wallet:change" nên cập nhật ngay, không cần F5.
+function coinOf(acc) {
+    return acc?.values?.coin ?? acc?.coin ?? 0;
+}
+
+export function emitWalletChange(coin) {
+    document.dispatchEvent(new CustomEvent('wallet:change', { detail: { coin } }));
+}
+
+// Thỉnh thoảng hỏi MockAPI xem số dư có đổi không (ví dụ có người chuyển coin
+// cho mình) rồi báo cho header. Tạm dừng khi tab bị ẩn hoặc đang chuyển coin.
+let _watchTimer = null;
+export function startWalletWatcher(intervalMs = 10000) {
+    if (_watchTimer) return;
+    const tick = async () => {
+        if (document.hidden || ViCoinApp._busy) return;
+        try {
+            const saved = localStorage.getItem('currentUser');
+            const local = saved ? JSON.parse(saved) : null;
+            if (!local?.id) return;
+            const fresh = await fetchAccount(local.id);
+            if (ViCoinApp._busy) return; // đang chuyển coin -> để luồng chuyển tự cập nhật
+            if (coinOf(fresh) === coinOf(local)) return;
+            // Chỉ gộp coin + lịch sử, không ghi đè các field khác của local (exp, lifespan...)
+            local.values = { ...local.values, coin: coinOf(fresh) };
+            local.transactions = fresh.transactions ?? local.transactions;
+            localStorage.setItem('currentUser', JSON.stringify(local));
+            if (ViCoinApp._userData?.id === local.id) {
+                ViCoinApp._userData = { ...ViCoinApp._userData, values: local.values, transactions: local.transactions };
+            }
+            emitWalletChange(coinOf(local));
+        } catch (err) {
+            console.warn('Wallet watcher: không đồng bộ được số dư.', err);
+        }
+    };
+    _watchTimer = setInterval(tick, intervalMs);
+}
+
 export const ViCoinApp = {
     _containerId: null,
     _onBack: null,
@@ -90,6 +130,7 @@ export const ViCoinApp = {
             const fresh = await fetchAccount(this._userData.id);
             this._userData = fresh;
             localStorage.setItem('currentUser', JSON.stringify(fresh));
+            emitWalletChange(coinOf(fresh));
         } catch (err) {
             console.warn('Ví Coin: không tải được số dư mới nhất, dùng dữ liệu cục bộ.', err);
         }
@@ -446,6 +487,7 @@ export const ViCoinApp = {
 
             this._userData = senderPayload;
             localStorage.setItem('currentUser', JSON.stringify(senderPayload));
+            emitWalletChange(coinOf(senderPayload));
             this._tx = senderPayload.transactions;
 
             this._draw();
