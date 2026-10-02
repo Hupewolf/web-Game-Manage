@@ -51,11 +51,13 @@ footer.innerHTML = `
 
 const navBtnArrow = document.querySelector(".nav-btn__arrow");
 
-const isCityPage = window.location.pathname.includes("city.html");
+const isCityPage = window.location.pathname.includes("testbg.html");
 const isThanThongPage = window.location.pathname.includes("thanThong.html");
 
 NavButton.render("nav-btn-slot", {
     label: isCityPage ? "Quay về phòng" : isThanThongPage ? "Quay lại phòng" : "Rời khỏi phòng",
+    // Bấm "Rời khỏi phòng" -> sang trang outSide
+    href: (isCityPage || isThanThongPage) ? undefined : "../outSide/outSide.html",
     
 });
 
