@@ -8,6 +8,7 @@
 import { NotificationPanel } from '../notification/notification.js';
 import { DashboardPanel } from '../dashboardPanel/dashboardPanel.js';
 import { startWalletWatcher } from '../viCoinApp/viCoinApp.js';
+import { Mood } from '../mood/mood.js';
 
 const getInitials = (name) => {
 	if (!name) return "G";
@@ -25,6 +26,9 @@ const getAvatarColor = (name) => {
 	}
 	return colors[Math.abs(hash) % colors.length];
 };
+
+// Màu thanh tinh thần theo mức
+const moodClass = (v) => (v <= 20 ? 'mood-pill--danger' : v <= 50 ? 'mood-pill--warn' : 'mood-pill--ok');
 
 // 126250 -> "126.250" (kiểu số Việt Nam, giống trong mock)
 const fmt = (n) => Number(n || 0).toLocaleString('vi-VN');
@@ -92,6 +96,7 @@ export const GameHeader = {
 		const xp = state.xp || { current: 0, max: 1 };
 		const xpPct = Math.min(100, Math.round((xp.current / (xp.max || 1)) * 100));
 		const gem = state.currency?.gem?.value ?? 0;
+		const mood = Mood.get();
 		const unread = NotificationPanel.unreadCount?.() ?? 0;
 		const avatarInner = state.avatar
 			? `<img src="${state.avatar}" alt="${state.name}">`
@@ -136,6 +141,15 @@ export const GameHeader = {
 			</div>	
 
 			<div class="header__right">
+				<div class="mood-pill ${moodClass(mood)}" id="mood-pill" title="Tinh thần: giảm khi ở ngoài, hồi khi về phòng">
+					<img class="wallet-pill__icon" src="../../img/icon/brain.png" alt="Tinh thần">
+					<div class="mood-pill__body">
+						<span class="mood-pill__label">Tinh thần</span>
+						<div class="mood-pill__track"><div class="mood-pill__fill" id="mood-fill" style="width:${mood}%"></div></div>
+					</div>
+					<span class="mood-pill__value" id="mood-value">${mood}</span>
+					<span class="mood-pill__trend" id="mood-trend" data-trend="${Mood.trend()}"></span>
+				</div>
 				<div class="header__wallet">
 					<div class="wallet-pill" data-currency="coin">
 						<img class="wallet-pill__icon" src="../../img/icon/UCoin.svg" alt="Coin">
@@ -239,11 +253,20 @@ export const GameHeader = {
 			this.syncDashboardButton();
 		});
 
+		// Tinh thần đổi (giảm ngoài đường / hồi trong phòng) -> cập nhật thanh ngay. Gắn 1 lần.
+		if (!this._moodBound) {
+			this._moodBound = true;
+			document.addEventListener('mood:change', (e) => this.updateMood(e.detail));
+		}
+
 		// Bảng iPad có thể tự đóng (nút X / phím Esc) -> đồng bộ lại trạng thái nút
 		document.addEventListener('dashboard:change', () => this.syncDashboardButton());
 
 		// Đọc hết thông báo / có thông báo mới -> cập nhật huy hiệu
 		document.addEventListener('notification:change', () => this.updateNotificationBadge());
+
+		// tsv: bắt đầu theo dõi quà nguyên liệu admin gửi (hàm tự bỏ qua nếu không phải tsv)
+		NotificationPanel.startInbox();
 	},
 
 	/* ===== Cập nhật từng phần, không cần render lại cả header ===== */
@@ -255,6 +278,18 @@ export const GameHeader = {
 		btn.classList.toggle('is-active', open);
 		btn.setAttribute('aria-expanded', String(open));
 		btn.setAttribute('aria-label', open ? 'Đóng bảng quản lý' : 'Mở bảng quản lý');
+	},
+
+	updateMood({ value = 0, trend = 'flat' } = {}) {
+		const pill = document.getElementById('mood-pill');
+		if (!pill) return;
+		pill.className = `mood-pill ${moodClass(value)}`;
+		const fill = document.getElementById('mood-fill');
+		if (fill) fill.style.width = `${value}%`;
+		const num = document.getElementById('mood-value');
+		if (num) num.textContent = value;
+		const t = document.getElementById('mood-trend');
+		if (t) t.dataset.trend = trend;
 	},
 
 	updateNotificationBadge() {

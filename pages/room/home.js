@@ -1,5 +1,6 @@
 import { playerState, GameHeader } from '../../share/main.js';
 import { DashboardPanel } from '../../component/dashboardPanel/dashboardPanel.js';
+import { Mood } from '../../component/mood/mood.js';
 
 // function resizeGame() {
 //     const game = document.querySelector("#web");
@@ -75,6 +76,9 @@ DashboardPanel.render('dashboard-panel-slot', playerState);
 
 // Header — render sau để đồng bộ được trạng thái nút bảng iPad
 GameHeader.render(playerState);
+
+// Ở trong phòng: tinh thần hồi dần
+Mood.start('room');
 
 const box = document.getElementById("mission-box");
 const openBtn = document.getElementById("mission-icon");

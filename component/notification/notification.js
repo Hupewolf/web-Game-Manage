@@ -1,5 +1,15 @@
+import { fetchAccount } from '../../share/accountApi.js';
+import { getCurrentUser, getRole, ROLE } from '../../share/roles.js';
+import { claimGift, getInbox, describeItems } from '../shopPanel/giftService.js';
+
+const esc = (t) => String(t ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
 export const NotificationPanel = {
     _initialized: false,
+
+    // Quà nguyên liệu admin gửi cho tsv (đọc từ inbox trên server). Chỉ tài khoản tsv có.
+    _gifts: [],
+    _inboxTimer: null,
 
     // Demo data — sau này có thể thay bằng dữ liệu thật từ server/socket
     _notifications: [
@@ -62,12 +72,29 @@ export const NotificationPanel = {
         const list = document.getElementById('notification-list');
         if (!list) return;
 
-        if (!this._notifications.length) {
+        if (!this._notifications.length && !this._gifts.length) {
             list.innerHTML = `<div class="notification-panel__empty">Không có thông báo mới</div>`;
             return;
         }
 
-        list.innerHTML = this._notifications.map(n => `
+        const gifts = this._gifts.map(g => `
+            <div class="notification-item ${g.claimed ? '' : 'notification-item--unread'}" data-gift="${esc(g.id)}">
+                <span class="notification-item__icon"><img src="../../img/icon/mdi_gift.svg"></span>
+                <div class="notification-item__body">
+                    <div class="notification-item__title-row">
+                        <span class="notification-item__dot"></span>
+                        <span class="notification-item__title">Nguyên liệu từ ${esc(g.from?.name || 'Admin')}</span>
+                    </div>
+                    <p class="notification-item__message">${esc(describeItems(g.items))}</p>
+                    <span class="notification-item__time">${esc(g.time)}</span>
+                    ${g.claimed
+                        ? `<span class="notification-item__done">Đã nhận ✓</span>`
+                        : `<button class="notification-item__btn" data-claim="${esc(g.id)}">Nhận</button>`}
+                </div>
+            </div>
+        `).join('');
+
+        const demos = this._notifications.map(n => `
             <div class="notification-item ${n.unread ? 'notification-item--unread' : ''}" data-id="${n.id}">
                 <span class="notification-item__icon"><img src="${n.icon}"></span>
                 <div class="notification-item__body">
@@ -80,9 +107,28 @@ export const NotificationPanel = {
                 </div>
             </div>
         `).join('');
+
+        list.innerHTML = gifts + demos;
     },
 
     _bindEvents() {
+        // Bấm "Nhận" trên quà nguyên liệu
+        document.getElementById('notification-list')?.addEventListener('click', async (e) => {
+            const btn = e.target.closest('[data-claim]');
+            if (!btn || btn.disabled) return;
+            btn.disabled = true;
+            btn.textContent = 'Đang nhận...';
+            try {
+                await claimGift(btn.dataset.claim);
+                this._gifts = getInbox(getCurrentUser());
+            } catch (err) {
+                alert(err?.message || 'Không nhận được quà, thử lại sau.');
+                await this.refreshInbox();
+            }
+            this._renderList();
+            this._emitChange();
+        });
+
         document.getElementById('notification-mark-all')
             ?.addEventListener('click', () => this.markAllRead());
 
@@ -104,6 +150,38 @@ export const NotificationPanel = {
         panel.style.right = `${window.innerWidth - rect.right}px`;
     },
 
+    // Chỉ tài khoản tsv có quà: nạp từ bản đã lưu cho huy hiệu hiện ngay, rồi hỏi server định kỳ
+    startInbox() {
+        if (this._inboxTimer) return;
+        const me = getCurrentUser();
+        if (!me?.id || getRole(me) !== ROLE.TSV) return;
+        this._gifts = getInbox(me);
+        this._renderList();
+        this._emitChange();
+        this.refreshInbox();
+        this._inboxTimer = setInterval(() => {
+            if (!document.hidden) this.refreshInbox();
+        }, 30000);
+    },
+
+    async refreshInbox() {
+        const me = getCurrentUser();
+        if (!me?.id) return;
+        try {
+            const acc = await fetchAccount(me.id);
+            this._gifts = getInbox(acc);
+            const cur = getCurrentUser();
+            if (cur) {
+                cur.inbox = Array.isArray(acc.inbox) ? acc.inbox : [];
+                localStorage.setItem('currentUser', JSON.stringify(cur));
+            }
+            this._renderList();
+            this._emitChange();
+        } catch (err) {
+            console.warn('Thông báo: chưa tải được quà nguyên liệu, sẽ thử lại.', err);
+        }
+    },
+
     markAllRead() {
         this._notifications.forEach(n => n.unread = false);
         this._renderList();
@@ -118,12 +196,12 @@ export const NotificationPanel = {
     },
 
     hasUnread() {
-        return this._notifications.some(n => n.unread);
+        return this.unreadCount() > 0;
     },
 
     // Số thông báo chưa đọc — header dùng để hiện huy hiệu đỏ
     unreadCount() {
-        return this._notifications.filter(n => n.unread).length;
+        return this._notifications.filter(n => n.unread).length + this._gifts.filter(g => !g.claimed).length;
     },
 
     _emitChange() {
@@ -143,6 +221,7 @@ export const NotificationPanel = {
 
     show(triggerEl) {
         if (!this._initialized) this.render();
+        if (this._inboxTimer) this.refreshInbox(); // mở bảng là hỏi server xem có quà mới không
         this._position(triggerEl);
         const panel = document.getElementById('notification-panel');
         requestAnimationFrame(() => {

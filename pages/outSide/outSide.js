@@ -1,4 +1,6 @@
 import { playerState, GameHeader } from '../../share/main.js';
+import { Mood } from '../../component/mood/mood.js';
+import { can } from '../../share/roles.js';
 
 function resizeGame() {
     const game = document.querySelector("#web");
@@ -47,3 +49,15 @@ resizeGame();
 document.getElementById("web").classList.add("is-ready");
 
 GameHeader.render(playerState);
+
+// Ra ngoài: tinh thần giảm dần
+Mood.start('outside');
+
+// Bấm thẻ "home" -> sang trang cửa hàng (hiện mới có 1 cửa hàng)
+document.querySelector('.home')?.addEventListener('click', () => {
+    if (!can('move')) {
+        alert('Vai trò của bạn không được phép di chuyển.');
+        return;
+    }
+    window.location.href = '../shop/shop.html?shop=home';
+});

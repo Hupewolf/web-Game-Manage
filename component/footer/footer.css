@@ -171,3 +171,13 @@ footer {
     align-items: flex-end;
     gap: 10px;
 }
+
+/* Thanh footer rộng 100% nằm đè lên nội dung phía trên (vd: nút trong quán) —
+   vùng trống cho click xuyên qua, chỉ nút điều hướng bên trong nhận click. */
+footer {
+    pointer-events: none;
+}
+
+footer > * {
+    pointer-events: auto;
+}
