@@ -20,6 +20,18 @@ body {
     height: 1080px;
     transform-origin: top left;
 
+    /* Ẩn cho tới khi JS tính xong scale (resizeGame) — tránh nháy khung 1920x1080 chưa co lại */
+    visibility: hidden;
+    animation: web-show-fallback 0s 3s forwards; /* phòng khi JS lỗi thì vẫn hiện sau 3s */
+}
+
+#web.is-ready {
+    visibility: visible;
+    animation: none;
+}
+
+@keyframes web-show-fallback {
+    to { visibility: visible; }
 }
 
 .home {

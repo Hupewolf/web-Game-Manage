@@ -67,6 +67,7 @@ function resizeGame() {
 
 window.addEventListener("resize", resizeGame);
 resizeGame();
+document.getElementById("web").classList.add("is-ready");
 
 // Bảng quản lý iPad — render sẵn nhưng ở trạng thái ĐÓNG.
 // Bấm nút danh sách trên header (trước đây là nút mở điện thoại) để bật/tắt.

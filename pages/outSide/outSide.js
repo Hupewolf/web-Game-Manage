@@ -44,5 +44,6 @@ function resizeGame() {
 
 window.addEventListener("resize", resizeGame);
 resizeGame();
+document.getElementById("web").classList.add("is-ready");
 
 GameHeader.render(playerState);
