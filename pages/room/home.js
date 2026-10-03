@@ -1,5 +1,6 @@
 import { playerState, GameHeader } from '../../share/main.js';
 import { DashboardPanel } from '../../component/dashboardPanel/dashboardPanel.js';
+import { Mood } from '../../component/mood/mood.js';
 
 // function resizeGame() {
 //     const game = document.querySelector("#web");
@@ -67,6 +68,7 @@ function resizeGame() {
 
 window.addEventListener("resize", resizeGame);
 resizeGame();
+document.getElementById("web").classList.add("is-ready");
 
 // Bảng quản lý iPad — render sẵn nhưng ở trạng thái ĐÓNG.
 // Bấm nút danh sách trên header (trước đây là nút mở điện thoại) để bật/tắt.
@@ -74,6 +76,9 @@ DashboardPanel.render('dashboard-panel-slot', playerState);
 
 // Header — render sau để đồng bộ được trạng thái nút bảng iPad
 GameHeader.render(playerState);
+
+// Ở trong phòng: tinh thần hồi dần
+Mood.start('room');
 
 const box = document.getElementById("mission-box");
 const openBtn = document.getElementById("mission-icon");

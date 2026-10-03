@@ -357,7 +357,7 @@ export const ViCoinApp = {
         try {
             const res = await apiFetch(API_BASE);
             if (!res.ok) throw new Error('network');
-            accounts = (await res.json()).filter((a) => a.id !== this._userData?.id);
+            accounts = (await res.json()).filter((a) => a.id !== this._userData?.id && !a.isMarket);
         } catch (err) {
             const body = modalRoot.querySelector('#vc-transfer-body');
             if (body) body.innerHTML = `<div class="vc-tx-empty">Không tải được danh sách tài khoản. Vui lòng thử lại.</div>`;

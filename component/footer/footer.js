@@ -54,14 +54,17 @@ const navBtnArrow = document.querySelector(".nav-btn__arrow");
 const isCityPage = window.location.pathname.includes("testbg.html");
 const isThanThongPage = window.location.pathname.includes("thanThong.html");
 const isOutSidePage = window.location.pathname.includes("outSide.html");
+const isShopPage = window.location.pathname.includes("shop.html");
 
 NavButton.render("nav-btn-slot", {
     label: isOutSidePage ? "Quay lại phòng"
+        : isShopPage ? "Quay lại bản đồ"
         : isCityPage ? "Quay về phòng"
         : isThanThongPage ? "Quay lại phòng"
         : "Rời khỏi phòng",
     // Ở phòng -> sang outSide; ở outSide -> quay lại phòng
     href: isOutSidePage ? "../room/room.html"
+        : isShopPage ? "../outSide/outSide.html"
         : (isCityPage || isThanThongPage) ? undefined
         : "../outSide/outSide.html",
 });
