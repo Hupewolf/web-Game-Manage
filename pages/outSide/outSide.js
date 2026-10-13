@@ -1,6 +1,7 @@
 import { playerState, GameHeader } from '../../share/main.js';
 import { Mood } from '../../component/mood/mood.js';
 import { can } from '../../share/roles.js';
+import { Loader } from '../../component/loader/loader.js';
 
 function resizeGame() {
     const game = document.querySelector("#web");
@@ -53,11 +54,21 @@ GameHeader.render(playerState);
 // Ra ngoài: tinh thần giảm dần
 Mood.start('outside');
 
+// Trang được khôi phục từ bfcache (back từ cửa hàng): JS không chạy lại -> cập nhật coin thủ công
+window.addEventListener('pageshow', (e) => {
+    if (!e.persisted) return;
+    try {
+        const u = JSON.parse(localStorage.getItem('currentUser') || 'null');
+        const coin = Number(u?.values?.coin ?? u?.coin);
+        if (Number.isFinite(coin)) GameHeader.updateCurrency('coin', coin);
+    } catch { /* bỏ qua */ }
+});
+
 // Bấm thẻ "home" -> sang trang cửa hàng (hiện mới có 1 cửa hàng)
 document.querySelector('.home')?.addEventListener('click', () => {
     if (!can('move')) {
         alert('Vai trò của bạn không được phép di chuyển.');
         return;
     }
-    window.location.href = '../shop/shop.html?shop=home';
+    Loader.go('../shop/shop.html?shop=home');
 });

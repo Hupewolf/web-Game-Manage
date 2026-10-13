@@ -1,5 +1,8 @@
 import { playerState } from '../component/header/playerState.js';
 import { GameHeader }  from '../component/header/header.js';
+import { guardTravel } from './travel.js';
+
+guardTravel();
 
 const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
 

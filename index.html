@@ -6,10 +6,18 @@
     <title>Document</title>
 </head>
 <body>
-    <script>
+    <script type="module">
+        import { Loader } from "./component/loader/loader.js";
+        import { getTravel, getLocation } from "./share/travel.js";
+
         const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
         if (isLoggedIn) {
-            window.location.replace("./pages/room/room.html");
+            // Đã đăng nhập: loading nháy 1 cái rồi vào thẳng (đang đi dở thì về trang đếm ngược)
+            const target = getTravel() ? "./pages/travel/travel.html"
+                : getLocation() === "outSide" ? "./pages/outSide/outSide.html"
+                : "./pages/room/room.html";
+            Loader.show("Đang vào game...");
+            setTimeout(() => window.location.replace(target), 900);
         } else {
             window.location.replace("./pages/login/login.html");
         }
