@@ -2,7 +2,7 @@
 // Hết giờ mới chuyển sang trang đích. Trạng thái nằm trên API nên thoát web rồi vào lại vẫn chạy tiếp.
 
 import { Loader } from '../../component/loader/loader.js';
-import { PAGE_URL, getTravel, getLocation, remaining, syncTravel, finishTravel, formatDuration } from '../../share/travel.js';
+import { PAGE_URL, getTravel, getLocation, remaining, syncTravel, finishTravel, cancelTravel, formatDuration } from '../../share/travel.js';
 import { VEHICLES } from '../../share/travelConfig.js';
 
 if (localStorage.getItem('isLoggedIn') !== 'true') {
@@ -40,6 +40,7 @@ function run(travel) {
         try {
             const to = await finishTravel(); // server xác nhận hết giờ mới cho qua
             if (!to) { done = false; return; }
+            Loader.setButton(null);
             Loader.show('Đã đến nơi!', '');
             setTimeout(() => location.replace(PAGE_URL[to]), 700);
         } catch {
@@ -51,4 +52,22 @@ function run(travel) {
 
     let timer = setInterval(tick, 250);
     tick();
+    const onCancel = async () => {
+        if (done) return;
+        done = true;
+        clearInterval(timer);
+        Loader.setButton('Đang huỷ...', null);
+        try {
+            const from = await cancelTravel();
+            Loader.show('Đã huỷ chuyến đi', '');
+            Loader.setButton(null);
+            setTimeout(() => location.replace(PAGE_URL[from]), 500);
+        } catch {
+            Loader.show('Không huỷ được, thử lại sau.', '');
+            Loader.setButton('Huỷ', onCancel);
+            done = false;
+            timer = setInterval(tick, 250);
+        }
+    };
+    Loader.setButton('Huỷ', onCancel);
 }

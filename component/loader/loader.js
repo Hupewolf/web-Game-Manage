@@ -83,6 +83,21 @@ export const Loader = {
         if (el) el.textContent = text;
     },
 
+    setButton(label, onClick) {
+        let btn = overlay?.querySelector('.gl-btn');
+        if (!label) { btn?.remove(); return; }
+        if (!overlay) return;
+        if (!btn) {
+            btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'gl-btn';
+            overlay.appendChild(btn);
+        }
+        btn.textContent = label;
+        btn.disabled = false;
+        btn.onclick = onClick;
+    },
+
     hide() {
         going = false;
         overlay?.remove();

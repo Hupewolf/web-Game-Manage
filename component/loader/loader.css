@@ -131,3 +131,16 @@
     0% { transform: translateX(0px); }
     100% { transform: translateX(-350px); }
 }
+
+.gl-btn {
+    padding: 10px 28px;
+    border: 2px solid #282828;
+    border-radius: 999px;
+    background: #ffffff;
+    color: #282828;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+}
+.gl-btn:hover { background: #282828; color: #ffffff; }
+.gl-btn:disabled { opacity: 0.5; cursor: default; }
