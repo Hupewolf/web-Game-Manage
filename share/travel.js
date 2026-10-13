@@ -124,6 +124,13 @@ export async function finishTravel() {
     return to;
 }
 
+export async function cancelTravel() {
+    const rec = await fetchRecord();
+    const from = rec.location ?? (rec.travel?.to === 'outSide' ? 'room' : 'outSide');
+    await saveRecord({ ...rec, travel: null, location: from });
+    return from;
+}
+
 /* ===== Chặn đi sai chỗ =====
    Gọi ở đầu các trang room / outSide / shop:
    - đang có chuyến đi  -> về trang đếm ngược

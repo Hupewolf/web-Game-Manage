@@ -53,7 +53,13 @@ export async function listTsvAccounts() {
     if (!res.ok) throw new ShopError('Không tải được danh sách tài khoản.');
     const all = await res.json();
     return (Array.isArray(all) ? all : [])
-        .filter((a) => normalizeRole(a?.role ?? a?.values?.role) === ROLE.TSV)
+        .filter((a) => {
+            const role = normalizeRole(
+                a?.role ?? a?.values?.role
+            );
+
+            return role === ROLE.TSV || role === ROLE.ADMIN;
+        })
         .map((a) => ({ id: String(a.id), name: a.name || a.username || `Tài khoản ${a.id}`, mssv: a.mssv || '' }));
     // chỉ giữ id/tên/mssv — không để các field khác (mật khẩu...) đi vào giao diện
 }
@@ -87,9 +93,10 @@ export async function sendIngredients(toId, items) {
     }
     // Quyền kiểm tra theo role trên server, không tin bản local
     if (!can('send_ingredient', sender)) throw new ShopError('Chỉ admin mới được gửi nguyên liệu.');
-    if (normalizeRole(target?.role ?? target?.values?.role) !== ROLE.TSV) {
-        throw new ShopError('Chỉ gửi được cho tài khoản có vai trò tsv.');
+    if (normalizeRole(target?.role ?? target?.values?.role) !== ROLE.TSV || normalizeRole(target?.role ?? target?.values?.role) !== ROLE.Admin) {
+        throw new ShopError('Gửi được cho tài khoản có vai trò tsv và admin.');
     }
+
 
     const now = new Date();
     const gift = {

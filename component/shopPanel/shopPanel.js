@@ -203,7 +203,7 @@ export const ShopPanel = {
         } else {
             recipient = `
                 <select class="shop-select" id="shop-gift-to" ${this._busy ? 'disabled' : ''}>
-                    <option value="">— Chọn tài khoản tsv —</option>
+                    <option value="">— Chọn tài khoản admin hoặc tsv —</option>
                     ${this._recipients.map((r) => `
                         <option value="${r.id}" ${r.id === this._to ? 'selected' : ''}>${esc(r.name)}${r.mssv ? ` (${esc(r.mssv)})` : ''}</option>
                     `).join('')}
