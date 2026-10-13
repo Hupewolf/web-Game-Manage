@@ -39,7 +39,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 console.log("Đăng nhập thành công với user:", user.name);
                 localStorage.setItem("isLoggedIn", "true");
                 localStorage.setItem("currentUser", JSON.stringify(user)); 
-                window.location.href = "../room/room.html";
+                const { Loader } = await import("../../component/loader/loader.js");
+                Loader.go("../room/room.html", { ms: 2000, text: "Đang vào game..." });
             } else {
                 alert("MSSV hoặc mật khẩu không chính xác!");
                 loginBtn.textContent = "Đăng nhập";
