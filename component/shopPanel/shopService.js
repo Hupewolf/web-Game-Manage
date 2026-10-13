@@ -96,6 +96,9 @@ function mergeIntoLocal(server) {
     if (server.values && 'items' in server.values) next.values.items = server.values.items;
     if ('items' in server) next.items = server.items;
     if ('ingredients' in server) next.ingredients = server.ingredients;
+    if ('vehicles' in server) next.vehicles = server.vehicles;
+    if ('travel' in server) next.travel = server.travel;
+    if ('location' in server) next.location = server.location;
     if ('inbox' in server) next.inbox = server.inbox;
     if ('transactions' in server) next.transactions = server.transactions;
     if ('role' in server) next.role = server.role;
@@ -230,6 +233,18 @@ export async function buyFood(shop, qty) {
         try { await adjustMarket(shop, n); } catch { /* không hoàn được thì thôi, tránh che lỗi gốc */ }
         throw err;
     }
+}
+
+// Mua phương tiện (app iPad): trừ coin, thêm id vào u.vehicles. Mỗi xe mua 1 lần.
+export async function buyVehicle(vehicle) {
+    return mutateAccount((u) => {
+        requirePermission(u, 'move');
+        const owned = Array.isArray(u.vehicles) ? u.vehicles : [];
+        if (vehicle.id === 'walk' || owned.includes(vehicle.id)) throw new ShopError('Bạn đã sở hữu phương tiện này.');
+        spend(u, vehicle.price);
+        u.vehicles = [...owned, vehicle.id];
+        logTx(u, { title: `Mua ${vehicle.name}`, subtitle: 'Cửa hàng phương tiện', amount: -vehicle.price });
+    });
 }
 
 // tsv đưa món đã chế biến lên sàn: trừ món trong túi, nhận giá cố định cho mỗi món.
