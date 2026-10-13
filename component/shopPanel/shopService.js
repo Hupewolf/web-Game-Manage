@@ -6,6 +6,7 @@
 import { API_BASE, fetchAccount, putAccount } from '../../share/accountApi.js';
 import { can, getCurrentUser } from '../../share/roles.js';
 import { INGREDIENTS } from './shopConfig.js';
+import { VEHICLES } from '../../share/travelConfig.js';
 
 export class ShopError extends Error {}
 
@@ -97,8 +98,6 @@ function mergeIntoLocal(server) {
     if ('items' in server) next.items = server.items;
     if ('ingredients' in server) next.ingredients = server.ingredients;
     if ('vehicles' in server) next.vehicles = server.vehicles;
-    if ('travel' in server) next.travel = server.travel;
-    if ('location' in server) next.location = server.location;
     if ('inbox' in server) next.inbox = server.inbox;
     if ('transactions' in server) next.transactions = server.transactions;
     if ('role' in server) next.role = server.role;
@@ -241,6 +240,11 @@ export async function buyVehicle(vehicle) {
         requirePermission(u, 'move');
         const owned = Array.isArray(u.vehicles) ? u.vehicles : [];
         if (vehicle.id === 'walk' || owned.includes(vehicle.id)) throw new ShopError('Bạn đã sở hữu phương tiện này.');
+        const idx = VEHICLES.findIndex((v) => v.id === vehicle.id);
+        const prev = idx > 0 ? VEHICLES[idx - 1] : null;
+        if (prev && prev.id !== 'walk' && !owned.includes(prev.id)) {
+            throw new ShopError(`Bạn cần mua ${prev.name} trước khi mua ${vehicle.name}.`);
+        }
         spend(u, vehicle.price);
         u.vehicles = [...owned, vehicle.id];
         logTx(u, { title: `Mua ${vehicle.name}`, subtitle: 'Cửa hàng phương tiện', amount: -vehicle.price });

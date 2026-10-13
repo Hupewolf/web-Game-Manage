@@ -55,7 +55,7 @@
     display: flex;
     flex-direction: column;
     gap: 18px;
-    min-height: 630px;
+    height: 650px;
     padding: 46px 36px 24px;
     border-radius: 0 0 28px 28px;
     border: 5px solid var(--nau);
@@ -65,6 +65,11 @@
         radial-gradient(rgba(138, 90, 43, 0.08) 1.5px, transparent 1.5px) 0 0 / 22px 22px,
         var(--giay);
     box-shadow: 0 18px 0 -6px var(--nau-dam), 0 28px 40px rgba(74, 44, 20, 0.45);
+}
+
+.shop-card-top {
+    display: flex;
+    justify-content: space-between;
 }
 
 /* ===== Bảng hiệu gỗ ===== */
@@ -115,21 +120,6 @@
     color: #ffe3b8;
 }
 
-/* Vai trò: con dấu */
-.shop-role {
-    padding: 8px 20px;
-    border-radius: 12px;
-    border: 3px dashed currentColor;
-    font-size: 15px;
-    font-weight: 800;
-    background: rgba(255, 255, 255, 0.55);
-    transform: rotate(2.5deg);
-}
-
-.shop-role--tsv { color: var(--xanh); }
-.shop-role--csv { color: var(--cam-dam); }
-.shop-role--admin { color: var(--do); }
-
 /* ===== Kho nguyên liệu: tờ ghi chú ===== */
 .shop-stock {
     display: flex;
@@ -154,6 +144,7 @@
 /* ===== Tab: thẻ thực đơn ===== */
 .shop-tabs {
     display: flex;
+    height: 80%;
     gap: 12px;
 }
 
@@ -384,30 +375,6 @@
     font-weight: 600;
     color: var(--nau);
 }
-
-.shop-craft__need {
-    display: flex;
-    gap: 14px;
-    list-style: none;
-}
-
-.shop-craft__need li {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 9px 16px;
-    border-radius: 99px;
-    border: 3px solid var(--nau-nhat);
-    background: #fff;
-    font-size: 16px;
-    font-weight: 700;
-}
-
-.shop-craft__need li span { font-weight: 800; }
-.shop-craft__need li.is-ok { border-color: #9ccc78; }
-.shop-craft__need li.is-ok span { color: var(--xanh); }
-.shop-craft__need li.is-missing { border-color: #f0a79f; }
-.shop-craft__need li.is-missing span { color: var(--do); }
 
 .shop-empty {
     margin: auto;

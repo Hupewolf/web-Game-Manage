@@ -16,6 +16,7 @@ export const SHOPS = {
 
         // Công thức: 1 phần món = 1 rau + 2 thịt + 1 tinh bột
         recipe: { rau: 1, thit: 2, tinhbot: 1 },
+        cookSeconds: 5,
 
         // Món ăn (lưu vào túi đồ cùng định dạng item hiện có: nameItems / image / type / indexItem / quantity)
         food: {

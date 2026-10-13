@@ -56,22 +56,33 @@ export const VehicleApp = {
                 </div>
                 ${this._msg ? `<div class="vh-msg vh-msg--${this._msg.type}">${this._msg.text}</div>` : ''}
                 <div class="vh-flex">
-                    ${VEHICLES.map((v) => this._card(v, owned, best, coin)).join('')}
+                    ${VEHICLES.map((v, i) => this._card(v, i, owned, best, coin)).join('')}
                 </div>
             </div>`;
 
         el.querySelectorAll('[data-buy]').forEach((btn) => {
             btn.addEventListener('click', () => this._buy(btn.dataset.buy));
         });
+        el.querySelectorAll('[data-locked]').forEach((btn) => {
+            btn.addEventListener('click', () => {
+                const v = VEHICLES.find((x) => x.id === btn.dataset.locked);
+                const prev = VEHICLES[VEHICLES.indexOf(v) - 1];
+                this._msg = { type: 'err', text: `Bạn cần mua ${prev.name} trước khi mua ${v.name}.` };
+                this._draw();
+            });
+        });
     },
 
-    _card(v, owned, best, coin) {
+    _card(v, i, owned, best, coin) {
         const has = owned.includes(v.id);
+        const prev = i > 0 ? VEHICLES[i - 1] : null;
+        const locked = !has && prev && !owned.includes(prev.id); // chưa có phương tiện ngay trước nó
         const inUse = best.id === v.id;
         const saved = Math.round((1 - v.timeFactor) * 100);
         let action;
         if (inUse) action = `<button class="vh-btn vh-btn--use" disabled>Đang dùng</button>`;
         else if (has) action = `<button class="vh-btn" disabled>Đã sở hữu</button>`;
+        else if (locked) action = `<button class="vh-btn vh-btn--locked" data-locked="${v.id}"><i class="fa-solid fa-lock"></i> Chưa mở khoá</button>`;
         else if (coin < v.price) action = `<button class="vh-btn" disabled>Không đủ coin · ${fmt(v.price)}</button>`;
         else action = `<button class="vh-btn vh-btn--buy" data-buy="${v.id}" ${this._busy ? 'disabled' : ''}>Mua · ${fmt(v.price)} coin</button>`;
 
