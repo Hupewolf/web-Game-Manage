@@ -1,17 +1,18 @@
 // component/shopPanel/shopPanel.js
 // Giao diện cửa hàng. Tab hiển thị theo vai trò:
 //   Món ăn          : mọi vai trò (mua món từ sàn bằng coin, sàn có món mới mua được)
-//   Chế biến        : tsv / admin (1 rau + 2 thịt + 1 tinh bột -> 1 món)
+//   Chế biến        : tsv / admin (trạm nấu: ném 1 rau + 2 thịt + 1 tinh bột vào nồi -> nấu vài giây -> 1 món)
 //   Bán món         : tsv / admin (đưa món đã chế biến lên sàn chung, nhận coin)
 //   Gửi nguyên liệu : chỉ admin (gửi cho tsv, tsv nhận trong thông báo ở header)
 
 import { SHOPS, INGREDIENTS } from './shopConfig.js';
-import { can, getRole, getCurrentUser, ROLE_LABEL } from '../../share/roles.js';
+import { can, getCurrentUser } from '../../share/roles.js';
 import {
     ShopError, buyFood, craftFood, sellFood,
-    refreshAccount, coinOf, getIngredients, getFoodCount, maxCraftable, getMarketStock,
+    refreshAccount, coinOf, getIngredients, getFoodCount, getMarketStock,
 } from './shopService.js';
 import { listTsvAccounts, sendIngredients } from './giftService.js';
+import { CookStation } from './cookStation.js';
 
 const esc = (t) => String(t).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const fmt = (n) => Number(n || 0).toLocaleString('vi-VN');
@@ -84,22 +85,28 @@ export const ShopPanel = {
         const tabs = this._tabs();
         if (!tabs.some((t) => t.id === this._tab)) this._tab = tabs[0]?.id;
 
-        const role = getRole(user);
         const ing = getIngredients(user);
-        const showStock = can('craft_food', user) || can('receive_ingredient', user);
+        // Tab chế biến đã có kệ nguyên liệu riêng nên ẩn thanh kho để lấy chỗ cho bếp
+        const showStock = (can('craft_food', user) || can('receive_ingredient', user)) && this._tab !== 'craft';
 
         this._root.innerHTML = `
             <div class="shop-awning" aria-hidden="true"></div>
             <div class="shop-card">
-                <div class="shop-head">
-                    <div class="shop-head__title">
-                        <i class="fa-solid fa-store"></i>
-                        <div>
-                            <h1>${shop.name}</h1>
-                            <p>${shop.tagline}</p>
+                <div class="shop-card-top">
+                    <div class="shop-head">
+                        <div class="shop-head__title">
+                            <i class="fa-solid fa-store"></i>
+                            <div>
+                                <h1>${shop.name}</h1>
+                                <p>${shop.tagline}</p>
+                            </div>
                         </div>
                     </div>
-                    <span class="shop-role shop-role--${role}">Vai trò: ${ROLE_LABEL[role]}</span>
+                    <div class="shop-tabs">
+                        ${tabs.map((t) => `
+                            <button class="shop-tab${t.id === this._tab ? ' is-active' : ''}" data-action="tab" data-tab="${t.id}">${t.label}</button>
+                        `).join('')}
+                    </div>
                 </div>
 
                 ${showStock ? `
@@ -110,21 +117,26 @@ export const ShopPanel = {
                     `).join('')}
                 </div>` : ''}
 
-                <div class="shop-tabs">
-                    ${tabs.map((t) => `
-                        <button class="shop-tab${t.id === this._tab ? ' is-active' : ''}" data-action="tab" data-tab="${t.id}">${t.label}</button>
-                    `).join('')}
-                </div>
+                
 
                 <div class="shop-body">
                     ${this._tab === 'food' ? this._foodTab(user) : ''}
-                    ${this._tab === 'craft' ? this._craftTab(user) : ''}
+                    ${this._tab === 'craft' ? '<div id="cook-slot"></div>' : ''}
                     ${this._tab === 'sell' ? this._sellTab(user) : ''}
                     ${this._tab === 'send' ? this._sendTab() : ''}
                 </div>
             </div>
             <div class="shop-toast" id="shop-toast"></div>
         `;
+
+        // Trạm nấu giữ nguyên phần tử cũ (nồi đang nấu, lửa...) qua mỗi lần vẽ lại, chỉ gắn lại vào chỗ trống
+        const slot = this._root.querySelector('#cook-slot');
+        if (slot) {
+            slot.replaceWith(CookStation.mount(shop, user, {
+                craft: () => craftFood(shop, 1),
+                toast: (msg, type) => this._toast(msg, type),
+            }));
+        }
     },
 
     _stepper(key, max = 99, min = 1) {
@@ -237,39 +249,6 @@ export const ShopPanel = {
         }
     },
 
-    _craftTab(user) {
-        const shop = this._shop;
-        const have = getIngredients(user);
-        const max = maxCraftable(user, shop.recipe);
-        const q = Math.min(this._key('craft'), Math.max(max, 1));
-        const recipeText = Object.entries(shop.recipe)
-            .map(([id, n]) => `${n} ${INGREDIENTS[id].name}`).join(' + ');
-        return `
-            <div class="shop-craft">
-                <div class="shop-craft__recipe">
-                    <img src="${shop.food.image}" alt="${shop.food.nameItems}">
-                    <div>
-                        <h3>${shop.food.nameItems}</h3>
-                        <p>${recipeText} → 1 phần</p>
-                    </div>
-                </div>
-                <ul class="shop-craft__need">
-                    ${Object.entries(shop.recipe).map(([id, n]) => {
-                        const ok = have[id] >= n * q;
-                        return `<li class="${ok ? 'is-ok' : 'is-missing'}">
-                            <i class="fa-solid ${INGREDIENTS[id].icon}"></i> ${INGREDIENTS[id].name}
-                            <span>${have[id]} / ${n * q}</span>
-                        </li>`;
-                    }).join('')}
-                </ul>
-                <p class="shop-item__meta">Có thể chế biến tối đa: <b>${max}</b> phần · Đang có món: <b>${getFoodCount(user, shop.food)}</b></p>
-                ${this._stepper('craft', Math.max(max, 1))}
-                <button class="shop-btn" data-action="craft" ${max < 1 || this._busy ? 'disabled' : ''}>
-                    ${max < 1 ? 'Thiếu nguyên liệu' : `Chế biến x${q}`}
-                </button>
-            </div>`;
-    },
-
     async _onClick(e) {
         const btn = e.target.closest('[data-action]');
         if (!btn || btn.disabled) return;
@@ -308,10 +287,6 @@ export const ShopPanel = {
                 await sellFood(this._shop, n);
                 this._qty.sell = 1;
                 this._toast(`Đã bán ${n} ${this._shop.food.nameItems} lên sàn (+${fmt(this._shop.food.price * n)} coin).`, 'ok');
-            } else if (action === 'craft') {
-                const n = Math.min(this._key('craft'), maxCraftable(getCurrentUser(), this._shop.recipe));
-                await craftFood(this._shop, n);
-                this._toast(`Đã chế biến ${n} ${this._shop.food.nameItems}.`, 'ok');
             }
         } catch (err) {
             if (err instanceof ShopError) this._toast(err.message, 'err');

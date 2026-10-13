@@ -1,0 +1,646 @@
+/* component/shopPanel/cookStation.css
+   Trạm nấu ăn: cảnh bếp tối ấm (để lửa nổi bật), kệ nguyên liệu bên trái, nồi + lửa ở giữa, khay thành phẩm bên phải.
+   Biến điều khiển từ JS trên .cook: --heat (độ lớn của lửa, 0 = tắt), --fill (độ đầy của nồi 0..1), --cook (tiến độ nấu 0..1). */
+
+.cook {
+    --heat: 0;
+    --fill: 0;
+    --cook: 0;
+
+    position: relative;
+    display: grid;
+    grid-template-columns: 270px 1fr 250px;
+    height: 380px;
+    border-radius: 26px;
+    border: 4px solid var(--nau-dam);
+    overflow: hidden;
+    background:
+        repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.07) 0 2px, transparent 2px 64px),
+        linear-gradient(180deg, #6e4624 0%, #4a2c14 62%, #34200e 100%);
+    box-shadow: inset 0 6px 24px rgba(0, 0, 0, 0.45), 0 5px 0 rgba(74, 44, 20, 0.35);
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.cook.is-carrying { cursor: grabbing; }
+
+/* ===== Kệ nguyên liệu ===== */
+.cook-shelf {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px 16px 12px;
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.32), rgba(0, 0, 0, 0.1));
+    border-right: 4px solid rgba(0, 0, 0, 0.35);
+}
+
+.cook-title {
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--nau-nhat);
+}
+
+.cook-ing {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 10px 14px 10px 10px;
+    border-radius: 20px;
+    border: 3px solid var(--nau-nhat);
+    background: linear-gradient(var(--kem), #f6dfb4);
+    box-shadow: 0 5px 0 rgba(0, 0, 0, 0.4);
+    cursor: grab;
+    touch-action: none;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.2s ease;
+}
+
+.cook-ing:hover { transform: translateY(-2px); box-shadow: 0 7px 0 rgba(0, 0, 0, 0.4); }
+.cook-ing:focus-visible { outline: 3px solid var(--cam-nhat); outline-offset: 2px; }
+.cook-ing.is-dragging { opacity: 0.6; }
+
+.cook-ing.is-empty {
+    filter: grayscale(0.85) brightness(0.9);
+    cursor: not-allowed;
+}
+
+.cook-ing.is-shake { animation: cook-shake 0.4s ease; }
+
+.cook-ing__icon {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    border: 4px solid #fff;
+    box-shadow: 0 4px 0 rgba(74, 44, 20, 0.3);
+    font-size: 29px;
+    color: #fff;
+}
+
+.cook-ing__icon--rau { background: #6aa84f; }
+.cook-ing__icon--thit { background: #e0584a; }
+.cook-ing__icon--tinhbot { background: #e0a43a; }
+
+.cook-ing__info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--nau);
+}
+
+.cook-ing__info b { font-size: 19px; font-weight: 800; color: var(--nau-dam); }
+.cook-ing__info em { font-style: normal; font-weight: 800; color: var(--cam-dam); }
+
+.cook-ing__pips { display: flex; gap: 5px; margin-top: 2px; }
+
+.cook-pip {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 2px solid var(--nau-nhat);
+    background: #fff;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.cook-pip.is-on {
+    background: radial-gradient(circle at 35% 30%, #ffb35c, var(--cam));
+    border-color: var(--cam-dam);
+    transform: scale(1.15);
+}
+
+.cook-tip {
+    margin-top: auto;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--nau-nhat);
+    text-align: center;
+}
+
+/* ===== Sân khấu giữa: nồi + bếp ===== */
+.cook-stage {
+    position: relative;
+    overflow: hidden;
+}
+
+/* ánh sáng lửa hắt ra cả cảnh (gradient) */
+.cook-glow {
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(ellipse 58% 52% at 50% 80%, rgba(255, 160, 50, 0.62), rgba(255, 100, 20, 0.2) 48%, transparent 72%),
+        radial-gradient(ellipse 90% 80% at 50% 100%, rgba(255, 90, 10, 0.22), transparent 70%);
+    opacity: calc(var(--heat) * 0.85);
+    transition: opacity 0.6s ease;
+    pointer-events: none;
+}
+
+.cook-status {
+    position: absolute;
+    top: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 6;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    min-width: 280px;
+    padding: 8px 22px;
+    border-radius: 99px;
+    border: 3px solid var(--nau-dam);
+    background: var(--kem);
+    box-shadow: 0 4px 0 rgba(0, 0, 0, 0.4);
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--nau-dam);
+    text-align: center;
+    white-space: nowrap;
+}
+
+.cook-bar {
+    display: none;
+    width: 100%;
+    height: 10px;
+    border-radius: 99px;
+    background: #ead3a6;
+    overflow: hidden;
+}
+
+.cook-bar i {
+    display: block;
+    width: 0;
+    height: 100%;
+    border-radius: 99px;
+    background: linear-gradient(90deg, #ffd23f, #ff8a00, #ff3d00);
+}
+
+.cook.is-cooking .cook-bar { display: block; }
+
+.cook-clear {
+    position: absolute;
+    top: 18px;
+    right: 14px;
+    z-index: 6;
+    padding: 6px 14px;
+    border: 2px solid var(--nau-nhat);
+    border-radius: 99px;
+    background: rgba(255, 246, 229, 0.12);
+    color: var(--nau-nhat);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.cook-clear:hover { background: rgba(255, 246, 229, 0.28); }
+.cook-clear[hidden] { display: none; }
+
+/* mặt bàn bếp + bệ bếp */
+.cook-counter {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 40px;
+    background: linear-gradient(#b87a45, #8a5a2b);
+    border-top: 4px solid #d9a066;
+    box-shadow: 0 -6px 14px rgba(0, 0, 0, 0.3);
+}
+
+.cook-stove {
+    position: absolute;
+    left: 50%;
+    bottom: 30px;
+    width: 330px;
+    height: 24px;
+    margin-left: -165px;
+    z-index: 1;
+    border-radius: 12px 12px 4px 4px;
+    background: linear-gradient(#7d7d85, #4a4a52);
+    border: 3px solid #2b2b30;
+    box-shadow: 0 4px 0 rgba(0, 0, 0, 0.35);
+}
+
+/* ===== Lửa: gradient đỏ -> cam -> vàng, chớp tắt theo --heat ===== */
+.cook-fire {
+    position: absolute;
+    left: 50%;
+    bottom: 52px;
+    width: 230px;
+    height: 100px;
+    margin-left: -115px;
+    z-index: 1;
+    transform-origin: 50% 100%;
+    transform: scaleY(var(--heat));
+    opacity: min(1, calc(var(--heat) * 3));
+    transition: transform 0.5s cubic-bezier(.3, 1.4, .5, 1), opacity 0.4s ease;
+    filter: drop-shadow(0 0 12px rgba(255, 140, 0, 0.9));
+    pointer-events: none;
+}
+
+.cook-flame {
+    position: absolute;
+    left: var(--x);
+    bottom: 0;
+    width: 46px;
+    height: 74px;
+    scale: var(--s);
+    transform-origin: 50% 100%;
+    clip-path: path('M23 0 C26 18 46 30 44 52 C43 66 33 74 23 74 C13 74 3 66 2 52 C0 36 14 30 23 0 Z');
+    background: linear-gradient(to top, #d32100 0%, #ff4d00 25%, #ff8a00 55%, #ffc21f 85%, #ffe27a 100%);
+    animation: cook-flicker 0.9s ease-in-out infinite;
+    animation-delay: var(--d);
+}
+
+.cook-flame i {
+    position: absolute;
+    left: 12px;
+    bottom: 0;
+    width: 22px;
+    height: 44px;
+    clip-path: path('M11 0 C13 11 22 18 21 31 C20.5 39 16 44 11 44 C6 44 1.5 39 1 31 C0 21 7 17 11 0 Z');
+    background: linear-gradient(to top, #ffb01f 0%, #ffe27a 55%, #fffbe0 100%);
+    animation: cook-flicker 0.7s ease-in-out infinite reverse;
+    animation-delay: var(--d);
+}
+
+.cook.is-cooking .cook-flame { animation-duration: 0.55s; }
+
+.cook-spark {
+    position: absolute;
+    left: var(--x);
+    bottom: 30px;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #ffd36b;
+    box-shadow: 0 0 8px 2px rgba(255, 150, 30, 0.9);
+    opacity: 0;
+    animation: cook-spark 1.7s linear infinite;
+    animation-delay: var(--d);
+}
+
+/* ===== Nồi ===== */
+.cook-pot {
+    position: absolute;
+    left: 50%;
+    bottom: 86px;
+    width: 270px;
+    height: 190px;
+    margin-left: -135px;
+    z-index: 2;
+    transform-origin: 50% 100%;
+}
+
+.cook-pot.is-bump { animation: cook-bump 0.35s ease; }
+
+.cook-pot.is-hover::after {
+    content: "";
+    position: absolute;
+    left: -10px;
+    right: -10px;
+    top: -18px;
+    height: 92px;
+    border-radius: 50%;
+    border: 4px dashed var(--cam-nhat);
+    animation: cook-aim 0.8s ease-in-out infinite alternate;
+    pointer-events: none;
+}
+
+.cook-pot__body {
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    top: 30px;
+    bottom: 0;
+    border-radius: 10px 10px 92px 92px / 10px 10px 84px 84px;
+    background:
+        linear-gradient(90deg, rgba(0, 0, 0, 0.55) 0%, rgba(255, 255, 255, 0.18) 28%, rgba(0, 0, 0, 0.05) 52%, rgba(0, 0, 0, 0.6) 100%),
+        linear-gradient(#4b4b52, #1f1f23);
+    box-shadow: inset 0 -10px 16px rgba(0, 0, 0, 0.5), 0 6px 14px rgba(0, 0, 0, 0.45);
+}
+
+/* nồi bị lửa hắt sáng ở đáy */
+.cook-pot__body::after {
+    content: "";
+    position: absolute;
+    inset: auto 0 0 0;
+    height: 70%;
+    border-radius: inherit;
+    background: radial-gradient(ellipse 70% 80% at 50% 100%, rgba(255, 120, 20, 0.75), transparent 70%);
+    opacity: calc(var(--heat) * 0.8);
+    transition: opacity 0.6s ease;
+}
+
+.cook-pot__handle {
+    position: absolute;
+    top: 62px;
+    width: 32px;
+    height: 18px;
+    border-radius: 9px;
+    background: linear-gradient(#5d5d65, #25252a);
+    box-shadow: 0 3px 0 rgba(0, 0, 0, 0.4);
+}
+
+.cook-pot__handle--l { left: -12px; }
+.cook-pot__handle--r { right: -12px; }
+
+.cook-pot__rim {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 64px;
+    border-radius: 50%;
+    background: linear-gradient(#8a8a93, #35353b);
+    box-shadow: 0 4px 0 rgba(0, 0, 0, 0.35);
+}
+
+.cook-pot__mouth {
+    position: absolute;
+    inset: 8px 10px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse at 50% 30%, #1a1a1e, #08080a);
+    box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.8);
+}
+
+/* canh: hiện dần khi thêm nguyên liệu, sẫm dần khi nấu (--cook) */
+.cook-soup {
+    position: absolute;
+    inset: 3px 4px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse at 50% 35%, #fff0c2 0%, #f3c46b 45%, #d98a2b 100%);
+    opacity: calc(var(--fill) * 0.95);
+    transition: opacity 0.4s ease;
+    overflow: hidden;
+}
+
+.cook-soup::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 35%, #ffb04a, #c4561a 60%, #7a2c0c);
+    opacity: var(--cook);
+}
+
+.cook-floater {
+    position: absolute;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    margin: -13px 0 0 -13px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    font-size: 12px;
+    color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    animation: cook-bob 1.6s ease-in-out infinite;
+}
+
+.cook.is-cooking .cook-floater { animation-duration: 0.8s; }
+
+.cook-bubble {
+    position: absolute;
+    z-index: 1;
+    bottom: 30%;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.85);
+    background: rgba(255, 255, 255, 0.25);
+    opacity: 0;
+}
+
+.cook.is-cooking .cook-bubble { animation: cook-bubble 0.9s ease-out infinite; animation-delay: var(--d); }
+
+.cook-ripple {
+    position: absolute;
+    inset: 12% 16%;
+    z-index: 3;
+    border-radius: 50%;
+    border: 3px solid rgba(255, 255, 255, 0.9);
+    animation: cook-ripple 0.7s ease-out forwards;
+    pointer-events: none;
+}
+
+.cook-drop {
+    position: absolute;
+    z-index: 3;
+    top: 40%;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #ffd98a;
+    animation: cook-drop 0.6s ease-out forwards;
+    pointer-events: none;
+}
+
+/* hơi nước */
+.cook-steam {
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% - 26px);
+    width: 140px;
+    height: 90px;
+    margin-left: -70px;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+    pointer-events: none;
+}
+
+.cook.is-lit .cook-steam { opacity: 0.35; }
+.cook.is-cooking .cook-steam { opacity: 1; }
+
+.cook-steam span {
+    position: absolute;
+    bottom: 0;
+    width: 18px;
+    height: 60px;
+    border-radius: 50%;
+    background: radial-gradient(rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0));
+    filter: blur(4px);
+    animation: cook-steam 2.2s ease-in infinite;
+}
+
+.cook-steam span:nth-child(1) { left: 18%; }
+.cook-steam span:nth-child(2) { left: 46%; animation-delay: 0.7s; }
+.cook-steam span:nth-child(3) { left: 72%; animation-delay: 1.4s; }
+
+/* ===== Cột phải: công thức + khay thành phẩm ===== */
+.cook-side {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 16px 12px;
+    background: linear-gradient(270deg, rgba(0, 0, 0, 0.32), rgba(0, 0, 0, 0.1));
+    border-left: 4px solid rgba(0, 0, 0, 0.35);
+}
+
+.cook-recipe {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 18px;
+    border: 3px dashed var(--nau-nhat);
+    background: var(--kem);
+    color: var(--nau);
+}
+
+.cook-recipe img { width: 54px; height: 54px; object-fit: contain; flex-shrink: 0; }
+.cook-recipe div { display: flex; flex-direction: column; gap: 2px; }
+.cook-recipe b { font-size: 20px; font-weight: 800; color: var(--nau-dam); }
+.cook-recipe small { font-size: 12.5px; font-weight: 700; line-height: 1.3; }
+
+.cook-plate {
+    position: relative;
+    margin-top: 8px;
+    width: 170px;
+    height: 170px;
+    border-radius: 50%;
+    background:
+        radial-gradient(circle at 50% 50%, #fffaf0 0 52%, #f0dcb4 53% 58%, #fffaf0 59% 100%);
+    border: 5px solid #d9a066;
+    box-shadow: 0 8px 0 rgba(0, 0, 0, 0.4), inset 0 4px 10px rgba(138, 90, 43, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cook-plate.has-dish { box-shadow: 0 8px 0 rgba(0, 0, 0, 0.4), 0 0 28px 6px rgba(255, 200, 90, 0.55); }
+
+.cook-plate__dish img {
+    width: 96px;
+    height: 96px;
+    object-fit: contain;
+    filter: drop-shadow(0 6px 4px rgba(74, 44, 20, 0.35));
+}
+
+.cook-plate__dish.is-pop { animation: cook-pop 0.55s cubic-bezier(.3, 1.6, .5, 1); }
+
+.cook-plate__label {
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.3;
+    text-align: center;
+    color: var(--nau-nhat);
+}
+
+/* ===== Phần tử bay (gắn vào body nên nằm ngoài .cook) ===== */
+.cook-ghost {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 4px solid #fff;
+    color: #fff;
+    box-shadow: 0 14px 18px rgba(0, 0, 0, 0.4);
+    pointer-events: none;
+    will-change: transform;
+}
+
+.cook-ghost.cook-ing__icon--rau { background: #6aa84f; }
+.cook-ghost.cook-ing__icon--thit { background: #e0584a; }
+.cook-ghost.cook-ing__icon--tinhbot { background: #e0a43a; }
+
+.cook-dish-fly {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 9999;
+    object-fit: contain;
+    pointer-events: none;
+    filter: drop-shadow(0 10px 8px rgba(0, 0, 0, 0.4));
+    will-change: transform;
+}
+
+/* ===== Animation ===== */
+@keyframes cook-flicker {
+    0%, 100% { transform: scale(1, 1) skewX(0deg); }
+    25% { transform: scale(0.93, 1.1) skewX(5deg); }
+    50% { transform: scale(1.05, 0.93) skewX(-4deg); }
+    75% { transform: scale(0.97, 1.06) skewX(3deg); }
+}
+
+@keyframes cook-spark {
+    0% { transform: translate(0, 0); opacity: 0; }
+    12% { opacity: 1; }
+    100% { transform: translate(var(--dx), -130px); opacity: 0; }
+}
+
+@keyframes cook-steam {
+    0% { transform: translate(0, 0) scale(0.6); opacity: 0; }
+    25% { opacity: 0.9; }
+    100% { transform: translate(14px, -80px) scale(1.5); opacity: 0; }
+}
+
+@keyframes cook-bob {
+    0%, 100% { transform: translateY(0) rotate(-6deg); }
+    50% { transform: translateY(-3px) rotate(6deg); }
+}
+
+@keyframes cook-bubble {
+    0% { transform: translateY(0) scale(0.4); opacity: 0; }
+    30% { opacity: 1; }
+    100% { transform: translateY(-14px) scale(1.2); opacity: 0; }
+}
+
+@keyframes cook-ripple {
+    0% { transform: scale(0.2); opacity: 1; }
+    100% { transform: scale(1.1); opacity: 0; }
+}
+
+@keyframes cook-drop {
+    0% { transform: translate(0, 0); opacity: 1; }
+    55% { transform: translate(calc(var(--dx) * 0.6), var(--dy)); opacity: 1; }
+    100% { transform: translate(var(--dx), 12px); opacity: 0; }
+}
+
+@keyframes cook-bump {
+    0% { transform: scale(1, 1); }
+    35% { transform: scale(1.05, 0.93); }
+    70% { transform: scale(0.98, 1.03); }
+    100% { transform: scale(1, 1); }
+}
+
+@keyframes cook-aim {
+    from { opacity: 0.45; transform: scale(0.98); }
+    to { opacity: 1; transform: scale(1.03); }
+}
+
+@keyframes cook-pop {
+    0% { transform: scale(0) rotate(-20deg); }
+    100% { transform: scale(1) rotate(0deg); }
+}
+
+@keyframes cook-shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-7px); }
+    40% { transform: translateX(7px); }
+    60% { transform: translateX(-5px); }
+    80% { transform: translateX(5px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .cook-flame, .cook-flame i, .cook-spark, .cook-steam span, .cook-floater, .cook-bubble { animation: none; }
+}
