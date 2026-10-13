@@ -1,4 +1,11 @@
 import { ViCoinApp } from '../viCoinApp/viCoinApp.js';
+import { VehicleApp } from '../vehicleApp/vehicleApp.js';
+
+// Tiêu đề + icon trên thanh trạng thái khi mở app con
+const APP_META = {
+    vicoin: { title: 'Ví Coin', icon: 'fa-wallet' },
+    vehicle: { title: 'Phương Tiện', icon: 'fa-motorcycle' },
+};
 
 function updateClock() {
     const time = document.getElementById("time");
@@ -15,7 +22,7 @@ setInterval(updateClock, 1000);
 
 
 const FEATURES_ROW_1 = [
-    { id: 'shop',      label: 'Cửa Hàng',        icon: 'fa-bag-shopping', badge: true,  grad: 'grad-orange' },
+    { id: 'shop',      label: 'Phương Tiện',     icon: 'fa-motorcycle',   badge: false, grad: 'grad-orange' },
     { id: 'vicoin',    label: 'Ví Coin',         icon: 'fa-wallet',       badge: false, grad: 'grad-gold' },
     { id: 'meet',      label: 'Gặp Gỡ',          icon: 'fa-handshake',    badge: false, grad: 'grad-blue' },
     { id: 'guide',     label: 'Hướng Dẫn',       icon: 'fa-book-open',    badge: false, grad: 'grad-purple' },
@@ -270,6 +277,10 @@ export const DashboardPanel = {
                     this._openApp('vicoin');
                     return;
                 }
+                if (btn.dataset.feature === 'shop') {
+                    this._openApp('vehicle');
+                    return;
+                }
                 console.log('Mở tính năng:', btn.dataset.feature);
             });
         });
@@ -287,6 +298,18 @@ export const DashboardPanel = {
         if (!root) return;
         const card = root.querySelector('.dboard-card');
         if (card) card.dataset.view = appId;
+
+        const meta = APP_META[appId];
+        if (meta) {
+            const title = root.querySelector('.outer-bcn__app-title');
+            const icon = root.querySelector('.outer-bcn__app-icon i');
+            if (title) title.textContent = meta.title;
+            if (icon) icon.className = `fa-solid ${meta.icon}`;
+        }
+
+        if (appId === 'vehicle') {
+            VehicleApp.render('dboard-app-view');
+        }
 
         if (appId === 'vicoin') {
             const saved = localStorage.getItem('currentUser');

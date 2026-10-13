@@ -150,10 +150,14 @@
     padding: 0 22px 10px 18px;
 }
 
-.dboard-card[data-view="vicoin"] .outer-bcn--home { display: none; }
-.dboard-card[data-view="vicoin"] .outer-bcn--app { display: flex; }
-.dboard-card[data-view="vicoin"] .ipad-main { display: none; }
-.dboard-card[data-view="vicoin"] .dboard-app-view { display: flex; }
+.dboard-card[data-view="vicoin"] .outer-bcn--home,
+.dboard-card[data-view="vehicle"] .outer-bcn--home { display: none; }
+.dboard-card[data-view="vicoin"] .outer-bcn--app,
+.dboard-card[data-view="vehicle"] .outer-bcn--app { display: flex; }
+.dboard-card[data-view="vicoin"] .ipad-main,
+.dboard-card[data-view="vehicle"] .ipad-main { display: none; }
+.dboard-card[data-view="vicoin"] .dboard-app-view,
+.dboard-card[data-view="vehicle"] .dboard-app-view { display: flex; }
 
 .outer-bcn__back {
     border: none;
