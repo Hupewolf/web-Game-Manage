@@ -21,38 +21,40 @@ setInterval(updateClock, 1000);
 
 
 
+// Ảnh thẻ thành viên: thẻ ở trang chủ và avatar tròn trong "Hồ sơ" dùng chung 1 nguồn này
+// (avatar chỉ là phần cắt nhỏ của thẻ). Để trống = hiện khung "Chưa có thẻ".
+// Cũng có thể truyền qua state.profile.cardImage.
+const MEMBER_CARD_IMG = '';
+
 const FEATURES_ROW_1 = [
-    { id: 'shop',      label: 'Phương Tiện',     icon: 'fa-motorcycle',   badge: false, grad: 'grad-orange' },
-    { id: 'vicoin',    label: 'Ví Coin',         icon: 'fa-wallet',       badge: false, grad: 'grad-gold' },
-    { id: 'meet',      label: 'Gặp Gỡ',          icon: 'fa-handshake',    badge: false, grad: 'grad-blue' },
-    { id: 'guide',     label: 'Hướng Dẫn',       icon: 'fa-book-open',    badge: false, grad: 'grad-purple' },
-    { id: 'library',   label: 'Thư Viện',        icon: 'fa-book',         badge: false, grad: 'grad-teal' },
-    { id: 'mail',      label: 'Thư Thư',         icon: 'fa-envelope',     badge: true,  grad: 'grad-indigo' },
+    { id: 'shop',      label: 'Phương Tiện',     sub: 'Mua & sở hữu xe',      icon: 'fa-motorcycle',   badge: false, accent: 'orange' },
+    { id: 'vicoin',    label: 'Ví Coin',         sub: 'Số dư & giao dịch',    icon: 'fa-wallet',       badge: false, accent: 'yellow' },
+    { id: 'meet',      label: 'Gặp Gỡ',          sub: 'Kết nối thành viên',   icon: 'fa-handshake',    badge: false, accent: 'blue' },
+    { id: 'guide',     label: 'Hướng Dẫn',       sub: 'Làm quen nhanh',       icon: 'fa-book-open',    badge: false, accent: 'violet' },
+    { id: 'library',   label: 'Thư Viện',        sub: 'Tài liệu & sách',      icon: 'fa-book',         badge: false, accent: 'mint' },
+    { id: 'mail',      label: 'Thư Thư',         sub: 'Hộp thư của bạn',      icon: 'fa-envelope',     badge: true,  accent: 'pink' },
 ];
 
 const FEATURES_ROW_2 = [
-    { id: 'challenge', label: 'Thử Thách',       icon: 'fa-mountain',     badge: false, grad: 'grad-red' },
-    { id: 'gacha',     label: 'Vòng Xoáy Vô Hạn', icon: 'fa-rotate',      badge: false, grad: 'grad-sky' },
-    { id: 'squad',     label: 'Đội Hình',        icon: 'fa-people-group', badge: true,  grad: 'grad-cyan' },
-    { id: 'course',    label: 'Giáo Trình',      icon: 'fa-compass',     badge: false, grad: 'grad-violet' },
-    { id: 'contribute',label: 'Cống Hiến',       icon: 'fa-leaf',        badge: false, grad: 'grad-green' },
-    { id: 'trophy',    label: 'Thành Tựu',       icon: 'fa-trophy',      badge: false, grad: 'grad-navy' },
-];
-
-const HIGHLIGHTS = [
-    { id: 'journey', the: '1', title: 'Bắt đầu hành trình tu tiên', sub: 'Đạt cấp 15', progress: 12, max: 15, icon: 'fa-scroll' },
-    { id: 'event',  the: '2', title: 'Sự Kiện Đặc Biệt', sub: 'Tham gia để nhận thưởng hấp dẫn', icon: 'fa-torii-gate' },
-    { id: 'gift',  the: '3',  title: 'Gói Quà May Mắn', sub: 'Cơ hội nhận vật phẩm hiếm', icon: 'fa-box-open' },
+    { id: 'challenge', label: 'Thử Thách',       sub: 'Vượt ải nhận thưởng',  icon: 'fa-mountain',     badge: false, accent: 'pink' },
+    { id: 'gacha',     label: 'Vòng Xoáy Vô Hạn', sub: 'Quay nhận vật phẩm',  icon: 'fa-rotate',       badge: false, accent: 'blue' },
+    { id: 'squad',     label: 'Đội Hình',        sub: 'Quản lý đội nhóm',     icon: 'fa-people-group', badge: true,  accent: 'yellow' },
+    { id: 'course',    label: 'Giáo Trình',      sub: 'Lộ trình học tập',     icon: 'fa-compass',      badge: false, accent: 'violet' },
+    { id: 'contribute',label: 'Cống Hiến',       sub: 'Đóng góp điểm',        icon: 'fa-leaf',         badge: false, accent: 'mint' },
+    { id: 'trophy',    label: 'Thành Tựu',       sub: 'Cột mốc đã mở',        icon: 'fa-trophy',       badge: false, accent: 'orange' },
 ];
 
 function renderFeatureIcon(f) {
     return `
-        <button class="dboard-feature" data-feature="${f.id}">
-            <div class="dboard-feature__icon ${f.grad}">
+        <button class="dboard-feature dboard-feature--${f.accent}" data-feature="${f.id}">
+            <div class="dboard-feature__icon">
                 <i class="fa-solid ${f.icon}"></i>
                 ${f.badge ? '<span class="dboard-feature__dot"></span>' : ''}
             </div>
-            <span class="dboard-feature__label">${f.label}</span>
+            <div class="dboard-feature__text">
+                <span class="dboard-feature__label">${f.label}</span>
+                <span class="dboard-feature__sub">${f.sub}</span>
+            </div>
         </button>
     `;
 }
@@ -60,6 +62,7 @@ function renderFeatureIcon(f) {
 export const DashboardPanel = {
     _state: null,
     _open: false,        // mặc định bảng iPad đóng, mở bằng nút trên header
+    _side: 'card',       // cột trái trang chủ: 'card' (thẻ thành viên) | 'profile' (hồ sơ) — đổi bằng rail bên trái
     _escBound: false,
     _outsideBound: false,
 
@@ -81,6 +84,10 @@ export const DashboardPanel = {
         const coin = state.survival?.coin ?? 0;
         const missionsDone = 1; // demo: nhiệm vụ đã hoàn thành hôm nay
         const missionsTotal = 3;
+        const cardImg = state.profile?.cardImage || MEMBER_CARD_IMG;
+        // url() trong biến CSS bị tính theo vị trí file .css, nên đổi sang đường dẫn tuyệt đối theo trang
+        const cardUrl = cardImg ? new URL(cardImg, document.baseURI).href : '';
+        const initial = (name.trim()[0] || '?').toUpperCase();
 
         el.className = 'dboard-root' + (this._open ? ' dboard-root--open' : '');
         el.setAttribute('aria-hidden', String(!this._open));
@@ -88,7 +95,7 @@ export const DashboardPanel = {
             <div class="dboard-device">
                 <div class="dboard-device__cam"></div>
                 <div class="dboard-screen">
-            <div class="dboard-card">
+            <div class="dboard-card" data-view="home">
                 <div class="ipad-status-bar">
                     <div class="outer-bcn outer-bcn--home">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-code-xml"><path d="m18 16 4-4-4-4"/><path d="m6 8-4 4 4 4"/><path d="m14.5 4-5 16"/></svg>
@@ -117,123 +124,88 @@ export const DashboardPanel = {
                         
                     </div>
                 </div>
-                <!-- Sidebar trái -->
-                <div class="ipad-main">
-                    <aside class="dboard-side">
-                        <div class="dboard-profile">
-                            <div class="dboard-profile__avatar">
-
-                            </div>
-                            <div class="dboard-profile__info">
-                                <div class="dboard-profile__name">${name}</div>
-                                <span class="dboard-profile__tier">${tier}</span>
-                            </div>
-                        </div>
-                        <div class="dboard-level">
-                            <div class="dboard-level__row">
-                                <span>Lv.${level}</span>
-                                <span>${xp.current.toLocaleString()}/${xp.max.toLocaleString()}</span>
-                            </div>
-                            <div class="dboard-level__track">
-                                <div class="dboard-level__fill" style="width:${xpPct}%"></div>
-                            </div>
-                        </div>
-                        <button class="dboard-tagline">
-                            <span>Cùng học, cùng tiến bộ!</span>
-                            <i class="fa-solid fa-pen"></i>
+                <!-- Trang chủ: rail trái (Trang chủ / Hồ sơ) + thẻ thành viên hoặc hồ sơ + cụm app bên phải -->
+                <div class="ipad-main" data-side="${this._side}" style="--member-card-img: ${cardUrl ? `url('${cardUrl}')` : 'none'}">
+                    <nav class="dboard-rail" aria-label="Điều hướng chính">
+                        <button class="dboard-rail__btn" data-side-btn="card"${this._side === 'card' ? ' aria-current="page"' : ''} aria-label="Trang chủ" title="Trang chủ">
+                            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m3 11 9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1Z"/></svg>
                         </button>
-                        <div class="dboard-side-list">
-                            <button class="dboard-side-item" data-action="checkin">
-                                <div class="dboard-side-item__icon icon-star"><i class="fa-solid fa-star"></i></div>
-                                <div class="dboard-side-item__text">
-                                    <span class="t">Điểm Danh</span>
-                                    <span class="s">7 ngày liên tiếp</span>
-                                </div>
-                                <i class="fa-solid fa-chevron-right dboard-side-item__arrow"></i>
-                            </button>
-                            <button class="dboard-side-item" data-action="activity">
-                                <div class="dboard-side-item__icon icon-fire"><i class="fa-solid fa-fire"></i></div>
-                                <div class="dboard-side-item__text">
-                                    <span class="t">Hoạt Động</span>
-                                    <span class="s">Hôm nay 3h20m</span>
-                                </div>
-                                <i class="fa-solid fa-chevron-right dboard-side-item__arrow"></i>
-                            </button>
-                            <button class="dboard-side-item" data-action="trophy">
-                                <div class="dboard-side-item__icon icon-trophy"><i class="fa-solid fa-trophy"></i></div>
-                                <div class="dboard-side-item__text">
-                                    <span class="t">Thành Tựu</span>
-                                    <span class="s">8/32</span>
-                                </div>
-                                <i class="fa-solid fa-chevron-right dboard-side-item__arrow"></i>
-                            </button>
-                        </div>
-                        <div class="dboard-mascot">
-                            <div class="cat-box">
-                                <div class="cat-hand">
-                                    <div class="line1"></div>
-                                    <div class="line2"></div>
-                                    <div class="shadow1"></div>
-                                    <div class="shadow2"></div>
-                                </div>
-                            </div>
-                            <div class="dboard-mascot-text">
-                                Học tốt
-                                <br>
-                                &nbsp; Chơi vui
-                                <br>
-                                &nbsp; &nbsp; Cùng nhau
-                                <br>
-                                &nbsp; &nbsp; &nbsp; Phát triển!
-                            </div>
-                        </div>
-                        <button class="dboard-rank-btn" data-action="ranking">
-                            <i class="fa-solid fa-ranking-star"></i>
-                            <div class="dboard-rank-btn__text">
-                                <span class="t">Bảng Xếp Hạng</span>
-                                <span class="s">Xem thành tích thành viên</span>
-                            </div>
+                        <button class="dboard-rail__btn" data-side-btn="profile"${this._side === 'profile' ? ' aria-current="page"' : ''} aria-label="Hồ sơ" title="Hồ sơ">
+                            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                         </button>
-                    </aside>
-                    <!-- Nội dung chính -->
-                    <main class="dboard-main">
-                        <div class="dboard-banner">
-                            <div class="dboard-banner__text">
-                                <span class="line1">Học hết mình</span>
-                                <span class="line2">Chơi hết sức! </span>
+                    </nav>
+                    <section class="dboard-panel dboard-member-panel" aria-labelledby="dboard-member-title">
+                        <div class="dboard-panel__head">
+                            <h2 id="dboard-member-title">Thẻ thành viên</h2>
+                            <span>TỈ LỆ 1.5 : 1</span>
+                        </div>
+                        <div class="dboard-panel__body">
+                            <div class="dboard-member-card" role="img" aria-label="${cardImg ? 'Thẻ thành viên' : 'Thẻ thành viên đang chờ cập nhật'}">
+                                ${cardImg ? '' : '<span class="dboard-member-card__status">Chưa có thẻ</span>'}
                             </div>
-                            <div class="dboard-banner__glow"></div>
-                            
+                            <p class="dboard-member-note"><i></i><span>Thẻ chính thức sẽ tự thay thế khung này khi được cấp.</span></p>
+                        </div>
+                    </section>
+                    <section class="dboard-panel dboard-profile-panel" aria-labelledby="dboard-profile-title">
+                        <div class="dboard-panel__head">
+                            <h2 id="dboard-profile-title">Hồ sơ</h2>
+                            <span>THÔNG TIN CÁ NHÂN</span>
+                        </div>
+                        <div class="dboard-panel__body">
+                            <div class="dboard-profile">
+                                <div class="dboard-profile__avatar">${cardImg ? '' : initial}</div>
+                                <div class="dboard-profile__info">
+                                    <div class="dboard-profile__name">${name}</div>
+                                    <span class="dboard-profile__tier">${tier}</span>
+                                </div>
+                            </div>
+                            <div class="dboard-level">
+                                <div class="dboard-level__row">
+                                    <span>Lv.${level}</span>
+                                    <span>${xp.current.toLocaleString()}/${xp.max.toLocaleString()}</span>
+                                </div>
+                                <div class="dboard-level__track">
+                                    <div class="dboard-level__fill" style="width:${xpPct}%"></div>
+                                </div>
+                            </div>
+                            <div class="dboard-side-list">
+                                <button class="dboard-side-item" data-action="checkin">
+                                    <div class="dboard-side-item__icon icon-star"><i class="fa-solid fa-star"></i></div>
+                                    <div class="dboard-side-item__text">
+                                        <span class="t">Điểm Danh</span>
+                                        <span class="s">7 ngày liên tiếp</span>
+                                    </div>
+                                    <i class="fa-solid fa-chevron-right dboard-side-item__arrow"></i>
+                                </button>
+                                <button class="dboard-side-item" data-action="activity">
+                                    <div class="dboard-side-item__icon icon-fire"><i class="fa-solid fa-fire"></i></div>
+                                    <div class="dboard-side-item__text">
+                                        <span class="t">Hoạt Động</span>
+                                        <span class="s">Hôm nay 3h20m</span>
+                                    </div>
+                                    <i class="fa-solid fa-chevron-right dboard-side-item__arrow"></i>
+                                </button>
+                                <button class="dboard-side-item" data-action="trophy">
+                                    <div class="dboard-side-item__icon icon-trophy"><i class="fa-solid fa-trophy"></i></div>
+                                    <div class="dboard-side-item__text">
+                                        <span class="t">Thành Tựu</span>
+                                        <span class="s">8/32</span>
+                                    </div>
+                                    <i class="fa-solid fa-chevron-right dboard-side-item__arrow"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+                    <section class="dboard-panel dboard-menu-panel" aria-labelledby="dboard-menu-title">
+                        <div class="dboard-panel__head">
+                            <h2 id="dboard-menu-title">Menu nhanh</h2>
+                            <span>${FEATURES_ROW_1.length + FEATURES_ROW_2.length} CHỨC NĂNG</span>
                         </div>
                         <div class="dboard-feature-grid">
                             ${FEATURES_ROW_1.map(renderFeatureIcon).join('')}
                             ${FEATURES_ROW_2.map(renderFeatureIcon).join('')}
                         </div>
-                        <div class="dboard-highlights">
-                            <div class="dboard-highlights__head">
-                                <i class="fa-solid fa-fire"></i>
-                                <span>Nổi bật</span>
-                                <i class="fa-solid fa-chevron-right"></i>
-                            </div>
-                            <div class="dboard-highlights__list">
-                                ${HIGHLIGHTS.map(h => `
-                                    <div class="dboard-highlight-card${h.the}" data-highlight="${h.id}">
-                                        <div class="inner-dboard-highlight-card">
-                                            <div class="dboard-highlight-card__icon"><i class="fa-solid ${h.icon}"></i></div>
-                                            <div class="dboard-highlight-card__text">
-                                                <span class="t">${h.title}</span>
-                                                <span class="s">${h.sub}</span>
-                                                ${h.progress ? `
-                                                    <div class="mini-track"><div class="mini-fill" style="width:${(h.progress/h.max)*100}%"></div></div>
-                                                    <span class="mini-count">${h.progress}/${h.max}</span>
-                                                ` : ''}
-                                            </div>
-                                        </div>>
-                                    </div>
-                                `).join('')}
-                            </div>
-                        </div>
-                    </main>
+                    </section>
                 </div>
                 <div class="dboard-app-view" id="dboard-app-view"></div>
             </div>
@@ -270,6 +242,9 @@ export const DashboardPanel = {
         }
 
         root.querySelector('#dboard-app-back')?.addEventListener('click', () => this._closeApp());
+        root.querySelectorAll('[data-side-btn]').forEach(btn => {
+            btn.addEventListener('click', () => this._setSide(btn.dataset.sideBtn));
+        });
 
         root.querySelectorAll('.dboard-feature').forEach(btn => {
             btn.addEventListener('click', () => {
@@ -288,6 +263,20 @@ export const DashboardPanel = {
             btn.addEventListener('click', () => {
                 console.log('Hành động bảng quản lý:', btn.dataset.action);
             });
+        });
+    },
+
+    /* ===== Đổi cột trái trang chủ: thẻ thành viên <-> hồ sơ ===== */
+
+    _setSide(side) {
+        this._side = side;
+        const root = this._root();
+        if (!root) return;
+        const main = root.querySelector('.ipad-main');
+        if (main) main.dataset.side = side;
+        root.querySelectorAll('[data-side-btn]').forEach(btn => {
+            if (btn.dataset.sideBtn === side) btn.setAttribute('aria-current', 'page');
+            else btn.removeAttribute('aria-current');
         });
     },
 
@@ -356,6 +345,7 @@ export const DashboardPanel = {
         el.classList.remove('dboard-root--open');
         el.setAttribute('aria-hidden', 'true');
         this._closeApp(); // đóng bảng thì luôn quay về màn hình chính, không giữ app con đang mở
+        this._setSide('card');
         this._emit();
     },
 
