@@ -25,12 +25,19 @@ const TX_TYPE_META = {
     topup: { icon: 'fa-wallet', cls: 'tx-icon--topup' },
 };
 
-const HIGHLIGHT_FEATURES = [
-    { id: 'lucky', icon: 'fa-dice', grad: 'vc-grad-blue', title: 'Vòng quay may mắn', sub: 'Cơ hội nhận coin miễn phí' },
-    { id: 'mission', icon: 'fa-calendar-check', grad: 'vc-grad-green', title: 'Nhiệm vụ hàng ngày', sub: 'Hoàn thành để nhận thưởng' },
-    { id: 'ranking', icon: 'fa-ranking-star', grad: 'vc-grad-orange', title: 'BXH Thành viên', sub: 'Top nạp coin nhiều nhất' },
-    { id: 'giftshop', icon: 'fa-gift', grad: 'vc-grad-purple', title: 'Cửa hàng quà tặng', sub: 'Đổi coin lấy vật phẩm' },
+// Lưới chức năng (theo prototype): 1 dịch vụ, 3 ô "sắp ra mắt", rồi 4 thao tác chính
+const FEATURE_ACTIONS = [
+    { id: 'pay',      label: 'Dịch vụ CLB',  icon: 'fa-file-invoice-dollar', accent: 'pink' },
+    { coming: true },
+    { coming: true },
+    { coming: true },
+    { id: 'transfer', label: 'Chuyển coin',  icon: 'fa-paper-plane',         accent: 'blue' },
+    { id: 'topup',    label: 'Nạp coin',     icon: 'fa-credit-card',         accent: 'yellow' },
+    { id: 'history',  label: 'Lịch sử',      icon: 'fa-clock-rotate-left',   accent: 'mint' },
+    { id: 'offers',   label: 'Ưu đãi &amp; quà', icon: 'fa-gift',            accent: 'violet' },
 ];
+
+const WEEK_LABELS = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'];
 
 function fmtCoin(n) {
     return Math.round(n || 0).toLocaleString('vi-VN');
@@ -38,6 +45,37 @@ function fmtCoin(n) {
 
 function fmtVND(coin) {
     return (Math.round(coin || 0) * 10).toLocaleString('vi-VN');
+}
+
+function renderAction(a) {
+    if (a.coming) {
+        return `
+            <button class="vc-action vc-action--coming" disabled aria-label="Tính năng tương lai, sắp ra mắt">
+                <span class="vc-action__icon"><i class="fa-solid fa-lock"></i></span>
+                <span class="vc-action__label">Sắp ra mắt</span>
+            </button>
+        `;
+    }
+    return `
+        <button class="vc-action vc-action--${a.accent}" data-action="${a.id}">
+            <span class="vc-action__icon"><i class="fa-solid ${a.icon}"></i></span>
+            <span class="vc-action__label">${a.label}</span>
+        </button>
+    `;
+}
+
+// Chuỗi ngày trong tuần (demo): coi như đã điểm danh các ngày trước hôm nay
+function renderWeek() {
+    const todayIdx = (new Date().getDay() + 6) % 7; // T2 = 0 ... CN = 6
+    return WEEK_LABELS.map((label, i) => {
+        const cls = i < todayIdx ? 'vc-day--done' : i === todayIdx ? 'vc-day--today' : '';
+        return `
+            <div class="vc-day ${cls}">
+                <span>${i < todayIdx ? '✓' : i + 1}</span>
+                <small>${label}</small>
+            </div>
+        `;
+    }).join('');
 }
 
 // Luôn tắt cache khi gọi MockAPI để tránh nhận dữ liệu số dư/lịch sử cũ
@@ -177,84 +215,59 @@ export const ViCoinApp = {
 
     _html() {
         const coin = this._coin();
+        const name = this._userData?.name || 'Người chơi';
+        const level = this._userData?.level ?? 0;
+        const exp = this._userData?.exp || { current: 0, max: 20000 };
+        const expPct = Math.min(100, Math.round(((exp.current || 0) / (exp.max || 1)) * 100));
+        const today = new Date().toLocaleDateString('vi-VN', { weekday: 'long', day: 'numeric', month: 'long' });
         return `
             <div class="vc-app">
-                <div class="vc-top">
-                    <div class="vc-balance-card">
-                        <div class="vc-balance-card__badge">Hạng thành viên: ${this._tier()}</div>
+                <header class="vc-topline">
+                    <div class="vc-greeting">
+                        <small>${today}</small>
+                        <strong>Ví của ${name}</strong>
+                    </div>
+                    <div class="vc-status-pill">
+                        <i></i><span>Đã bảo vệ</span>
+                        <svg width="16" height="16" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg>
+                    </div>
+                </header>
+
+                <div class="vc-dashboard">
+                    <section class="vc-balance-card" aria-labelledby="vc-balance-title">
+                        <div class="vc-balance-card__label">
+                            <span id="vc-balance-title">Số dư khả dụng</span>
+                            <span class="vc-balance-card__rank">${this._tier().toUpperCase()} · LV.${String(level).padStart(2, '0')}</span>
+                        </div>
                         <div class="vc-balance-card__main">
-                            <div class="vc-coin-orb"></div>
+                            <div class="vc-coin-orb" aria-hidden="true"></div>
                             <div class="vc-balance-card__info">
-                                <span class="vc-balance-card__label">Số dư của bạn</span>
-                                <div class="vc-balance-card__amount">${fmtCoin(coin)} <img src="../../img/icon/UCoin.svg" ></div>
-                                <span class="vc-balance-card__vnd">≈ ${fmtVND(coin)} VNĐ (ước tính)</span>
+                                <div class="vc-balance-card__amount">${fmtCoin(coin)}<span class="vc-balance-card__unit">coin</span></div>
+                                <div class="vc-balance-card__vnd">≈ ${fmtVND(coin)} VNĐ · Giá trị ước tính</div>
                             </div>
                         </div>
-                        <button class="vc-balance-card__history" data-action="focus-history">
-                            <i class="fa-regular fa-clock"></i> Lịch sử giao dịch <i class="fa-solid fa-chevron-right"></i>
-                        </button>
-                        <div class="vc-balance-card__tagline">Cùng nhau phát triển · Ban Công Nghệ</div>
-                    </div>
-                    <div class="vc-quick-grid">
-                        <button class="vc-quick" data-action="transfer">
-                            <span class="vc-quick__icon vc-grad-blue"><i class="fa-solid fa-paper-plane"></i></span>
-                            Chuyển Coin
-                        </button>
-                        <button class="vc-quick" data-action="pay">
-                            <span class="vc-quick__icon vc-grad-teal"><i class="fa-solid fa-file-invoice-dollar"></i></span>
-                            Thanh toán dịch vụ CLB
-                        </button>
-                        <button class="vc-quick" data-action="topup">
-                            <span class="vc-quick__icon vc-grad-orange"><i class="fa-solid fa-wallet"></i></span>
-                            Nạp Coin
-                        </button>
-                        <button class="vc-quick" data-action="offers">
-                            <span class="vc-quick__icon vc-grad-purple"><i class="fa-solid fa-gift"></i></span>
-                            Ưu đãi & quà tặng
-                        </button>
-                    </div>
+                        <div class="vc-balance-card__foot">
+                            <span>${expPct}% đến cấp tiếp theo</span>
+                            <div class="vc-mini-progress" aria-label="Tiến độ ${expPct} phần trăm"><span style="width:${expPct}%"></span></div>
+                        </div>
+                    </section>
+
+                    <section class="vc-panel vc-daily" aria-labelledby="vc-daily-title">
+                        <div class="vc-daily__copy">
+                            <h2 id="vc-daily-title">Chuỗi ngày năng động</h2>
+                            <p>Quay lại mỗi ngày để tích tiến độ nhận quà tuần.</p>
+                        </div>
+                        <div class="vc-streak" aria-label="Tiến độ tuần">
+                            ${renderWeek()}
+                        </div>
+                    </section>
                 </div>
 
-                <div class="vc-mid">
-                    <div class="vc-history-card" id="vc-history-anchor">
-                        <div class="vc-card-head">
-                            <span>Lịch sử giao dịch</span>
-                            <a href="#" class="vc-see-all" data-action="see-all">Xem tất cả</a>
-                        </div>
-                        <div class="vc-tabs">
-                            ${TAB_LABELS.map((t) => `<button class="vc-tab ${this._activeTab === t.id ? 'vc-tab--active' : ''}" data-tab="${t.id}">${t.label}</button>`).join('')}
-                        </div>
-                        <div class="vc-tx-list">
-                            ${this._renderTxList()}
-                        </div>
+                <section class="vc-panel vc-feature-panel" aria-label="Chức năng ví coin">
+                    <div class="vc-feature-grid">
+                        ${FEATURE_ACTIONS.map(renderAction).join('')}
                     </div>
-
-                    <div class="outer-vc-highlights-card">
-                        <div class="vc-highlights-card">
-                            <div class="vc-card-head"><span>Tính năng nổi bật</span></div>
-                            <div class="vc-highlights-grid">
-                                ${HIGHLIGHT_FEATURES.map((f) => `
-                                    <button class="vc-highlight" data-action="feature-${f.id}">
-                                        <span class="vc-highlight__icon ${f.grad}"><i class="fa-solid ${f.icon}"></i></span>
-                                        <span class="vc-highlight__text">
-                                            <span class="t">${f.title}</span>
-                                            <span class="s">${f.sub}</span>
-                                        </span>
-                                    </button>
-                                `).join('')}
-                            </div>
-                        </div>
-                        <div class="vc-banner">
-                            <div class="vc-banner__text">
-                                <span class="vc-banner__title">Nạp coin nhận quà xịn</span>
-                                <span class="vc-banner__sub">Tặng thêm 20% khi nạp từ 500 coin trở lên!</span>
-                            </div>
-                            <button class="vc-banner__cta" data-action="topup"><i class="fa-solid fa-chevron-right"></i></button>
-                        </div>
-                    </div>
-                </div>
-
-                
+                </section>
             </div>
 
             <div class="vc-modal-root" id="vc-modal-root"></div>
@@ -291,24 +304,11 @@ export const ViCoinApp = {
     _bindEvents(root) {
         root.addEventListener('click', (e) => e.stopPropagation());
 
-        root.querySelector('[data-action="focus-history"]')?.addEventListener('click', (e) => {
-            e.preventDefault();
-            root.querySelector('#vc-history-anchor')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        });
-        root.querySelector('[data-action="see-all"]')?.addEventListener('click', (e) => e.preventDefault());
-
-        root.querySelectorAll('.vc-tab').forEach((btn) => {
-            btn.addEventListener('click', () => {
-                this._activeTab = btn.dataset.tab;
-                this._draw();
-            });
-        });
-
         root.querySelector('[data-action="transfer"]')?.addEventListener('click', () => this._openTransferModal());
+        root.querySelector('[data-action="history"]')?.addEventListener('click', () => this._openHistorySheet());
         root.querySelector('[data-action="pay"]')?.addEventListener('click', () => this._toast('Thanh toán dịch vụ CLB đang được phát triển.'));
-        root.querySelectorAll('[data-action="topup"]').forEach((b) => b.addEventListener('click', () => this._toast('Tính năng Nạp Coin đang được phát triển.')));
+        root.querySelector('[data-action="topup"]')?.addEventListener('click', () => this._toast('Tính năng Nạp Coin đang được phát triển.'));
         root.querySelector('[data-action="offers"]')?.addEventListener('click', () => this._toast('Ưu đãi & quà tặng sắp ra mắt.'));
-        root.querySelectorAll('[data-action^="feature-"]').forEach((b) => b.addEventListener('click', () => this._toast('Tính năng đang được phát triển.')));
     },
 
     _toast(msg) {
@@ -325,33 +325,77 @@ export const ViCoinApp = {
         }, 2200);
     },
 
-    async _openTransferModal() {
+    // Sheet dùng chung (chuyển coin, lịch sử) theo kiểu prototype: nền tối + hộp bo tròn.
+    // Chặn click nổi lên (xem lý do ở _bindEvents) để bấm X hay vùng tối chỉ đóng sheet, không đóng cả iPad.
+    _openSheet({ title, desc, body }) {
         const modalRoot = document.getElementById('vc-modal-root');
-        if (!modalRoot) return;
+        if (!modalRoot) return null;
 
         modalRoot.innerHTML = `
-            <div class="vc-overlay" id="vc-transfer-overlay">
-                <div class="vc-transfer-modal">
-                    <div class="vc-transfer-modal__head">
-                        <span>Chuyển Coin</span>
-                        <button class="vc-modal-close" id="vc-transfer-close"><i class="fa-solid fa-xmark"></i></button>
+            <div class="vc-overlay" id="vc-sheet-overlay">
+                <div class="vc-sheet" role="dialog" aria-modal="true" aria-labelledby="vc-sheet-title">
+                    <div class="vc-sheet__head">
+                        <div>
+                            <h2 id="vc-sheet-title">${title}</h2>
+                            <p>${desc}</p>
+                        </div>
+                        <button class="vc-sheet__close" id="vc-sheet-close" aria-label="Đóng"><i class="fa-solid fa-xmark"></i></button>
                     </div>
-                    <div class="vc-transfer-modal__body" id="vc-transfer-body">
-                        <div class="vc-loading vc-loading--small"><i class="fa-solid fa-circle-notch fa-spin"></i> Đang tải danh sách tài khoản...</div>
-                    </div>
+                    <div class="vc-sheet__body" id="vc-sheet-body">${body}</div>
                 </div>
             </div>
         `;
 
-        // Chặn sự kiện click nổi lên khỏi modal (xem lý do ở _bindEvents phía trên) —
-        // để bấm X hay bấm ra vùng tối chỉ đóng MODAL, không đóng cả bảng iPad.
-        modalRoot.addEventListener('click', (e) => e.stopPropagation());
+        modalRoot.onclick = (e) => e.stopPropagation();
 
         const close = () => { modalRoot.innerHTML = ''; };
-        modalRoot.querySelector('#vc-transfer-close')?.addEventListener('click', close);
-        modalRoot.querySelector('#vc-transfer-overlay')?.addEventListener('click', (e) => {
-            if (e.target.id === 'vc-transfer-overlay') close();
+        modalRoot.querySelector('#vc-sheet-close')?.addEventListener('click', close);
+        modalRoot.querySelector('#vc-sheet-overlay')?.addEventListener('click', (e) => {
+            if (e.target.id === 'vc-sheet-overlay') close();
         });
+        return modalRoot;
+    },
+
+    _openHistorySheet() {
+        this._activeTab = 'all';
+        const modalRoot = this._openSheet({
+            title: 'Lịch sử giao dịch',
+            desc: 'Giao dịch mới nhất hiển thị trước.',
+            body: this._historyHtml(),
+        });
+        if (modalRoot) this._bindHistoryTabs(modalRoot);
+    },
+
+    _historyHtml() {
+        return `
+            <div class="vc-tabs">
+                ${TAB_LABELS.map((t) => `<button class="vc-tab ${this._activeTab === t.id ? 'vc-tab--active' : ''}" data-tab="${t.id}">${t.label}</button>`).join('')}
+            </div>
+            <div class="vc-tx-list">
+                ${this._renderTxList()}
+            </div>
+        `;
+    },
+
+    // Đổi tab chỉ vẽ lại phần thân sheet (không _draw cả app, vì sẽ làm đóng sheet)
+    _bindHistoryTabs(modalRoot) {
+        modalRoot.querySelectorAll('.vc-tab').forEach((btn) => {
+            btn.addEventListener('click', () => {
+                this._activeTab = btn.dataset.tab;
+                const body = modalRoot.querySelector('#vc-sheet-body');
+                if (body) body.innerHTML = this._historyHtml();
+                this._bindHistoryTabs(modalRoot);
+            });
+        });
+    },
+
+    async _openTransferModal() {
+        const modalRoot = this._openSheet({
+            title: 'Chuyển coin',
+            desc: 'Chọn người nhận và nhập số coin muốn chuyển.',
+            body: `<div class="vc-loading vc-loading--small"><i class="fa-solid fa-circle-notch fa-spin"></i> Đang tải danh sách tài khoản...</div>`,
+        });
+        if (!modalRoot) return;
 
         let accounts = [];
         try {
@@ -359,35 +403,48 @@ export const ViCoinApp = {
             if (!res.ok) throw new Error('network');
             accounts = (await res.json()).filter((a) => a.id !== this._userData?.id && !a.isMarket);
         } catch (err) {
-            const body = modalRoot.querySelector('#vc-transfer-body');
+            const body = modalRoot.querySelector('#vc-sheet-body');
             if (body) body.innerHTML = `<div class="vc-tx-empty">Không tải được danh sách tài khoản. Vui lòng thử lại.</div>`;
             return;
         }
 
         if (!accounts.length) {
-            const body = modalRoot.querySelector('#vc-transfer-body');
+            const body = modalRoot.querySelector('#vc-sheet-body');
             if (body) body.innerHTML = `<div class="vc-tx-empty">Chưa có tài khoản nào khác để chuyển coin.</div>`;
             return;
         }
 
-        const body = modalRoot.querySelector('#vc-transfer-body');
+        const body = modalRoot.querySelector('#vc-sheet-body');
         if (!body) return;
         body.innerHTML = `
             <label class="vc-field">
                 <span>Người nhận</span>
-                <select id="vc-transfer-recipient">
-                    ${accounts.map((a) => `<option value="${a.id}">${a.name}${a.mssv ? ' (' + a.mssv + ')' : ''}</option>`).join('')}
-                </select>
+                <div class="vc-input-wrap">
+                    <select id="vc-transfer-recipient">
+                        ${accounts.map((a) => `<option value="${a.id}">${a.name}${a.mssv ? ' (' + a.mssv + ')' : ''}</option>`).join('')}
+                    </select>
+                </div>
             </label>
             <label class="vc-field">
                 <span>Số coin muốn chuyển</span>
-                <input type="number" id="vc-transfer-amount" min="1" max="${this._coin()}" placeholder="Nhập số coin" />
+                <div class="vc-input-wrap">
+                    <input type="number" id="vc-transfer-amount" min="1" max="${this._coin()}" placeholder="0" />
+                    <em>COIN</em>
+                </div>
             </label>
-            <div class="vc-transfer-balance">Số dư hiện tại: <strong>${fmtCoin(this._coin())} coin</strong></div>
+            <div class="vc-preview">
+                <div class="vc-preview__row"><span>Số dư hiện tại</span><strong>${fmtCoin(this._coin())} coin</strong></div>
+                <div class="vc-preview__row"><span>Còn lại</span><strong id="vc-transfer-remain">${fmtCoin(this._coin())} coin</strong></div>
+            </div>
             <div class="vc-transfer-error" id="vc-transfer-error"></div>
-            <button class="vc-transfer-submit" id="vc-transfer-submit">Xác nhận chuyển</button>
+            <button class="vc-primary" id="vc-transfer-submit">Xác nhận chuyển</button>
         `;
 
+        modalRoot.querySelector('#vc-transfer-amount')?.addEventListener('input', (e) => {
+            const remain = Math.max(0, this._coin() - Number(e.target.value || 0));
+            const el = modalRoot.querySelector('#vc-transfer-remain');
+            if (el) el.textContent = `${fmtCoin(remain)} coin`;
+        });
         modalRoot.querySelector('#vc-transfer-submit')?.addEventListener('click', () => this._submitTransfer());
     },
 
