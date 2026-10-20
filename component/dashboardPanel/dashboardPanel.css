@@ -85,7 +85,8 @@
     height: 100%;
     padding: 16px;
     border-radius: 40px;
-    background: linear-gradient(155deg, #ffffff 0%, #eef2fb 45%, #d7e0f2 100%);
+    /* background: linear-gradient(155deg, #ffffff 0%, #eef2fb 45%, #d7e0f2 100%); */
+    background: #eef2fb;
     box-shadow:
         0 40px 70px rgba(20, 40, 90, 0.32),
         0 10px 22px rgba(20, 40, 90, 0.18),
@@ -138,8 +139,8 @@
     max-height: 100%;
 }
 
-/* Nền trang chủ ấm như prototype — app con (Ví Coin, Phương Tiện) giữ nền cũ */
-.dboard-card[data-view="home"] {
+/* Nền ấm như prototype, dùng chung cho trang chủ và các app con (rail trái luôn hiện) */
+.dboard-card {
     background: linear-gradient(145deg, #fffdf9, #fff7f2);
 }
 
@@ -219,27 +220,36 @@
 
 .dboard-app-view {
     display: none;
+    grid-column: 2;
+    min-width: 0;
+    min-height: 0;
+    padding: 0 28px 24px 20px;
+}
+
+/* Thân iPad: rail trái (luôn hiện) | trang chủ hoặc app con */
+.ipad-body {
     flex: 1;
     min-height: 0;
     width: 100%;
+    display: grid;
+    grid-template-columns: 94px minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr);
 }
 
 .ipad-main {
-    flex: 1;
+    grid-column: 2;
     min-height: 0;
-    width: 100%;
-    padding: 0 28px 0 0;
+    padding: 0 28px 0 20px;
     display: grid;
-    grid-template-columns: 94px repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 20px;
     align-items: stretch;
 }
 
-/* Rail trái | cột giữa chỉ hiện 1 trong 2 (thẻ thành viên / hồ sơ) | cụm app bên phải */
-.dboard-rail { grid-column: 1; }
+/* Cột trái chỉ hiện 1 trong 2: thẻ thành viên hoặc hồ sơ; cụm app nằm cột phải */
 .dboard-member-panel,
-.dboard-profile-panel { grid-column: 2; }
-.dboard-menu-panel { grid-column: 3; }
+.dboard-profile-panel { grid-column: 1; }
+.dboard-menu-panel { grid-column: 2; }
 
 .ipad-main[data-side="card"] .dboard-profile-panel,
 .ipad-main[data-side="profile"] .dboard-member-panel { display: none; }
@@ -264,6 +274,13 @@
         color-mix(in srgb, var(--tb-pink) 10%, #fff) 46%,
         color-mix(in srgb, var(--tb-blue) 25%, #fff));
 }
+
+/* Mỗi nhóm icon ứng với 1 màn hình (data-view của .dboard-card) */
+.dboard-rail__group { display: none; }
+
+.dboard-card[data-view="home"] .dboard-rail__group[data-group="home"],
+.dboard-card[data-view="vicoin"] .dboard-rail__group[data-group="vicoin"],
+.dboard-card[data-view="vehicle"] .dboard-rail__group[data-group="vehicle"] { display: contents; }
 
 .dboard-rail__btn {
     position: relative;
@@ -290,6 +307,9 @@
     stroke-linecap: round;
     stroke-linejoin: round;
 }
+
+.dboard-rail__btn--end { margin-top: auto; }
+.dboard-rail__btn i { font-size: 22px; }
 
 .dboard-rail__btn[aria-current="page"] {
     color: #397fbc;
@@ -331,6 +351,10 @@
     background: linear-gradient(145deg, #ffffff 0 62%, #f1f7ff 100%);
 }
 
+.dboard-member-panel {
+    height: fit-content;
+}
+
 .dboard-panel__head {
     margin-bottom: 18px;
     display: flex;
@@ -355,7 +379,6 @@
 .dboard-profile-panel .dboard-panel__body { justify-content: flex-start; gap: 16px; }
 
 .dboard-panel__body {
-    flex: 1;
     min-height: 0;
     display: flex;
     flex-direction: column;
@@ -572,15 +595,16 @@
 .dboard-feature-grid {
     flex: 1;
     min-height: 0;
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    grid-template-rows: repeat(4, minmax(0, 1fr));
-    gap: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    overflow-y: scroll;
 }
 
 .dboard-feature {
     --accent: var(--tb-blue);
     min-width: 0;
+    width: calc((100% - 12px)/2);
     padding: 12px 12px 10px;
     display: flex;
     flex-direction: column;
@@ -622,8 +646,8 @@
 
 .dboard-feature__icon {
     position: relative;
-    width: 42px;
-    height: 42px;
+    width: 56px;
+    height: 56px;
     border-radius: 15px 15px 13px 15px;
     display: flex;
     align-items: center;
@@ -631,15 +655,13 @@
     flex-shrink: 0;
     background: var(--accent);
     color: #303650;
-    font-size: 18px;
+    font-size: 26px;
     border: 3px solid rgba(255, 255, 255, 0.78);
     box-shadow:
         inset 0 -4px 0 rgba(35, 37, 57, 0.08),
         0 6px 13px color-mix(in srgb, var(--accent) 23%, transparent);
     transform: rotate(-2deg);
 }
-
-.dboard-feature--violet .dboard-feature__icon { color: #fff; }
 
 .dboard-feature__dot {
     position: absolute;
@@ -654,7 +676,7 @@
 
 .dboard-feature__label {
     display: block;
-    font-size: 12px;
+    font-size: 16px;
     font-weight: 700;
     line-height: 1.35;
 }
@@ -663,15 +685,15 @@
     display: block;
     margin-top: 3px;
     color: var(--tb-muted);
-    font-size: 9px;
+    font-size: 12px;
     line-height: 1.4;
 }
 
 /* ===== Responsive ===== */
 @media (max-width: 900px) {
-    .ipad-main { grid-template-columns: 94px 1fr; overflow-y: auto; }
+    .ipad-main { grid-template-columns: 1fr; overflow-y: auto; }
     .dboard-member-panel,
     .dboard-profile-panel,
-    .dboard-menu-panel { grid-column: 2; }
+    .dboard-menu-panel { grid-column: 1; }
     .dboard-feature-grid { grid-template-rows: none; grid-auto-rows: 104px; }
 }
