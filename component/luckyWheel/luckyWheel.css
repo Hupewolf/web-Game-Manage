@@ -129,7 +129,7 @@
 .lw-label { font-family: var(--beVietnamPro, sans-serif); font-weight: 800; fill: #2b2f45; }
 .lw-label--big { font-size: 16px; }
 .lw-label--prize { font-size: 13px; }
-.lw-label--empty { font-size: 15px; fill: #aab3c5; font-weight: 600; }
+.lw-label--empty { font-size: 10px; fill: #aab3c5; font-weight: 700; }
 
 .lw-slot.is-win path {
     stroke: #2b2f45;

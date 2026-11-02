@@ -16,7 +16,7 @@
      'squad'      Đội Hình         'course'    Giáo Trình
      'contribute' Cống Hiến        'trophy'    Thành Tựu
    ============================================================ */
-export const XU_APPS = ['shop', 'vicoin'];
+export const XU_APPS = ['shop', 'vicoin', 'guide'];
 
 // Mỗi app tặng bao nhiêu xu mỗi ngày
 export const XU_PER_APP = 1;

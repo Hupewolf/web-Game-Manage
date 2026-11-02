@@ -32,7 +32,7 @@ function wheelSvg() {
         const fill = s.coin ? PRIZE_FILL(s.coin) : '#eef2fb';
         const label = s.coin
             ? `<text x="${C}" y="${C - 66}" text-anchor="middle" dominant-baseline="middle" class="lw-label lw-label--${s.coin >= 5 ? 'big' : 'prize'}">+${s.coin}</text>`
-            : `<text x="${C}" y="${C - 66}" text-anchor="middle" dominant-baseline="middle" class="lw-label lw-label--empty">×</text>`;
+            : `<text x="${C}" y="${C - 66}" text-anchor="middle" dominant-baseline="middle" class="lw-label lw-label--empty">Trượt</text>`;
         return `
             <g class="lw-slot" data-slot="${i}">
                 <path d="M${C} ${C} L${x0.toFixed(2)} ${y0.toFixed(2)} A${R} ${R} 0 0 1 ${x1.toFixed(2)} ${y1.toFixed(2)} Z" fill="${fill}" stroke="#fff" stroke-width="2"/>
@@ -220,7 +220,7 @@ export const LuckyWheel = {
             document.querySelector('.wallet-pill[data-currency="coin"]')?.classList.add('xu-pop');
             setTimeout(() => document.querySelector('.wallet-pill[data-currency="coin"]')?.classList.remove('xu-pop'), 900);
         } else {
-            result.textContent = 'Chưa trúng — chúc may mắn lần sau!';
+            result.textContent = 'Trúng gió';
             result.className = 'lucky-result lucky-result--miss';
         }
         this._render();
