@@ -1,13 +1,15 @@
 // component/shopPanel/cookStation.js
 // Trạm nấu ăn ở tab "Chế biến": kệ nguyên liệu -> kéo thả (cầm ném) vào nồi -> có nguyên liệu thì lửa cháy
-// -> ném đủ công thức thì bắt đầu đếm giờ nấu (mặc định 5 giây) -> xong thì món bay ra khay thành phẩm.
+// -> ném đủ công thức thì hiện mini game nhớ màu (colorMemoryGame.js) -> chọn đúng thì bắt đầu đếm giờ nấu
+// (mặc định 5 giây) -> xong thì món bay ra khay thành phẩm. Chọn sai = nấu thất bại (xem COOK_MINIGAME).
 //
 // Nguyên liệu CHỈ bị trừ khi món nấu xong (hooks.craft gọi craftFood lên server). Thoát trang giữa chừng
 // thì không mất gì. Trạng thái nồi nằm trong object này nên ShopPanel vẽ lại giao diện (tab, toast...) vẫn
 // giữ nguyên nồi đang nấu: ShopPanel chỉ gắn lại đúng phần tử #cook-station.
 
-import { INGREDIENTS } from './shopConfig.js';
+import { INGREDIENTS, COOK_MINIGAME } from './shopConfig.js';
 import { getIngredients } from './shopService.js';
+import { ColorMemoryGame } from './colorMemoryGame.js';
 
 const DEFAULT_COOK_SECONDS = 5;
 const DRAG_THRESHOLD = 6; // dưới ngần này px thì coi là bấm (tự ném), không phải kéo
@@ -30,7 +32,7 @@ export const CookStation = {
     _user: null,
     _inPot: {},
     _pending: {},   // nguyên liệu đang bay giữa không trung (đã ném, chưa rơi vào nồi)
-    _phase: 'idle', // idle | cooking | finishing
+    _phase: 'idle', // idle | minigame | cooking | finishing
     _startedAt: 0,
     _cookMs: DEFAULT_COOK_SECONDS * 1000,
     _raf: 0,
@@ -143,6 +145,7 @@ export const CookStation = {
                         <b>${shop.food.nameItems}</b>
                         <small>${recipeText}</small>
                         <small><i class="fa-solid fa-clock"></i> Nấu ${secs} giây</small>
+                        ${COOK_MINIGAME.enabled ? '<small><i class="fa-solid fa-gamepad"></i> Có mini game nhớ màu</small>' : ''}
                     </div>
                 </div>
                 <div class="cook-plate" data-ref="plate">
@@ -208,7 +211,8 @@ export const CookStation = {
         if (!this._ref.statusText) return;
         let msg = text;
         if (msg === undefined) {
-            if (this._phase === 'finishing') msg = 'Sắp xong...';
+            if (this._phase === 'minigame') msg = 'Chơi mini game để bắt đầu nấu...';
+            else if (this._phase === 'finishing') msg = 'Sắp xong...';
             else if (this._phase === 'cooking') msg = `Đang nấu... ${Math.max(1, Math.ceil(this._cookMs / 1000))}s`;
             else if (this._hint) msg = this._hint;
             else if (sum(this._inPot) === 0) msg = 'Kéo nguyên liệu thả vào nồi';
@@ -359,7 +363,7 @@ export const CookStation = {
         this._addFloater(id);
         this._splash();
         this.sync(this._user);
-        if (this._phase === 'idle' && this._isFull()) this._startCooking();
+        if (this._phase === 'idle' && this._isFull()) this._beginCook();
     },
 
     _addFloater(id) {
@@ -410,6 +414,47 @@ export const CookStation = {
     },
 
     /* ===== Nấu ===== */
+
+    // Nồi đủ nguyên liệu: chơi mini game trước, thắng mới nấu. Tắt mini game (enabled: false) thì nấu luôn.
+    async _beginCook() {
+        if (!COOK_MINIGAME.enabled) return this._startCooking();
+        this._phase = 'minigame'; // đặt ngay để không bị kích hoạt 2 lần
+        this._refresh();
+        let won = false;
+        try {
+            won = await ColorMemoryGame.play(COOK_MINIGAME);
+        } catch (err) {
+            console.warn('Mini game bị lỗi, coi như thất bại.', err);
+        }
+        if (won) {
+            this._hooks.toast?.('Chọn đúng rồi! Bắt đầu nấu.', 'ok');
+            this._startCooking();
+        } else {
+            await this._fail();
+        }
+    },
+
+    // Thua mini game: dọn nồi. Tuỳ COOK_MINIGAME.loseIngredientsOnFail mà mất hay giữ nguyên liệu.
+    async _fail() {
+        this._phase = 'finishing';
+        this._refresh();
+        let lost = false;
+        if (COOK_MINIGAME.loseIngredientsOnFail) {
+            try {
+                const user = await this._hooks.fail?.();
+                if (user) { this._user = user; lost = true; }
+            } catch (err) {
+                this._hooks.toast?.(err?.message || 'Không lưu được kết quả, thử lại sau.', 'err');
+            }
+        }
+        this._phase = 'idle';
+        this._resetPot();
+        this._hooks.toast?.(
+            lost ? 'Nấu thất bại! Nguyên liệu bị cháy hết rồi.' : 'Nấu thất bại! Nguyên liệu vẫn còn, thử lại nhé.',
+            'err',
+        );
+        this.sync(this._user);
+    },
 
     _startCooking() {
         this._phase = 'cooking';

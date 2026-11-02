@@ -273,6 +273,19 @@ export async function sellFood(shop, qty) {
     }
 }
 
+// Nấu thất bại (thua mini game): chỉ gọi khi COOK_MINIGAME.loseIngredientsOnFail = true -> trừ nguyên liệu, không có món.
+export async function failCraft(shop) {
+    return mutateAccount((u) => {
+        requirePermission(u, 'craft_food');
+        const ing = getIngredients(u);
+        for (const [id, need] of Object.entries(shop.recipe)) {
+            if (ing[id] < need) throw new ShopError(`Không đủ ${INGREDIENTS[id].name} trong kho.`);
+        }
+        for (const [id, need] of Object.entries(shop.recipe)) ing[id] -= need;
+        u.ingredients = ing;
+    });
+}
+
 export async function craftFood(shop, qty) {
     const n = toQty(qty);
     return mutateAccount((u) => {
