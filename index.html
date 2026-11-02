@@ -16,8 +16,7 @@
             const target = getTravel() ? "./pages/travel/travel.html"
                 : getLocation() === "outSide" ? "./pages/outSide/outSide.html"
                 : "./pages/room/room.html";
-            Loader.show("Đang vào game...");
-            setTimeout(() => window.location.replace(target), 900);
+            Loader.go(target, { replace: true, ms: 900, text: "Đang vào game..." });
         } else {
             window.location.replace("./pages/login/login.html");
         }

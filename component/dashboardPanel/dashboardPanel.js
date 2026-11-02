@@ -54,7 +54,8 @@ const RAIL_ICON = {
     mission: railSvg('<path d="M8 4h8M9 2h6v4H9z"/><path d="M6 4H5a2 2 0 0 0-2 2v15h18V6a2 2 0 0 0-2-2h-1"/><path d="m8 13 2 2 5-5"/>'),
     gift: railSvg('<path d="M3 9h18v12H3zM2 5h20v4H2zM12 5v16"/><path d="M12 5H7.5A2.5 2.5 0 1 1 10 2.5ZM12 5h4.5A2.5 2.5 0 1 0 14 2.5Z"/>'),
     settings: railSvg('<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-2.83 2.83-.06-.06a1.7 1.7 0 0 0-1.88-.34 1.7 1.7 0 0 0-1.03 1.56V21h-4v-.08a1.7 1.7 0 0 0-1.04-1.56 1.7 1.7 0 0 0-1.88.34l-.06.06-2.83-2.83.06-.06A1.7 1.7 0 0 0 4.6 15 1.7 1.7 0 0 0 3.08 14H3v-4h.08A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.34-1.88l-.06-.06 2.83-2.83.06.06A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-1.52V3h4v.08A1.7 1.7 0 0 0 15 4.6a1.7 1.7 0 0 0 1.88-.34l.06-.06 2.83 2.83-.06.06A1.7 1.7 0 0 0 19.4 9c.25.61.85 1 1.51 1H21v4h-.08c-.67 0-1.27.4-1.52 1Z"/>'),
-    vehicle: '<i class="fa-solid fa-motorcycle"></i>',
+    vehicle: railSvg('<circle cx="6" cy="17" r="3"/><circle cx="18" cy="17" r="3"/><path d="m6 17 4-8h4l4 8M9 6h4"/>'),
+    activity: railSvg('<path d="M6 3v3M18 3v3M4 8h16v12H4z"/><path d="M8 12h3M8 16h8"/>'),
 };
 
 // Mỗi nhóm ứng với 1 giá trị data-view của .dboard-card (CSS chỉ hiện nhóm đang xem).
@@ -73,7 +74,10 @@ const RAIL_ITEMS = {
     ],
     vehicle: [
         { id: 'home', label: 'Trang chủ', icon: RAIL_ICON.home },
+        { id: 'vicoin', label: 'Ví coin', icon: RAIL_ICON.wallet, app: 'vicoin' },
         { id: 'vehicle', label: 'Phương Tiện', icon: RAIL_ICON.vehicle, current: true },
+        { id: 'activity', label: 'Hoạt động', icon: RAIL_ICON.activity },
+        { id: 'settings', label: 'Cài đặt', icon: RAIL_ICON.settings, end: true },
     ],
 };
 
@@ -83,7 +87,7 @@ function renderRail(side) {
             ${items.map((item) => {
                 const active = group === 'home' ? item.id === side : item.current;
                 return `
-                    <button class="dboard-rail__btn${item.end ? ' dboard-rail__btn--end' : ''}" data-rail="${item.id}"${active ? ' aria-current="page"' : ''} aria-label="${item.label}" title="${item.label}">
+                    <button class="dboard-rail__btn${item.end ? ' dboard-rail__btn--end' : ''}" data-rail="${item.id}"${item.app ? ` data-app="${item.app}"` : ''}${active ? ' aria-current="page"' : ''} aria-label="${item.label}" title="${item.label}">
                         ${item.icon}
                     </button>
                 `;
@@ -301,6 +305,10 @@ export const DashboardPanel = {
                     return;
                 }
                 if (btn.getAttribute('aria-current') === 'page') return;
+                if (btn.dataset.app) {
+                    this._openApp(btn.dataset.app); // chuyển thẳng sang app khác qua rail
+                    return;
+                }
                 console.log('Mở mục thanh bên:', id);
             });
         });

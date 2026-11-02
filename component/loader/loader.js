@@ -1,3 +1,5 @@
+import { preload as preloadAssets, pageKey } from './preloader.js';
+
 const TRUCK = `
 <div class="loader">
     <div class="truckWrapper">
@@ -66,7 +68,7 @@ export const Loader = {
             (document.body || document.documentElement).appendChild(el);
             ready.then(() => {
                 if (overlay !== el) return; // đã bị hide()
-                el.style.visibility = '';
+                el.style.visibility = 'visible'; // ghi rõ 'visible' để vẫn hiện khi body đang bị #gl-gate ẩn
                 requestAnimationFrame(() => el.classList.add('is-show'));
             });
         }
@@ -104,16 +106,62 @@ export const Loader = {
         overlay = null;
     },
 
-    // Hiện loading rồi mới chuyển trang. back: true -> history.back() (khôi phục trang cũ từ bfcache, nhanh hơn)
-    go(url, { ms = 1200, replace = false, back = false, text = 'Đang tải...' } = {}) {
+    // Tải sẵn ảnh của các trang trong `keys` (xem ASSETS ở preloader.js). percent: hiện % ở dòng phụ.
+    load(keys, { percent = true } = {}) {
+        return preloadAssets(keys, {
+            onProgress: percent ? (p) => this.setSub(`${Math.round(p * 100)}%`) : undefined,
+        });
+    },
+
+    // Hiện loading, TẢI SẴN ảnh của trang đích, rồi mới chuyển trang.
+    //   ms: thời gian loading tối thiểu (tải nhanh hơn thì vẫn đợi cho đủ ms).
+    //   preload: danh sách key tải sẵn; mặc định tự lấy theo url đích ([trang đích, 'common']); [] = không tải.
+    //   back: true -> history.back() (khôi phục trang cũ từ bfcache, đã có sẵn nên không cần tải).
+    go(url, { ms = 1200, replace = false, back = false, text = 'Đang tải...', preload: keys } = {}) {
         if (going) return;
         going = true;
         this.show(text);
-        setTimeout(() => {
+        const jump = () => {
             if (back) history.back();
             else if (replace) location.replace(url);
             else location.href = url;
-        }, ms);
+        };
+        if (back) { setTimeout(jump, ms); return; }
+        const started = Date.now();
+        const list = keys ?? [pageKey(url), 'common'].filter(Boolean);
+        this.load(list).finally(() => {
+            setTimeout(jump, Math.max(0, ms - (Date.now() - started)));
+        });
+    },
+
+    // Gọi ở đầu TRANG ĐÍCH (footer.js): giữ màn loading cho tới khi CSS, font, ảnh nền, icon đã tải + giải mã xong
+    // rồi mới mở trang. Cặp với thẻ <style id="gl-gate"> trong <head> của trang (che trang cho tới lúc này).
+    async gate(key = pageKey(), { maxMs = 15000 } = {}) {
+        this.show('Đang tải...');
+        try {
+            const loaded = new Promise((r) => {
+                if (document.readyState === 'complete') r();
+                else window.addEventListener('load', r, { once: true });
+            });
+            const assets = preloadAssets([key, 'common'].filter(Boolean), { timeout: maxMs });
+            const ready = Promise.all([loaded, assets]).then(() => document.fonts?.ready);
+            await Promise.race([ready, new Promise((r) => setTimeout(r, maxMs))]);
+            // chờ 2 khung hình để trình duyệt vẽ xong trang phía sau rồi mới kéo màn loading đi
+            await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+        } finally {
+            document.getElementById('gl-gate')?.remove();
+            this.fadeHide();
+        }
+    },
+
+    // Như hide() nhưng mờ dần cho mượt
+    fadeHide() {
+        const el = overlay;
+        going = false;
+        overlay = null;
+        if (!el) return;
+        el.classList.remove('is-show');
+        setTimeout(() => el.remove(), 300);
     },
 };
 
