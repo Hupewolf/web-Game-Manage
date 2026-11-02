@@ -3,6 +3,8 @@ import { InventoryModal } from "../personalItem/personalItem.js";
 import { Loader } from "../loader/loader.js";
 import { startTravel, PAGE_URL } from "../../share/travel.js";
 
+Loader.gate();
+
 {/* <div class="game-menu">
             <span class="left"></span>
             <span class="center"></span>

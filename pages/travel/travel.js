@@ -2,6 +2,7 @@
 // Hết giờ mới chuyển sang trang đích. Trạng thái nằm trên API nên thoát web rồi vào lại vẫn chạy tiếp.
 
 import { Loader } from '../../component/loader/loader.js';
+import { preload } from '../../component/loader/preloader.js';
 import { PAGE_URL, getTravel, getLocation, remaining, syncTravel, finishTravel, cancelTravel, formatDuration } from '../../share/travel.js';
 import { VEHICLES } from '../../share/travelConfig.js';
 
@@ -27,6 +28,8 @@ function run(travel) {
     const dest = travel.to === 'outSide' ? 'ra ngoài' : 'về phòng';
     const vehicle = VEHICLES.find((v) => v.id === travel.vehicle)?.name ?? 'Đi bộ';
     let done = false;
+    // Trong lúc đếm ngược, tải sẵn ảnh của trang đích (room / outSide) để tới nơi là vào thẳng, không phải tải thêm
+    const warm = preload([travel.to, 'common']);
 
     const tick = async () => {
         if (done) return;
@@ -42,6 +45,7 @@ function run(travel) {
             if (!to) { done = false; return; }
             Loader.setButton(null);
             Loader.show('Đã đến nơi!', '');
+            await warm; // chắc chắn ảnh trang đích đã tải xong
             setTimeout(() => location.replace(PAGE_URL[to]), 700);
         } catch {
             Loader.show('Mất kết nối, đang thử lại...', '');
