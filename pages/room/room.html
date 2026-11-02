@@ -18,6 +18,7 @@
         <link rel="stylesheet" href="../../component/dashboardPanel/dashboardPanel.css">
         <link rel="stylesheet" href="../../component/viCoinApp/viCoinApp.css">
         <link rel="stylesheet" href="../../component/vehicleApp/vehicleApp.css">
+        <link rel="stylesheet" href="../../component/luckyWheel/luckyWheel.css">
         <title>My Room</title>
     </head>
 
@@ -72,6 +73,13 @@
                     </div>
                     <button class="watch-all">XEM TẤT CẢ</button>
                 </div>
+            </div>
+            <!-- Vòng quay may mắn: nút mở riêng, đóng/mở độc lập với nhiệm vụ -->
+            <div class="lucky-outer minimized" id="lucky-outer">
+                <button class="lucky-icon-btn" id="lucky-icon" aria-label="Mở vòng quay may mắn">
+                    <i class="fa-solid fa-dharmachakra"></i>
+                </button>
+                <div class="lucky-slot" id="lucky-wheel-slot"></div>
             </div>
         </div>
         <footer></footer>

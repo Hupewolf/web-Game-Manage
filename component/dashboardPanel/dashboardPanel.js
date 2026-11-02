@@ -1,5 +1,8 @@
 import { ViCoinApp } from '../viCoinApp/viCoinApp.js';
 import { VehicleApp } from '../vehicleApp/vehicleApp.js';
+import { XU_APPS } from '../luckyWheel/luckyConfig.js';
+import { getXuView, isAssigned } from '../luckyWheel/xuService.js';
+import { claimXuForApp } from '../luckyWheel/luckyWheel.js';
 
 // Tiêu đề + icon trên thanh trạng thái khi mở app con
 const APP_META = {
@@ -96,12 +99,20 @@ function renderRail(side) {
     `).join('');
 }
 
+// Huy hiệu xu trên app được gán: "+1 xu" (chưa nhận hôm nay) / "Đã nhận"
+function xuBadgeHtml(id) {
+    if (!isAssigned(id)) return '';
+    const got = getXuView().claimed.includes(id);
+    return `<span class="dboard-feature__xu${got ? ' is-claimed' : ''}" data-xu-badge="${id}"><i class="fa-solid ${got ? 'fa-check' : 'fa-star'}"></i>${got ? 'Đã nhận' : '+1 xu'}</span>`;
+}
+
 function renderFeatureIcon(f) {
     return `
         <button class="dboard-feature dboard-feature--${f.accent}" data-feature="${f.id}">
             <div class="dboard-feature__icon">
                 <i class="fa-solid ${f.icon}"></i>
                 ${f.badge ? '<span class="dboard-feature__dot"></span>' : ''}
+                ${xuBadgeHtml(f.id)}
             </div>
             <div class="dboard-feature__text">
                 <span class="dboard-feature__label">${f.label}</span>
@@ -116,6 +127,7 @@ export const DashboardPanel = {
     _open: false,        // mặc định bảng iPad đóng, mở bằng nút trên header
     _side: 'card',       // cột trái trang chủ: 'card' (thẻ thành viên) | 'profile' (hồ sơ) — đổi bằng rail bên trái
     _escBound: false,
+    _xuBound: false,
     _outsideBound: false,
 
     render(containerId, state = {}) {
@@ -248,7 +260,7 @@ export const DashboardPanel = {
                         <section class="dboard-panel dboard-menu-panel" aria-labelledby="dboard-menu-title">
                             <div class="dboard-panel__head">
                                 <h2 id="dboard-menu-title">Menu nhanh</h2>
-                                <span>${FEATURES_ROW_1.length + FEATURES_ROW_2.length} CHỨC NĂNG</span>
+                                <span id="dboard-menu-count">${FEATURES_ROW_1.length + FEATURES_ROW_2.length} CHỨC NĂNG</span>
                             </div>
                             <div class="dboard-feature-grid">
                                 ${FEATURES_ROW_1.map(renderFeatureIcon).join('')}
@@ -264,9 +276,31 @@ export const DashboardPanel = {
         `;
 
         this._bindEvents(el);
+        this._syncXu();
+    },
+
+    // Cập nhật huy hiệu "+1 xu" trên các app + tổng xu nhận hôm nay
+    _syncXu() {
+        const root = this._root();
+        if (!root) return;
+        const v = getXuView();
+        root.querySelectorAll('[data-xu-badge]').forEach((b) => {
+            const got = v.claimed.includes(b.dataset.xuBadge);
+            b.classList.toggle('is-claimed', got);
+            b.innerHTML = `<i class="fa-solid ${got ? 'fa-check' : 'fa-star'}"></i>${got ? 'Đã nhận' : '+1 xu'}`;
+        });
+        const count = root.querySelector('#dboard-menu-count');
+        if (count) {
+            const n = FEATURES_ROW_1.length + FEATURES_ROW_2.length;
+            count.textContent = XU_APPS.length ? `${n} CHỨC NĂNG · XU ${v.earned}/${v.total}` : `${n} CHỨC NĂNG`;
+        }
     },
 
     _bindEvents(root) {
+        if (!this._xuBound) {
+            document.addEventListener('xu:change', () => this._syncXu());
+            this._xuBound = true;
+        }
         if (!this._escBound) {
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape' && this._open) this.hide();
@@ -315,6 +349,8 @@ export const DashboardPanel = {
 
         root.querySelectorAll('.dboard-feature').forEach(btn => {
             btn.addEventListener('click', () => {
+                // App được gán xu: lần đầu bấm trong ngày -> +1 xu (không chặn việc mở app)
+                claimXuForApp(btn.dataset.feature);
                 if (btn.dataset.feature === 'vicoin') {
                     this._openApp('vicoin');
                     return;

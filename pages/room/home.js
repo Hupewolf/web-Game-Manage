@@ -1,6 +1,7 @@
 import { playerState, GameHeader } from '../../share/main.js';
 import { DashboardPanel } from '../../component/dashboardPanel/dashboardPanel.js';
 import { Mood } from '../../component/mood/mood.js';
+import { LuckyWheel } from '../../component/luckyWheel/luckyWheel.js';
 
 // function resizeGame() {
 //     const game = document.querySelector("#web");
@@ -79,6 +80,9 @@ GameHeader.render(playerState);
 
 // Ở trong phòng: tinh thần hồi dần
 Mood.start('room');
+
+// Vòng quay may mắn dưới "Nhiệm vụ hôm nay" (xu nhận từ các app trên iPad)
+LuckyWheel.mount('lucky-wheel-slot');
 
 const box = document.getElementById("mission-box");
 const openBtn = document.getElementById("mission-icon");
