@@ -28,3 +28,15 @@ export const SHOPS = {
         },
     },
 };
+
+// ===== Mini game "nhớ màu" khi nấu ăn (xuất hiện ngay khi bỏ đủ nguyên liệu vào nồi) =====
+// Mọi mốc thời gian tính bằng mili giây (1000 = 1 giây) — sửa tự do ở đây.
+export const COOK_MINIGAME = {
+    enabled: true,              // false = tắt mini game, bỏ đủ nguyên liệu là nấu luôn như cũ
+    needStartButton: true,      // true = bấm "Bắt đầu" mới chạy; false = tự chạy sau 800ms
+    wordMs: 1000,               // chữ màu hiện trên bảng bao lâu
+    gapMs: 2000,                // sau khi chữ biến mất, chờ bao lâu thì 9 bi đổi màu
+    revealMs: 1000,             // 9 bi hiện màu trong bao lâu rồi quay về xám
+    resultMs: 1400,             // hiện kết quả đúng / sai bao lâu rồi đóng bảng
+    loseIngredientsOnFail: false, // true = nấu thất bại thì mất nguyên liệu trong nồi; false = giữ nguyên, thử lại
+};

@@ -8,7 +8,7 @@
 import { SHOPS, INGREDIENTS } from './shopConfig.js';
 import { can, getCurrentUser } from '../../share/roles.js';
 import {
-    ShopError, buyFood, craftFood, sellFood,
+    ShopError, buyFood, craftFood, failCraft, sellFood,
     refreshAccount, coinOf, getIngredients, getFoodCount, getMarketStock,
 } from './shopService.js';
 import { listTsvAccounts, sendIngredients } from './giftService.js';
@@ -134,6 +134,7 @@ export const ShopPanel = {
         if (slot) {
             slot.replaceWith(CookStation.mount(shop, user, {
                 craft: () => craftFood(shop, 1),
+                fail: () => failCraft(shop),
                 toast: (msg, type) => this._toast(msg, type),
             }));
         }
@@ -197,9 +198,9 @@ export const ShopPanel = {
     _sendTab() {
         let recipient;
         if (this._recipients === null) {
-            recipient = `<p class="shop-item__meta">${this._recipientsError || 'Đang tải danh sách tài khoản tsv...'}</p>`;
+            recipient = `<p class="shop-item__meta">${this._recipientsError || 'Đang tải danh sách tài khoản...'}</p>`;
         } else if (!this._recipients.length) {
-            recipient = '<p class="shop-item__meta">Chưa có tài khoản nào có vai trò tsv.</p>';
+            recipient = '<p class="shop-item__meta">Chưa có tài khoản nào có vai trò tsv hoặc admin.</p>';
         } else {
             recipient = `
                 <select class="shop-select" id="shop-gift-to" ${this._busy ? 'disabled' : ''}>
@@ -214,8 +215,8 @@ export const ShopPanel = {
         const canSend = this._to && total > 0 && !this._busy;
         return `
             <div class="shop-craft shop-send">
-                <h3>Gửi nguyên liệu cho tsv</h3>
-                <p class="shop-item__meta">Gửi miễn phí. Tài khoản tsv nhận thông báo ở header và bấm "Nhận" để bỏ vào kho.</p>
+                <h3>Gửi nguyên liệu cho tsv / admin</h3>
+                <p class="shop-item__meta">Gửi miễn phí. Người nhận (tsv / admin) thấy thông báo ở header và bấm "Nhận" để bỏ vào kho.</p>
                 ${recipient}
                 <div class="shop-send__row">
                     ${Object.values(INGREDIENTS).map((i) => `

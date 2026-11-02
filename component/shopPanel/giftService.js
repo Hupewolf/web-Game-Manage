@@ -1,6 +1,6 @@
 // component/shopPanel/giftService.js
-// Admin gửi nguyên liệu cho tài khoản tsv -> quà nằm trong `inbox` của tsv (trên MockAPI)
-// -> tsv mở thông báo ở header bấm "Nhận" thì nguyên liệu mới vào kho.
+// Admin gửi nguyên liệu cho tài khoản tsv / admin -> quà nằm trong `inbox` của người nhận (trên MockAPI)
+// -> người nhận mở thông báo ở header bấm "Nhận" thì nguyên liệu mới vào kho.
 //
 // inbox[i] = { id, type: 'ingredient_gift', from: { id, name }, items: { rau, thit, tinhbot },
 //              time, timestamp, claimed: false }
@@ -93,10 +93,11 @@ export async function sendIngredients(toId, items) {
     }
     // Quyền kiểm tra theo role trên server, không tin bản local
     if (!can('send_ingredient', sender)) throw new ShopError('Chỉ admin mới được gửi nguyên liệu.');
-    if (normalizeRole(target?.role ?? target?.values?.role) !== ROLE.TSV || normalizeRole(target?.role ?? target?.values?.role) !== ROLE.Admin) {
-        throw new ShopError('Gửi được cho tài khoản có vai trò tsv và admin.');
+    // Chỉ gửi được cho tsv hoặc admin (admin gửi cho chính mình cũng được)
+    const targetRole = normalizeRole(target?.role ?? target?.values?.role);
+    if (targetRole !== ROLE.TSV && targetRole !== ROLE.ADMIN) {
+        throw new ShopError('Chỉ gửi được cho tài khoản có vai trò tsv hoặc admin.');
     }
-
 
     const now = new Date();
     const gift = {
@@ -117,6 +118,18 @@ export async function sendIngredients(toId, items) {
         throw new ShopError('Không gửi được, thử lại sau.');
     }
     if (!res.ok) throw new ShopError('Không gửi được, thử lại sau.');
+
+    // Gửi cho chính mình: cập nhật luôn bản lưu trên máy (nếu không, bản local cũ chưa có quà
+    // và có thể bị ghi đè ngược lên server làm mất quà)
+    if (String(toId) === String(me.id)) {
+        const cur = getCurrentUser();
+        if (cur) {
+            cur.inbox = next.inbox;
+            localStorage.setItem('currentUser', JSON.stringify(cur));
+        }
+    }
+    // Báo cho bảng thông báo ở header tải lại hộp thư ngay (không phải đợi 30 giây)
+    document.dispatchEvent(new CustomEvent('inbox:changed', { detail: { toId: String(toId) } }));
     return gift;
 }
 

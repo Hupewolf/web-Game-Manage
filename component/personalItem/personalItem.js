@@ -1,5 +1,20 @@
 import { updateStatBar } from '../header/StatBar.js';
 
+import { fetchAccount } from '../../share/accountApi.js';
+
+// Bản currentUser trên máy có thể cũ hơn server. Trước khi PUT cả hồ sơ, lấy lại các field do cửa hàng ghi
+// (hộp thư quà, kho nguyên liệu) từ server để không ghi đè làm mất quà admin vừa gửi.
+async function withServerFields(userData) {
+    try {
+        const fresh = await fetchAccount(userData.id);
+        const out = { ...userData };
+        for (const k of ['inbox', 'ingredients']) if (k in fresh) out[k] = fresh[k];
+        return out;
+    } catch {
+        return userData;
+    }
+}
+
 export const InventoryModal = {
     allItems: [],
     currentItems: [],
@@ -213,7 +228,7 @@ export const InventoryModal = {
                         await fetch(`https://6a53c0628547b9f7111bc89e.mockapi.io/accounts/test/testManage/${userData.id}`, {
                             method: 'PUT',
                             headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify(userData)
+                            body: JSON.stringify(await withServerFields(userData))
                         });
                         console.log(`✅ Đồng bộ API thành công! Vật phẩm: ${itemIdentifier} | Đói: ${userData.values.hungry}/100 | Khát: ${userData.values.thirsty}/100`);
                     } catch (error) {
@@ -262,7 +277,7 @@ export const InventoryModal = {
                         await fetch(`https://6a53c0628547b9f7111bc89e.mockapi.io/accounts/test/testManage/${userData.id}`, {
                             method: 'PUT',
                             headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify(userData)
+                            body: JSON.stringify(await withServerFields(userData))
                         });
                     } catch (error) {
                         console.error("Lỗi khi update API:", error);

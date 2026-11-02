@@ -265,7 +265,7 @@ export const GameHeader = {
 		// Đọc hết thông báo / có thông báo mới -> cập nhật huy hiệu
 		document.addEventListener('notification:change', () => this.updateNotificationBadge());
 
-		// tsv: bắt đầu theo dõi quà nguyên liệu admin gửi (hàm tự bỏ qua nếu không phải tsv)
+		// tsv / admin: bắt đầu theo dõi quà nguyên liệu (hàm tự bỏ qua nếu là tài khoản khác)
 		NotificationPanel.startInbox();
 	},
 

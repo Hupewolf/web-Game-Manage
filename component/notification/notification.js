@@ -7,7 +7,7 @@ const esc = (t) => String(t ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '
 export const NotificationPanel = {
     _initialized: false,
 
-    // Quà nguyên liệu admin gửi cho tsv (đọc từ inbox trên server). Chỉ tài khoản tsv có.
+    // Quà nguyên liệu admin gửi (đọc từ inbox trên server). Chỉ tài khoản tsv / admin có.
     _gifts: [],
     _inboxTimer: null,
 
@@ -150,11 +150,14 @@ export const NotificationPanel = {
         panel.style.right = `${window.innerWidth - rect.right}px`;
     },
 
-    // Chỉ tài khoản tsv có quà: nạp từ bản đã lưu cho huy hiệu hiện ngay, rồi hỏi server định kỳ
+    // Tài khoản tsv và admin có quà: nạp từ bản đã lưu cho huy hiệu hiện ngay, rồi hỏi server định kỳ
     startInbox() {
         if (this._inboxTimer) return;
         const me = getCurrentUser();
-        if (!me?.id || getRole(me) !== ROLE.TSV) return;
+        const role = getRole(me);
+        if (!me?.id || (role !== ROLE.TSV && role !== ROLE.ADMIN)) return;
+        // Vừa có người gửi quà (kể cả admin tự gửi cho mình) -> tải lại hộp thư ngay
+        document.addEventListener('inbox:changed', () => this.refreshInbox());
         this._gifts = getInbox(me);
         this._renderList();
         this._emitChange();
