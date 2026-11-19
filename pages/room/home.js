@@ -1,5 +1,6 @@
 import { playerState, GameHeader } from '../../share/main.js';
 import { DashboardPanel } from '../../component/dashboardPanel/dashboardPanel.js';
+import { SchedulePanel } from '../../component/schedulePanel/schedulePanel.js';
 
 // function resizeGame() {
 //     const game = document.querySelector("#web");
@@ -93,3 +94,6 @@ openBtn.addEventListener("click", () => {
 
 
 
+
+// Lịch trình: bấm nút dưới "Nhiệm vụ hôm nay" để mở lịch giữa màn hình
+SchedulePanel.mount(document.getElementById("schedule-icon"));

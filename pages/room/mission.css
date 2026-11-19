@@ -7,6 +7,9 @@
     width: 280px;
 }
 
+/* Đang thu nhỏ: chỉ chiếm chỗ của nút 54px để nút Lịch trình nằm sát bên dưới */
+.outer-box.minimized { height: 54px; }
+
 .outer-box.minimized #mission-icon {
     opacity: 1;
     transform: scale(1);
@@ -28,11 +31,6 @@
 
 .mission-icon-btn:hover {
     transform: translateY(-3px) scale(1.04);
-}
-
-.mission-icon-btn .calender-icon {
-    background-color: #ffffff;
-    opacity: 1;
 }
 
 #mission-icon {
@@ -111,10 +109,10 @@
 .calender-icon {
     width: 22px;
     height: 22px;
-    background-color: var(--fun-blue);
+    background-color: #ffffff;
     -webkit-mask: url("../../img/icon/simple-line-icons_calender.svg") no-repeat center;
     mask: url("../../img/icon/simple-line-icons_calender.svg") no-repeat center;
-    opacity: 0.85;
+    opacity: 1;
 }
 
 .mission-list {

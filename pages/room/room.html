@@ -17,6 +17,7 @@
         <link rel="stylesheet" href="../../component/notification/notification.css">
         <link rel="stylesheet" href="../../component/dashboardPanel/dashboardPanel.css">
         <link rel="stylesheet" href="../../component/viCoinApp/viCoinApp.css">
+        <link rel="stylesheet" href="../../component/schedulePanel/schedulePanel.css">
         <title>My Room</title>
     </head>
 
@@ -27,6 +28,9 @@
         <!-- Bảng quản lý (component mới) — nằm giữa trang, giữa header và footer -->
         <div id="dashboard-panel-slot" class="dboard-root" aria-hidden="true"></div>
         <div class="main">
+            <button class="schedule-icon-btn" id="schedule-icon" aria-label="Mở lịch trình">
+                <i class="g-icon calender-icon"></i>
+            </button>
             <div class="outer-box minimized">
         
                 <button class="mission-icon-btn" id="mission-icon">
@@ -72,6 +76,7 @@
                     <button class="watch-all">XEM TẤT CẢ</button>
                 </div>
             </div>
+
         </div>
         <footer></footer>
     </div>

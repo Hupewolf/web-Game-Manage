@@ -71,6 +71,11 @@ body::before {
     padding: 16px 40px;
     right: 0;
     width: fit-content;
+    /* Xếp dọc: nút Nhiệm vụ, rồi nút Lịch trình bên dưới */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 12px;
 }
 
 img {
