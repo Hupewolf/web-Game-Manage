@@ -2,7 +2,6 @@ import { playerState, GameHeader } from '../../share/main.js';
 import { initStage } from '../../share/stage.js';
 import { SHOPS } from '../../component/shopPanel/shopConfig.js';
 import { ShopPanel } from '../../component/shopPanel/shopPanel.js';
-import { Mood } from '../../component/mood/mood.js';
 import { can } from '../../share/roles.js';
 
 initStage();
@@ -14,5 +13,4 @@ if (!SHOPS[shopId] || (localStorage.getItem('isLoggedIn') === 'true' && !can('mo
     window.location.replace('../outSide/outSide.html');
 } else {
     ShopPanel.render('shop-slot', shopId);
-    Mood.start('outside'); // đang ở ngoài phòng nên tinh thần vẫn giảm
 }

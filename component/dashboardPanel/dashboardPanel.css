@@ -1,6 +1,6 @@
 /* component/dashboardPanel/dashboardPanel.css
    Bảng quản lý — tông màu tươi sáng, vui nhộn, tách biệt với giao diện cyberpunk-tối
-   của phần còn lại của game (đúng như tinh thần bản mock-up gốc). */
+   của phần còn lại của game (đúng như bản mock-up gốc). */
 
 .dboard-root {
     --db-blue: #4f8ef7;
@@ -174,14 +174,10 @@
     padding: 0 22px 10px 18px;
 }
 
-.dboard-card[data-view="vicoin"] .outer-bcn--home,
-.dboard-card[data-view="vehicle"] .outer-bcn--home { display: none; }
-.dboard-card[data-view="vicoin"] .outer-bcn--app,
-.dboard-card[data-view="vehicle"] .outer-bcn--app { display: flex; }
-.dboard-card[data-view="vicoin"] .ipad-main,
-.dboard-card[data-view="vehicle"] .ipad-main { display: none; }
-.dboard-card[data-view="vicoin"] .dboard-app-view,
-.dboard-card[data-view="vehicle"] .dboard-app-view { display: flex; }
+.dboard-card[data-view="vicoin"] .outer-bcn--home { display: none; }
+.dboard-card[data-view="vicoin"] .outer-bcn--app { display: flex; }
+.dboard-card[data-view="vicoin"] .ipad-main { display: none; }
+.dboard-card[data-view="vicoin"] .dboard-app-view { display: flex; }
 
 .outer-bcn__back {
     border: none;
@@ -279,8 +275,7 @@
 .dboard-rail__group { display: none; }
 
 .dboard-card[data-view="home"] .dboard-rail__group[data-group="home"],
-.dboard-card[data-view="vicoin"] .dboard-rail__group[data-group="vicoin"],
-.dboard-card[data-view="vehicle"] .dboard-rail__group[data-group="vehicle"] { display: contents; }
+.dboard-card[data-view="vicoin"] .dboard-rail__group[data-group="vicoin"] { display: contents; }
 
 .dboard-rail__btn {
     position: relative;
@@ -672,32 +667,6 @@
     border-radius: 50%;
     background: #ff4757;
     border: 2px solid #fff;
-}
-
-.dboard-feature__xu {
-    position: absolute;
-    right: -14px;
-    bottom: -7px;
-    display: inline-flex;
-    align-items: center;
-    gap: 3px;
-    padding: 2px 7px;
-    border-radius: 999px;
-    background: #ffb000;
-    color: #fff;
-    border: 2px solid #fff;
-    font-size: 10px;
-    font-weight: 800;
-    line-height: 1.3;
-    white-space: nowrap;
-    transform: rotate(2deg);
-    box-shadow: 0 3px 8px rgba(255, 176, 0, 0.4);
-}
-
-.dboard-feature__xu.is-claimed {
-    background: #cfd6e6;
-    color: #5b6478;
-    box-shadow: none;
 }
 
 .dboard-feature__label {

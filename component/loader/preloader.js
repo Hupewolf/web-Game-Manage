@@ -23,7 +23,6 @@ const COMMON = [
 export const ASSETS = {
     common: COMMON.map(IMG),
     login: [],
-    travel: [],
     room: [
         'background/phong-hien-dai.png',          // nền phòng
         'background/db-banner.png',               // 3 ảnh trong bảng iPad (mở iPad là có ngay)

@@ -1,5 +1,4 @@
 import { playerState, GameHeader } from '../../share/main.js';
-import { Mood } from '../../component/mood/mood.js';
 import { can } from '../../share/roles.js';
 import { Loader } from '../../component/loader/loader.js';
 
@@ -50,9 +49,6 @@ resizeGame();
 document.getElementById("web").classList.add("is-ready");
 
 GameHeader.render(playerState);
-
-// Ra ngoài: tinh thần giảm dần
-Mood.start('outside');
 
 // Trang được khôi phục từ bfcache (back từ cửa hàng): JS không chạy lại -> cập nhật coin thủ công
 window.addEventListener('pageshow', (e) => {
