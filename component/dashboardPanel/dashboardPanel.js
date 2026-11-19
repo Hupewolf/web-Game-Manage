@@ -1,13 +1,8 @@
 import { ViCoinApp } from '../viCoinApp/viCoinApp.js';
-import { VehicleApp } from '../vehicleApp/vehicleApp.js';
-import { XU_APPS } from '../luckyWheel/luckyConfig.js';
-import { getXuView, isAssigned } from '../luckyWheel/xuService.js';
-import { claimXuForApp } from '../luckyWheel/luckyWheel.js';
 
 // Tiêu đề + icon trên thanh trạng thái khi mở app con
 const APP_META = {
     vicoin: { title: 'Ví Coin', icon: 'fa-wallet' },
-    vehicle: { title: 'Phương Tiện', icon: 'fa-motorcycle' },
 };
 
 function updateClock() {
@@ -30,7 +25,6 @@ setInterval(updateClock, 1000);
 const MEMBER_CARD_IMG = '';
 
 const FEATURES_ROW_1 = [
-    { id: 'shop',      label: 'Phương Tiện',     sub: 'Mua & sở hữu xe',      icon: 'fa-motorcycle',   badge: false, accent: 'orange' },
     { id: 'vicoin',    label: 'Ví Coin',         sub: 'Số dư & giao dịch',    icon: 'fa-wallet',       badge: false, accent: 'yellow' },
     { id: 'meet',      label: 'Gặp Gỡ',          sub: 'Kết nối thành viên',   icon: 'fa-handshake',    badge: false, accent: 'blue' },
     { id: 'guide',     label: 'Hướng Dẫn',       sub: 'Làm quen nhanh',       icon: 'fa-book-open',    badge: false, accent: 'violet' },
@@ -57,7 +51,6 @@ const RAIL_ICON = {
     mission: railSvg('<path d="M8 4h8M9 2h6v4H9z"/><path d="M6 4H5a2 2 0 0 0-2 2v15h18V6a2 2 0 0 0-2-2h-1"/><path d="m8 13 2 2 5-5"/>'),
     gift: railSvg('<path d="M3 9h18v12H3zM2 5h20v4H2zM12 5v16"/><path d="M12 5H7.5A2.5 2.5 0 1 1 10 2.5ZM12 5h4.5A2.5 2.5 0 1 0 14 2.5Z"/>'),
     settings: railSvg('<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-2.83 2.83-.06-.06a1.7 1.7 0 0 0-1.88-.34 1.7 1.7 0 0 0-1.03 1.56V21h-4v-.08a1.7 1.7 0 0 0-1.04-1.56 1.7 1.7 0 0 0-1.88.34l-.06.06-2.83-2.83.06-.06A1.7 1.7 0 0 0 4.6 15 1.7 1.7 0 0 0 3.08 14H3v-4h.08A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.34-1.88l-.06-.06 2.83-2.83.06.06A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-1.52V3h4v.08A1.7 1.7 0 0 0 15 4.6a1.7 1.7 0 0 0 1.88-.34l.06-.06 2.83 2.83-.06.06A1.7 1.7 0 0 0 19.4 9c.25.61.85 1 1.51 1H21v4h-.08c-.67 0-1.27.4-1.52 1Z"/>'),
-    vehicle: railSvg('<circle cx="6" cy="17" r="3"/><circle cx="18" cy="17" r="3"/><path d="m6 17 4-8h4l4 8M9 6h4"/>'),
     activity: railSvg('<path d="M6 3v3M18 3v3M4 8h16v12H4z"/><path d="M8 12h3M8 16h8"/>'),
 };
 
@@ -73,13 +66,6 @@ const RAIL_ITEMS = {
         { id: 'vicoin', label: 'Ví coin', icon: RAIL_ICON.wallet, current: true },
         { id: 'mission', label: 'Nhiệm vụ', icon: RAIL_ICON.mission },
         { id: 'gift', label: 'Hộp quà', icon: RAIL_ICON.gift },
-        { id: 'settings', label: 'Cài đặt', icon: RAIL_ICON.settings, end: true },
-    ],
-    vehicle: [
-        { id: 'home', label: 'Trang chủ', icon: RAIL_ICON.home },
-        { id: 'vicoin', label: 'Ví coin', icon: RAIL_ICON.wallet, app: 'vicoin' },
-        { id: 'vehicle', label: 'Phương Tiện', icon: RAIL_ICON.vehicle, current: true },
-        { id: 'activity', label: 'Hoạt động', icon: RAIL_ICON.activity },
         { id: 'settings', label: 'Cài đặt', icon: RAIL_ICON.settings, end: true },
     ],
 };
@@ -99,20 +85,12 @@ function renderRail(side) {
     `).join('');
 }
 
-// Huy hiệu xu trên app được gán: "+1 xu" (chưa nhận hôm nay) / "Đã nhận"
-function xuBadgeHtml(id) {
-    if (!isAssigned(id)) return '';
-    const got = getXuView().claimed.includes(id);
-    return `<span class="dboard-feature__xu${got ? ' is-claimed' : ''}" data-xu-badge="${id}"><i class="fa-solid ${got ? 'fa-check' : 'fa-star'}"></i>${got ? 'Đã nhận' : '+1 xu'}</span>`;
-}
-
 function renderFeatureIcon(f) {
     return `
         <button class="dboard-feature dboard-feature--${f.accent}" data-feature="${f.id}">
             <div class="dboard-feature__icon">
                 <i class="fa-solid ${f.icon}"></i>
                 ${f.badge ? '<span class="dboard-feature__dot"></span>' : ''}
-                ${xuBadgeHtml(f.id)}
             </div>
             <div class="dboard-feature__text">
                 <span class="dboard-feature__label">${f.label}</span>
@@ -127,7 +105,6 @@ export const DashboardPanel = {
     _open: false,        // mặc định bảng iPad đóng, mở bằng nút trên header
     _side: 'card',       // cột trái trang chủ: 'card' (thẻ thành viên) | 'profile' (hồ sơ) — đổi bằng rail bên trái
     _escBound: false,
-    _xuBound: false,
     _outsideBound: false,
 
     render(containerId, state = {}) {
@@ -276,31 +253,9 @@ export const DashboardPanel = {
         `;
 
         this._bindEvents(el);
-        this._syncXu();
-    },
-
-    // Cập nhật huy hiệu "+1 xu" trên các app + tổng xu nhận hôm nay
-    _syncXu() {
-        const root = this._root();
-        if (!root) return;
-        const v = getXuView();
-        root.querySelectorAll('[data-xu-badge]').forEach((b) => {
-            const got = v.claimed.includes(b.dataset.xuBadge);
-            b.classList.toggle('is-claimed', got);
-            b.innerHTML = `<i class="fa-solid ${got ? 'fa-check' : 'fa-star'}"></i>${got ? 'Đã nhận' : '+1 xu'}`;
-        });
-        const count = root.querySelector('#dboard-menu-count');
-        if (count) {
-            const n = FEATURES_ROW_1.length + FEATURES_ROW_2.length;
-            count.textContent = XU_APPS.length ? `${n} CHỨC NĂNG · XU ${v.earned}/${v.total}` : `${n} CHỨC NĂNG`;
-        }
     },
 
     _bindEvents(root) {
-        if (!this._xuBound) {
-            document.addEventListener('xu:change', () => this._syncXu());
-            this._xuBound = true;
-        }
         if (!this._escBound) {
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape' && this._open) this.hide();
@@ -349,14 +304,8 @@ export const DashboardPanel = {
 
         root.querySelectorAll('.dboard-feature').forEach(btn => {
             btn.addEventListener('click', () => {
-                // App được gán xu: lần đầu bấm trong ngày -> +1 xu (không chặn việc mở app)
-                claimXuForApp(btn.dataset.feature);
                 if (btn.dataset.feature === 'vicoin') {
                     this._openApp('vicoin');
-                    return;
-                }
-                if (btn.dataset.feature === 'shop') {
-                    this._openApp('vehicle');
                     return;
                 }
                 console.log('Mở tính năng:', btn.dataset.feature);
@@ -397,10 +346,6 @@ export const DashboardPanel = {
             const icon = root.querySelector('.outer-bcn__app-icon i');
             if (title) title.textContent = meta.title;
             if (icon) icon.className = `fa-solid ${meta.icon}`;
-        }
-
-        if (appId === 'vehicle') {
-            VehicleApp.render('dboard-app-view');
         }
 
         if (appId === 'vicoin') {

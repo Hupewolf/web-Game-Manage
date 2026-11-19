@@ -1,5 +1,5 @@
 // share/accountApi.js
-// Gọi MockAPI tài khoản dùng chung cho các component mới (cửa hàng, tinh thần).
+// Gọi MockAPI tài khoản dùng chung cho các component mới (cửa hàng, ví coin).
 
 export const API_BASE = 'https://6a53c0628547b9f7111bc89e.mockapi.io/accounts/test/testManage';
 

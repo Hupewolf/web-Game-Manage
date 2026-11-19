@@ -8,15 +8,10 @@
 <body>
     <script type="module">
         import { Loader } from "./component/loader/loader.js";
-        import { getTravel, getLocation } from "./share/travel.js";
 
         const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
         if (isLoggedIn) {
-            // Đã đăng nhập: loading nháy 1 cái rồi vào thẳng (đang đi dở thì về trang đếm ngược)
-            const target = getTravel() ? "./pages/travel/travel.html"
-                : getLocation() === "outSide" ? "./pages/outSide/outSide.html"
-                : "./pages/room/room.html";
-            Loader.go(target, { replace: true, ms: 900, text: "Đang vào game..." });
+            Loader.go("./pages/room/room.html", { replace: true, ms: 900, text: "Đang vào game..." });
         } else {
             window.location.replace("./pages/login/login.html");
         }

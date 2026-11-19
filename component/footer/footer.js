@@ -1,7 +1,6 @@
 import { NavButton } from "../navButton/NavButton.js";
 import { InventoryModal } from "../personalItem/personalItem.js";
 import { Loader } from "../loader/loader.js";
-import { startTravel, PAGE_URL } from "../../share/travel.js";
 
 Loader.gate();
 
@@ -75,23 +74,16 @@ NavButton.render("nav-btn-slot", {
 
 const isRoomPage = window.location.pathname.includes("/room/");
 
-// Phòng <-> outSide: bắt đầu chuyến đi có đếm ngược (thời gian phụ thuộc phương tiện), sang trang loading.
+// Phòng <-> outSide: bắt đầu chuyến đi có đếm ngược, sang trang loading.
 // Cửa hàng -> outSide: loading rồi quay lại; nếu đi từ outSide sang thì dùng history.back()
 // để trình duyệt khôi phục trang từ bfcache (nhanh, không tải lại).
-document.querySelector(".nav-btn")?.addEventListener("click", async (e) => {
+document.querySelector(".nav-btn")?.addEventListener("click", (e) => {
     if (isRoomPage || isOutSidePage) {
         e.preventDefault();
-        Loader.show("Đang chuẩn bị...");
-        try {
-            await startTravel(isRoomPage ? "outSide" : "room"); // lưu chuyến đi lên API
-            window.location.href = PAGE_URL.travel;
-        } catch {
-            Loader.hide();
-            alert("Không kết nối được máy chủ, thử lại sau.");
-        }
+        Loader.go(isRoomPage ? "../outSide/outSide.html" : "../room/room.html");
     } else if (isShopPage) {
         e.preventDefault();
-        Loader.go(PAGE_URL.outSide, { back: document.referrer.includes("outSide.html") });
+        Loader.go("../outSide/outSide.html", { back: document.referrer.includes("outSide.html") });
     }
 });
 
